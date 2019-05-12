@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FileUploadApp.Core\FileUploadApp.Core.csproj" />
+    <ProjectReference Include="..\FileUploadApp.Domain\FileUploadApp.Domain.csproj" />
+    <ProjectReference Include="..\FileUploadApp.Interfaces\FileUploadApp.Interfaces.csproj" />
+  </ItemGroup>
+
+</Project>

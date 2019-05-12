@@ -1,0 +1,66 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.202
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileUploadApp", "FileUploadApp\FileUploadApp.csproj", "{6346C4D7-F278-4D5B-BC34-AA11D0488660}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileUploadApp.Domain", "FileUploadApp.Domain\FileUploadApp.Domain.csproj", "{EBC19B3C-6027-4EA7-9A03-C866562159AE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{E28B5E71-A290-4CD2-850D-A856175D31BA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{2CCF48F5-DAB2-41E1-982F-F023C1ED9215}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileUploadApp.Core", "FileUploadApp.Core\FileUploadApp.Core.csproj", "{5F8BAA2D-493F-4B09-90D5-54237487F720}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileUploadApp.Services", "FileUploadApp.Services\FileUploadApp.Services.csproj", "{B61FEAF1-37F4-4809-B166-95D42C08216F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileUploadApp.Handlers", "FileUploadApp.Handlers\FileUploadApp.Handlers.csproj", "{21B6853F-073B-4B5A-AEBD-58EE4A9E2C11}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileUploadApp.Interfaces", "FileUploadApp.Interfaces\FileUploadApp.Interfaces.csproj", "{EE234C8E-DEA8-4B01-8F4E-F8CF772E6BB1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6346C4D7-F278-4D5B-BC34-AA11D0488660}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6346C4D7-F278-4D5B-BC34-AA11D0488660}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6346C4D7-F278-4D5B-BC34-AA11D0488660}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6346C4D7-F278-4D5B-BC34-AA11D0488660}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EBC19B3C-6027-4EA7-9A03-C866562159AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBC19B3C-6027-4EA7-9A03-C866562159AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBC19B3C-6027-4EA7-9A03-C866562159AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBC19B3C-6027-4EA7-9A03-C866562159AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F8BAA2D-493F-4B09-90D5-54237487F720}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F8BAA2D-493F-4B09-90D5-54237487F720}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F8BAA2D-493F-4B09-90D5-54237487F720}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F8BAA2D-493F-4B09-90D5-54237487F720}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B61FEAF1-37F4-4809-B166-95D42C08216F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B61FEAF1-37F4-4809-B166-95D42C08216F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B61FEAF1-37F4-4809-B166-95D42C08216F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B61FEAF1-37F4-4809-B166-95D42C08216F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21B6853F-073B-4B5A-AEBD-58EE4A9E2C11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21B6853F-073B-4B5A-AEBD-58EE4A9E2C11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21B6853F-073B-4B5A-AEBD-58EE4A9E2C11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21B6853F-073B-4B5A-AEBD-58EE4A9E2C11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE234C8E-DEA8-4B01-8F4E-F8CF772E6BB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE234C8E-DEA8-4B01-8F4E-F8CF772E6BB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE234C8E-DEA8-4B01-8F4E-F8CF772E6BB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE234C8E-DEA8-4B01-8F4E-F8CF772E6BB1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{EBC19B3C-6027-4EA7-9A03-C866562159AE} = {E28B5E71-A290-4CD2-850D-A856175D31BA}
+		{5F8BAA2D-493F-4B09-90D5-54237487F720} = {2CCF48F5-DAB2-41E1-982F-F023C1ED9215}
+		{B61FEAF1-37F4-4809-B166-95D42C08216F} = {2CCF48F5-DAB2-41E1-982F-F023C1ED9215}
+		{21B6853F-073B-4B5A-AEBD-58EE4A9E2C11} = {2CCF48F5-DAB2-41E1-982F-F023C1ED9215}
+		{EE234C8E-DEA8-4B01-8F4E-F8CF772E6BB1} = {E28B5E71-A290-4CD2-850D-A856175D31BA}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AD87DD4E-6017-46E8-BAE2-390993FA2761}
+	EndGlobalSection
+EndGlobal
