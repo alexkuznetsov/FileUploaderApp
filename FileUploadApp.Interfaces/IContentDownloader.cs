@@ -1,10 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 namespace FileUploadApp.Interfaces
 {
     public interface IContentDownloader
     {
-        Task<byte[]> Download();
+        Task<ReadOnlyMemory<byte>> Download();
     }
 
 }

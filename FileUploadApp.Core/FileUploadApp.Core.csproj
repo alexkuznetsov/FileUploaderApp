@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FileUploadApp.Domain\FileUploadApp.Domain.csproj" />
+    <ProjectReference Include="..\FileUploadApp.Interfaces\FileUploadApp.Interfaces.csproj" />
   </ItemGroup>
 
 </Project>

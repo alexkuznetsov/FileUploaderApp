@@ -23,10 +23,12 @@ namespace FileUploadApp.Handlers
             {
                 if (contentTypeChecker.IsAllowed(file.ContentType))
                 {
-                    uploadsService.UploadedFiles.Add(new MultipartFile(
-                        fileName: file.FileName,
+                    uploadsService.UploadedFiles.Add(new UploadedFile(
+                        name: file.FileName,
                         contentType: file.ContentType,
-                        dataStreamWrapper: new FormFileStreamWrapper(file)));
+                        height: 0,
+                        width: 0,
+                        streamWrapper: new FormFileStreamWrapper(file)));
                 }
             }
         }

@@ -19,7 +19,7 @@ namespace FileUploadApp.Services
             _address = address;
         }
 
-        public async Task<byte[]> Download()
+        public async Task<ReadOnlyMemory<byte>> Download()
         {
             using (var client = GetClient())
             {

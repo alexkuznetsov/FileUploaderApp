@@ -6,7 +6,7 @@ namespace FileUploadApp.Interfaces
 {
     public interface IUploadService
     {
-        ICollection<IUploadedFile> UploadedFiles { get; set; }
+        ICollection<UploadedFile> UploadedFiles { get; set; }
 
         Task<UploadResult> UploadAsync();
     }

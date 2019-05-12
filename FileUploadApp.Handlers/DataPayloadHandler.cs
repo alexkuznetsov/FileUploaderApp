@@ -2,7 +2,6 @@
 using FileUploadApp.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
-using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Text;
@@ -14,12 +13,15 @@ namespace FileUploadApp.Handlers
     {
         private readonly IFileDataPayloadHandler<FileAsBase64Payload[]> base64DataPayloadHadnler;
         private readonly IFileDataPayloadHandler<string[]> uriDataPayloadHandler;
+        private readonly IDeserializer deserializer;
 
         public DataPayloadHandler(IFileDataPayloadHandler<FileAsBase64Payload[]> base64DataPayloadHadnler,
-                                          IFileDataPayloadHandler<string[]> uriDataPayloadHandler)
+                                          IFileDataPayloadHandler<string[]> uriDataPayloadHandler,
+                                          IDeserializer deserializer)
         {
             this.base64DataPayloadHadnler = base64DataPayloadHadnler ?? throw new ArgumentNullException(nameof(base64DataPayloadHadnler));
             this.uriDataPayloadHandler = uriDataPayloadHandler ?? throw new ArgumentNullException(nameof(uriDataPayloadHandler));
+            this.deserializer = deserializer ?? throw new ArgumentNullException(nameof(deserializer));
         }
 
         public async Task ApplyAsync(HttpContext httpContext, IUploadService uploadService)
@@ -42,13 +44,13 @@ namespace FileUploadApp.Handlers
             }
         }
 
-        private static async Task<Base64Payload> DesirializeAsync(HttpRequest request)
+        private async Task<Base64Payload> DesirializeAsync(HttpRequest request)
         {
             using (StreamReader reader = new StreamReader(request.Body, Encoding.UTF8, true, 1024, true))
             {
                 var content = await reader.ReadToEndAsync();
 
-                return JsonConvert.DeserializeObject<Base64Payload>(content);
+                return await deserializer.DeserializeAsync<Base64Payload>(content);
             }
         }
 

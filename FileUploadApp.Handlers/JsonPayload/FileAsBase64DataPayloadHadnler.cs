@@ -1,4 +1,5 @@
-﻿using FileUploadApp.Domain;
+﻿using FileUploadApp.Core.Streams;
+using FileUploadApp.Domain;
 using FileUploadApp.Interfaces;
 using System;
 using System.Threading.Tasks;
@@ -32,10 +33,16 @@ namespace FileUploadApp.Handlers
 
                 if (contentTypeTestUtility.IsAllowed(contentType))
                 {
-                    uploadService.UploadedFiles.Add(new ByteArrayFile(
-                      name: f.Name,
-                      contentType: contentType,
-                      bytea: Convert.FromBase64String(f.Base64)));
+                    var readOnlyMemory = new ReadOnlyMemory<byte>(Convert.FromBase64String(f.Base64));
+
+                    uploadService.UploadedFiles.Add(new UploadedFile(
+                        name: f.Name,
+                        contentType: contentType,
+                        height:0,
+                        width:0,
+                        streamWrapper: new ByteaStreamWrapper(readOnlyMemory)
+                        )
+                    );
                 }
 
             }

@@ -1,8 +1,8 @@
-﻿using FileUploadApp.Domain;
+﻿using FileUploadApp.Core.Streams;
+using FileUploadApp.Domain;
 using FileUploadApp.Interfaces;
 using System;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace FileUploadApp.Services
@@ -27,18 +27,22 @@ namespace FileUploadApp.Services
             return downloader.Download().ContinueWith(r => AfterDownloadCompleated(u, r));
         }
 
-        private void AfterDownloadCompleated(Uri u, Task<byte[]> r)
+        private void AfterDownloadCompleated(Uri u, Task<ReadOnlyMemory<byte>> r)
         {
             var byteArray = r.Result;
-            var base64 = Convert.ToBase64String(byteArray.Take(MaxBitsCountForBase64).ToArray());
+            var base64 = Convert.ToBase64String(byteArray.Slice(0, MaxBitsCountForBase64).ToArray());
             var contentType = contentTypeChecker.DetectContentType(base64);
 
             if (contentTypeChecker.IsAllowed(contentType))
             {
-                uploadService.UploadedFiles.Add(new ByteArrayFile(
+                uploadService.UploadedFiles.Add(new UploadedFile(
                   name: Path.GetFileName(u.LocalPath),
                   contentType: contentType,
-                  bytea: byteArray));
+                  height:0,
+                  width:0,
+                  streamWrapper: new ByteaStreamWrapper(byteArray)
+                 )
+                );
             }
         }
     }
