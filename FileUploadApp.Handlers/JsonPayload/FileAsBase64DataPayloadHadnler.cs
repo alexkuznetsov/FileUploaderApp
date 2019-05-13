@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FileUploadApp.Handlers
 {
-    public class FileAsBase64DataPayloadHadnler : IFileDataPayloadHandler<FileAsBase64Payload[]>
+    public class FileAsBase64DataPayloadHadnler : IFileDataPayloadHandler<Base64FilePayload[]>
     {
         private readonly IContentTypeTestUtility contentTypeTestUtility;
         private readonly IUploadService uploadService;
@@ -18,14 +18,14 @@ namespace FileUploadApp.Handlers
             this.uploadService = uploadService;
         }
 
-        public Task ApplyAsync(FileAsBase64Payload[] files)
+        public Task ApplyAsync(Base64FilePayload[] files)
         {
             LoadImagesFromBase64(files);
 
             return Task.FromResult(0);
         }
 
-        private void LoadImagesFromBase64(FileAsBase64Payload[] files)
+        private void LoadImagesFromBase64(Base64FilePayload[] files)
         {
             foreach (var f in files)
             {

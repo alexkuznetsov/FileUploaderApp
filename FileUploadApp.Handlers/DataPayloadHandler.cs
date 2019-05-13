@@ -11,11 +11,11 @@ namespace FileUploadApp.Handlers
 {
     public class DataPayloadHandler : IFormJsonPayloadHandler<HttpContext>
     {
-        private readonly IFileDataPayloadHandler<FileAsBase64Payload[]> base64DataPayloadHadnler;
+        private readonly IFileDataPayloadHandler<Base64FilePayload[]> base64DataPayloadHadnler;
         private readonly IFileDataPayloadHandler<string[]> uriDataPayloadHandler;
         private readonly IDeserializer deserializer;
 
-        public DataPayloadHandler(IFileDataPayloadHandler<FileAsBase64Payload[]> base64DataPayloadHadnler,
+        public DataPayloadHandler(IFileDataPayloadHandler<Base64FilePayload[]> base64DataPayloadHadnler,
                                           IFileDataPayloadHandler<string[]> uriDataPayloadHandler,
                                           IDeserializer deserializer)
         {
@@ -44,13 +44,13 @@ namespace FileUploadApp.Handlers
             }
         }
 
-        private async Task<Base64Payload> DesirializeAsync(HttpRequest request)
+        private async Task<UploadRequest> DesirializeAsync(HttpRequest request)
         {
             using (StreamReader reader = new StreamReader(request.Body, Encoding.UTF8, true, 1024, true))
             {
                 var content = await reader.ReadToEndAsync();
 
-                return await deserializer.DeserializeAsync<Base64Payload>(content);
+                return await deserializer.DeserializeAsync<UploadRequest>(content);
             }
         }
 

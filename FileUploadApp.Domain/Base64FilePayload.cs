@@ -3,7 +3,7 @@
 namespace FileUploadApp.Domain
 {
     [DataContract]
-    public class FileAsBase64Payload
+    public class Base64FilePayload
     {
         [DataMember(Name = "name", IsRequired = true, Order = 0)]
         public string Name { get; set; }

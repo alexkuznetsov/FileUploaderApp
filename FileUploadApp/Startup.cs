@@ -39,7 +39,7 @@ namespace FileUploadApp
             services.AddSingleton(Configuration.BindTo<AppConfiguration>("conf"));
             services.AddSingleton<IContentTypeTestUtility, ContentTypeTestUtility>();
 
-            services.AddScoped<IFileDataPayloadHandler<FileAsBase64Payload[]>, FileAsBase64DataPayloadHadnler>();
+            services.AddScoped<IFileDataPayloadHandler<Base64FilePayload[]>, FileAsBase64DataPayloadHadnler>();
             services.AddScoped<IFileDataPayloadHandler<string[]>, FileAsUriDataPayloadHandler>();
 
             services.AddSingleton<IMultipathFormPayloadHandler<HttpContext>, FormDataPayloadHandler>();
