@@ -14,12 +14,14 @@ namespace FileUploadApp.Events
 
     public class AfterDownloadImageUriEvent : GenericEvent
     {
-        public AfterDownloadImageUriEvent(Uri uri, byte[] bytea)
+        public AfterDownloadImageUriEvent(uint number, Uri uri, byte[] bytea)
         {
+            Number = number;
             Uri = uri;
             Bytea = bytea;
         }
 
+        public uint Number { get; }
         public Uri Uri { get; }
         public byte[] Bytea { get; }
     }

@@ -33,11 +33,13 @@ namespace FileUploadApp.Core
         {
             var form = await httpContext.Request.ReadFormAsync();
             var filesCollection = new List<FormFileDescriptor>();
+            var number = 0U;
 
             foreach (var f in form.Files)
             {
                 filesCollection.Add(new FormFileDescriptor
                 (
+                    num: number++,
                     contentType: f.ContentType,
                     name: f.FileName,
                     stream: new FormFileStreamWrapper(new FormFileWrapper(f))

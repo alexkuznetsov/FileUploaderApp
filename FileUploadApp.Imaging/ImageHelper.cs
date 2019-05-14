@@ -43,6 +43,7 @@ namespace FileUploadApp.Imaging
                 original.SaveAsJpeg(s);
 
                 return new UploadedFile(
+                    num: file.Number,
                     name: PreviewPrefix + file.Name,
                     contentType: mime,
                     width: newWidth,

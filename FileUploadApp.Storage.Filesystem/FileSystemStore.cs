@@ -35,6 +35,7 @@ namespace FileUploadApp.Storage.Filesystem
 
             return new UploadedFile
             (
+                num: 0,
                 contentType: spec.ContentType,
                 name: spec.Name,
                 width: spec.Width,
@@ -66,11 +67,12 @@ namespace FileUploadApp.Storage.Filesystem
 
             return new UploadResultRow
             {
+                Id = spec.Path,
+                Name = file.Name,
                 ContentType = spec.ContentType,
+                Number = file.Number,
                 Height = spec.Height,
                 Width = spec.Width,
-                Id = spec.Name,
-                Path = filePath
             };
         }
 

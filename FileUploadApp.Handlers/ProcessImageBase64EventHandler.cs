@@ -25,7 +25,7 @@ namespace FileUploadApp.Handlers
         {
             var files = request.Files;
 
-            for (int i = 0; i < request.Files.Length; i++)
+            for (uint i = 0; i < request.Files.Length; i++)
             {
                 var contentType = contentTypeTestUtility.DetectContentType(files[i].Base64);
 
@@ -35,6 +35,7 @@ namespace FileUploadApp.Handlers
                     var readOnlyMemory = new ReadOnlyMemory<byte>(bytea);
 
                     uploadedFilesContext.Add(
+                        number: i,
                         name: files[i].Name,
                         contentType: contentType,
                         streamWrapper: new ByteaStreamWrapper(readOnlyMemory)

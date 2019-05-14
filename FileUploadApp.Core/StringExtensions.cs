@@ -5,7 +5,7 @@ namespace FileUploadApp
 {
     public static class StringExtensions
     {
-        public static IEnumerable<Uri> AsUriEnumerable(this string[] source, Action<string> onError = null)
+        public static IEnumerable<(uint, Uri)> AsUriEnumerable(this string[] source, Action<string> onError = null)
         {
             for (uint i = 0; i < source.Length; i++)
             {
@@ -13,7 +13,7 @@ namespace FileUploadApp
 
                 if (status)
                 {
-                    yield return result;
+                    yield return (i, result);
                 }
                 else
                 {

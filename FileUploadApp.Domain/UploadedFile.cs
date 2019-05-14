@@ -7,11 +7,12 @@
         public uint Height { get; private set; }
 
         public UploadedFile(
+            uint num,
             string name,
             string contentType,
             uint width,
             uint height,
-            StreamWrapper streamWrapper) : base(name, contentType, streamWrapper)
+            StreamWrapper streamWrapper) : base(num, name, contentType, streamWrapper)
         {
             Width = width;
             Height = height;

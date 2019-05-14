@@ -20,18 +20,18 @@ namespace FileUploadApp.Handlers
         public async Task Handle(ProcessImageUriEvent notification, CancellationToken cancellationToken)
         {
             var tasks = notification.Links.AsUriEnumerable()
-                         .Select(x => DownloadDataAsync(x, cancellationToken))
+                         .Select(x => DownloadDataAsync(x.Item1, x.Item2, cancellationToken))
                          .ToList();
 
             await Task.WhenAll(tasks);
         }
 
-        private async Task DownloadDataAsync(Uri uri, CancellationToken cancellationToken)
+        private async Task DownloadDataAsync(uint number, Uri uri, CancellationToken cancellationToken)
         {
             var data = await mediator.Send(new DownloadUriCommand(uri), cancellationToken)
                 .ConfigureAwait(false);
 
-            await mediator.Publish(new AfterDownloadImageUriEvent(data.Uri, data.Bytea))
+            await mediator.Publish(new AfterDownloadImageUriEvent(number, data.Uri, data.Bytea))
                 .ConfigureAwait(false);
         }
     }

@@ -25,6 +25,7 @@ namespace FileUploadApp.Handlers
                 if (contentTypeChecker.IsAllowed(file.ContentType))
                 {
                     uploadedFilesContext.Add(
+                        number: file.Number,
                         name: file.Name,
                         contentType: file.ContentType,
                         streamWrapper: file.Stream);

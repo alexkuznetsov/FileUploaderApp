@@ -29,9 +29,13 @@ namespace FileUploadApp.Controllers
         public async Task<IActionResult> Post()
         {
             var saveFilesResult = await mediator.Send(new UploadFilesCommand(uploadedFilesContext.GetList()));
-            var allFileNames = saveFilesResult.Result.Select(x => 
-                new { UploadedFileId = x.Id, UploadedFilePreviewId = x.Preview.Id  })
-                .ToArray();
+            var allFileNames = saveFilesResult.Result.Select(x => new
+            {
+                number = x.Number,
+                name = x.Name,
+                fileId = x.Id,
+                previewId = x.Preview.Id
+            }).ToArray();
 
             return Ok(allFileNames);
         }

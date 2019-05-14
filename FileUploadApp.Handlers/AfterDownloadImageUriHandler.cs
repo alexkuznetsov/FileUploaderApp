@@ -32,6 +32,7 @@ namespace FileUploadApp.Handlers
             if (contentTypeTestUtility.IsAllowed(contentType))
             {
                 uploadedFilesContext.Add(
+                    number: notification.Number,
                     name: Path.GetFileName(notification.Uri.LocalPath),
                     contentType: contentType,
                     streamWrapper: new ByteaStreamWrapper(byteArray));

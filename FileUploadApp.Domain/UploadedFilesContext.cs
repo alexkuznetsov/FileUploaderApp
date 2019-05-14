@@ -6,9 +6,10 @@ namespace FileUploadApp.Domain
     {
         private readonly Queue<UploadedFile> queue = new Queue<UploadedFile>();
 
-        public void Add(string name, string contentType, StreamWrapper streamWrapper)
+        public void Add(uint number, string name, string contentType, StreamWrapper streamWrapper)
         {
             queue.Enqueue(new UploadedFile(
+                        num: number,
                         name: name,
                         contentType: contentType,
                         height: 0,
