@@ -1,11 +1,10 @@
 ﻿using FileUploadApp.Domain;
-using Microsoft.AspNetCore.Http;
 using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace FileUploadApp.Core.Streams
+namespace FileUploadApp.StreamWrappers
 {
     public class ByteaStreamWrapper : StreamWrapper
     {
@@ -16,7 +15,7 @@ namespace FileUploadApp.Core.Streams
             _bytea = bytea;
         }
 
-        public override Task<byte[]> AsRawBytesAsync()
+        public override Task<byte[]> AsRawBytesAsync(CancellationToken cancellationToken = default)
         {
             return Task.FromResult(_bytea.ToArray());
         }

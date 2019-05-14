@@ -1,5 +1,6 @@
 ﻿using FileUploadApp.Domain;
 using FileUploadApp.Interfaces;
+using FileUploadApp.StreamWrappers;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -24,7 +25,7 @@ namespace FileUploadApp.Storage.Filesystem
 
         public async Task<UploadedFile> ReceiveAsync(string fileId)
         {
-            var filePath = FormatFilePath(fileId);
+            var filePath = BuildPathAndCheckDir(fileId);
             var spec = await specHandler.ReadSpecAsync(filePath).ConfigureAwait(false);
 
             if (spec == null)
@@ -44,13 +45,14 @@ namespace FileUploadApp.Storage.Filesystem
 
         public async Task<UploadResultRow> StoreAsync(UploadedFile file)
         {
-            var filePath = FormatFilePath(Guid.NewGuid().ToString());
+            var fileId = Guid.NewGuid().ToString();
+            var filePath = BuildPathAndCheckDir(fileId);
 
             var spec = await specHandler.WriteSpecAsync(filePath, new Spec
             (
-                cntentType: file.ContentType,
                 name: file.Name,
-                path: filePath,
+                cntentType: file.ContentType,
+                path: fileId,
                 height: file.Height,
                 width: file.Width,
                 dateTime: DateTime.UtcNow
@@ -58,7 +60,7 @@ namespace FileUploadApp.Storage.Filesystem
 
             using (var wri = File.OpenWrite(filePath))
             {
-                await file.StreamWrapper.CopyToAsync(wri).ConfigureAwait(false);
+                await file.Stream.CopyToAsync(wri).ConfigureAwait(false);
                 await wri.FlushAsync().ConfigureAwait(false);
             }
 
@@ -72,7 +74,7 @@ namespace FileUploadApp.Storage.Filesystem
             };
         }
 
-        private string FormatFilePath(string fileId)
+        private string BuildPathAndCheckDir(string fileId)
         {
             if (string.IsNullOrWhiteSpace(fileId))
             {
@@ -84,6 +86,11 @@ namespace FileUploadApp.Storage.Filesystem
             var foldersPath = Path.Combine(basePath, new string(span.Slice(0, 2)),
                 new string(span.Slice(2, 2)),
                 new string(span.Slice(4, 2)));
+
+            if (!Directory.Exists(foldersPath))
+            {
+                Directory.CreateDirectory(foldersPath);
+            }
 
             return Path.Combine(foldersPath, fileId);
         }

@@ -5,11 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="DownloadHelper.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\FileUploadApp.Core\FileUploadApp.Core.csproj" />
     <ProjectReference Include="..\FileUploadApp.Domain\FileUploadApp.Domain.csproj" />
     <ProjectReference Include="..\FileUploadApp.Interfaces\FileUploadApp.Interfaces.csproj" />
   </ItemGroup>

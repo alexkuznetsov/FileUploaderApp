@@ -5,7 +5,7 @@ namespace FileUploadApp.Interfaces
 {
     public interface IContentDownloader
     {
-        Task<ReadOnlyMemory<byte>> Download();
+        Task<byte[]> DownloadAsync(System.Threading.CancellationToken cancellationToken = default);
     }
 
 }

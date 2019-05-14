@@ -1,25 +1,25 @@
 ﻿using FileUploadApp.Domain;
-using Microsoft.AspNetCore.Http;
+using FileUploadApp.Interfaces;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace FileUploadApp.Core.Streams
+namespace FileUploadApp.StreamWrappers
 {
     public class FormFileStreamWrapper : StreamWrapper
     {
-        private readonly IFormFile formFile;
+        private readonly IFormFileWrapper formFile;
 
-        public FormFileStreamWrapper(IFormFile formFile)
+        public FormFileStreamWrapper(IFormFileWrapper formFile)
         {
             this.formFile = formFile;
         }
 
-        public override async Task<byte[]> AsRawBytesAsync()
+        public override async Task<byte[]> AsRawBytesAsync(CancellationToken cancellationToken = default)
         {
             using (var s = new MemoryStream())
             {
-                await CopyToAsync(s);
+                await CopyToAsync(s, cancellationToken);
                 return s.ToArray();
             }
         }

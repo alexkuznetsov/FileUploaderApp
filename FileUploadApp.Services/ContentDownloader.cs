@@ -19,11 +19,11 @@ namespace FileUploadApp.Services
             _address = address;
         }
 
-        public async Task<ReadOnlyMemory<byte>> Download()
+        public async Task<byte[]> DownloadAsync(System.Threading.CancellationToken cancellationToken = default)
         {
             using (var client = GetClient())
             {
-                var message = await client.GetAsync(_address);
+                var message = await client.GetAsync(_address, cancellationToken);
 
                 return await message.Content.ReadAsByteArrayAsync();
             }
@@ -32,7 +32,6 @@ namespace FileUploadApp.Services
         private HttpClient GetClient()
         {
             var client = new HttpClient(_sharedHandler, disposeHandler: false);
-
 
             client.DefaultRequestHeaders.Add("User-Agent", DefaultUserAgent);
 

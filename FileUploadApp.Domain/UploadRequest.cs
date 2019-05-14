@@ -3,13 +3,12 @@ using System.Runtime.Serialization;
 
 namespace FileUploadApp.Domain
 {
-    [DataContract]
     public class UploadRequest
     {
         [DataMember(Name = "files", IsRequired = false, EmitDefaultValue = false)]
-        public List<Base64FilePayload> Files { get; set; }
+        public Base64FilePayload[] Files { get; set; }
 
         [DataMember(Name = "links", IsRequired = false, EmitDefaultValue = false)]
-        public List<string> Links { get; set; }
+        public string[] Links { get; set; }
     }
 }

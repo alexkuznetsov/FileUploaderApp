@@ -1,30 +1,29 @@
-﻿using FileUploadApp.Domain;
+﻿using FileUploadApp.Commands;
+using FileUploadApp.Domain;
 using FileUploadApp.Imaging;
 using FileUploadApp.Interfaces;
-using System.Collections.Generic;
+using MediatR;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
-namespace FileUploadApp.Services
+namespace FileUploadApp.Handlers
 {
-    public class UploadService : IUploadService
+    public class UploadFilesCommandHandler : IRequestHandler<UploadFilesCommand, UploadResult>
     {
         private readonly IStorage storage;
 
-        public UploadService(IStorageProvider storageProvider)
+        public UploadFilesCommandHandler(IStorageProvider storageProvider)
         {
             storage = storageProvider.GetStorage();
         }
 
-        public ICollection<UploadedFile> UploadedFiles { get; set; } = new List<UploadedFile>();
-
-        public Task<UploadResult> UploadAsync()
+        public Task<UploadResult> Handle(UploadFilesCommand request, CancellationToken cancellationToken)
         {
-            var tasks = UploadedFiles.Select(x => SaveFileAsync(x));
+            var tasks = request.UploadedFiles.Select(x => SaveFileAsync(x));
 
             return Task.WhenAll(tasks)
-                .ContinueWith(x => Task.FromResult(new UploadResult(x.Result)))
-                .Unwrap();
+                .ContinueWith(x => new UploadResult(x.Result));
         }
 
         private async Task<UploadResultRow> SaveFileAsync(UploadedFile file)
@@ -44,7 +43,7 @@ namespace FileUploadApp.Services
                 .ConfigureAwait(false))
 
             {
-                return ImageHelper.Resize(origin, image, 100, 100, MimeConstants.JpgMime);
+                return ImageHelper.Resize(origin, image, 100, 100, "image/jpeg");
             }
         }
     }

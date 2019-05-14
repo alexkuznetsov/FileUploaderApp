@@ -1,5 +1,4 @@
-﻿using FileUploadApp.Handlers;
-using FileUploadApp.Interfaces;
+﻿using FileUploadApp.Core;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 
@@ -14,11 +13,9 @@ namespace FileUploadApp.Middlewares
             _next = next;
         }
 
-        public async Task Invoke(HttpContext httpContext, IUploadService uploadsService, PayloadTypeProcessorHelper processorHelper)
+        public async Task Invoke(HttpContext httpContext, EventGenerator eventGenerator)
         {
-            var proc = processorHelper.GetPayloadProcessor(httpContext);
-
-            await proc?.ApplyAsync(httpContext, uploadsService);
+            await eventGenerator.GenerateApprochiateEvent(httpContext);
 
             await _next(httpContext);
         }

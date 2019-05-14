@@ -3,25 +3,31 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileUploadApp", "FileUploadApp\FileUploadApp.csproj", "{6346C4D7-F278-4D5B-BC34-AA11D0488660}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileUploadApp", "FileUploadApp\FileUploadApp.csproj", "{6346C4D7-F278-4D5B-BC34-AA11D0488660}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileUploadApp.Domain", "FileUploadApp.Domain\FileUploadApp.Domain.csproj", "{EBC19B3C-6027-4EA7-9A03-C866562159AE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileUploadApp.Domain", "FileUploadApp.Domain\FileUploadApp.Domain.csproj", "{EBC19B3C-6027-4EA7-9A03-C866562159AE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{E28B5E71-A290-4CD2-850D-A856175D31BA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{2CCF48F5-DAB2-41E1-982F-F023C1ED9215}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileUploadApp.Core", "FileUploadApp.Core\FileUploadApp.Core.csproj", "{5F8BAA2D-493F-4B09-90D5-54237487F720}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileUploadApp.Core", "FileUploadApp.Core\FileUploadApp.Core.csproj", "{5F8BAA2D-493F-4B09-90D5-54237487F720}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileUploadApp.Services", "FileUploadApp.Services\FileUploadApp.Services.csproj", "{B61FEAF1-37F4-4809-B166-95D42C08216F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileUploadApp.Services", "FileUploadApp.Services\FileUploadApp.Services.csproj", "{B61FEAF1-37F4-4809-B166-95D42C08216F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileUploadApp.Handlers", "FileUploadApp.Handlers\FileUploadApp.Handlers.csproj", "{21B6853F-073B-4B5A-AEBD-58EE4A9E2C11}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileUploadApp.Handlers", "FileUploadApp.Handlers\FileUploadApp.Handlers.csproj", "{21B6853F-073B-4B5A-AEBD-58EE4A9E2C11}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileUploadApp.Interfaces", "FileUploadApp.Interfaces\FileUploadApp.Interfaces.csproj", "{EE234C8E-DEA8-4B01-8F4E-F8CF772E6BB1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileUploadApp.Interfaces", "FileUploadApp.Interfaces\FileUploadApp.Interfaces.csproj", "{EE234C8E-DEA8-4B01-8F4E-F8CF772E6BB1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileUploadApp.Storage.Filesystem", "FileUploadApp.Storage.Filesystem\FileUploadApp.Storage.Filesystem.csproj", "{32276AD5-9027-4394-B6BE-A26413810C43}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileUploadApp.Storage.Filesystem", "FileUploadApp.Storage.Filesystem\FileUploadApp.Storage.Filesystem.csproj", "{32276AD5-9027-4394-B6BE-A26413810C43}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileUploadApp.Imaging", "FileUploadApp.Imaging\FileUploadApp.Imaging.csproj", "{C0F9E0A9-F41A-425B-9854-54C6047A238B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileUploadApp.Imaging", "FileUploadApp.Imaging\FileUploadApp.Imaging.csproj", "{C0F9E0A9-F41A-425B-9854-54C6047A238B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileUploadApp.StreamWrappers", "FileUploadApp.StreamWrappers\FileUploadApp.StreamWrappers.csproj", "{246D8082-263D-4CB5-88CA-CC392CD50DD6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileUploadApp.Events", "FileUploadApp.Events\FileUploadApp.Events.csproj", "{7154552B-589E-4A95-AC9D-A5789B0889F0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileUploadApp.Commands", "FileUploadApp.Commands\FileUploadApp.Commands.csproj", "{C31AED92-41B2-42EE-8F84-E66A125F3810}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,6 +67,18 @@ Global
 		{C0F9E0A9-F41A-425B-9854-54C6047A238B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C0F9E0A9-F41A-425B-9854-54C6047A238B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C0F9E0A9-F41A-425B-9854-54C6047A238B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{246D8082-263D-4CB5-88CA-CC392CD50DD6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{246D8082-263D-4CB5-88CA-CC392CD50DD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{246D8082-263D-4CB5-88CA-CC392CD50DD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{246D8082-263D-4CB5-88CA-CC392CD50DD6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7154552B-589E-4A95-AC9D-A5789B0889F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7154552B-589E-4A95-AC9D-A5789B0889F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7154552B-589E-4A95-AC9D-A5789B0889F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7154552B-589E-4A95-AC9D-A5789B0889F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C31AED92-41B2-42EE-8F84-E66A125F3810}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C31AED92-41B2-42EE-8F84-E66A125F3810}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C31AED92-41B2-42EE-8F84-E66A125F3810}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C31AED92-41B2-42EE-8F84-E66A125F3810}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -73,6 +91,9 @@ Global
 		{EE234C8E-DEA8-4B01-8F4E-F8CF772E6BB1} = {E28B5E71-A290-4CD2-850D-A856175D31BA}
 		{32276AD5-9027-4394-B6BE-A26413810C43} = {2CCF48F5-DAB2-41E1-982F-F023C1ED9215}
 		{C0F9E0A9-F41A-425B-9854-54C6047A238B} = {2CCF48F5-DAB2-41E1-982F-F023C1ED9215}
+		{246D8082-263D-4CB5-88CA-CC392CD50DD6} = {2CCF48F5-DAB2-41E1-982F-F023C1ED9215}
+		{7154552B-589E-4A95-AC9D-A5789B0889F0} = {E28B5E71-A290-4CD2-850D-A856175D31BA}
+		{C31AED92-41B2-42EE-8F84-E66A125F3810} = {E28B5E71-A290-4CD2-850D-A856175D31BA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AD87DD4E-6017-46E8-BAE2-390993FA2761}

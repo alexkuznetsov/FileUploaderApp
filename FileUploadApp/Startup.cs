@@ -1,24 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
+﻿using FileUploadApp.Commands;
+using FileUploadApp.Core;
 using FileUploadApp.Core.Configuration;
+using FileUploadApp.Core.Serialization;
 using FileUploadApp.Domain;
+using FileUploadApp.Events;
 using FileUploadApp.Handlers;
 using FileUploadApp.Interfaces;
 using FileUploadApp.Middlewares;
 using FileUploadApp.Services;
+using FileUploadApp.Storage.Filesystem;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+
+using System.Linq;
+using System.Net.Http;
 
 namespace FileUploadApp
 {
@@ -36,18 +35,10 @@ namespace FileUploadApp
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddSingleton(Configuration.BindTo<AppConfiguration>("conf"));
+            services.AddSingleton(Configuration.BindTo<AppConfiguration>(ConfigConstants.ConfNode));
             services.AddSingleton<IContentTypeTestUtility, ContentTypeTestUtility>();
-
-            services.AddScoped<IFileDataPayloadHandler<Base64FilePayload[]>, FileAsBase64DataPayloadHadnler>();
-            services.AddScoped<IFileDataPayloadHandler<string[]>, FileAsUriDataPayloadHandler>();
-
-            services.AddSingleton<IMultipathFormPayloadHandler<HttpContext>, FormDataPayloadHandler>();
-            services.AddScoped<IFormJsonPayloadHandler<HttpContext>, DataPayloadHandler>();
-            services.AddScoped<IPlaintextPayloadHandler<HttpContext>, FileAsPlainTextLinkDataPayloadHandler>();
-
-            services.AddScoped<PayloadTypeProcessorHelper>();
-
+            services.AddSingleton<ISerializer, Serializer>();
+            services.AddSingleton<IDeserializer, Deserializer>();
             services.AddSingleton((r) =>
             {
                 return new HttpClientHandler
@@ -58,12 +49,23 @@ namespace FileUploadApp
             });
 
             services.AddSingleton<ContentDownloaderFactory>();
+            services.AddSingleton<SpecHandler>();
+            services.AddSingleton(Configuration.BindTo<StorageConfiguration>(ConfigConstants.FileStoreNode));
+            services.AddSingleton<IStorageProvider, FilesystemStorageProvider>();
 
-            services.AddScoped<IDownloadHelper, DownloadHelper>();
-            services.AddScoped<IUploadService, UploadService>();
+            services.AddScoped<EventGenerator>();
+            services.AddScoped<UploadedFilesContext>();
+            services.AddScoped<ServiceFactory>(p => p.GetService);
+
+            services.Scan(scan => scan
+               .FromAssembliesOf(typeof(IMediator)
+                    , typeof(FilesRequestEvent)
+                    , typeof(DownloadUriCommand)
+                    , typeof(AfterDownloadImageUriHandler))
+               .AddClasses()
+               .AsImplementedInterfaces());
 
             services.AddTransient<UploadedDataPreprocessMiddleware>();
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,13 +1,13 @@
-﻿using System;
-using FileUploadApp.Domain;
+﻿using FileUploadApp.Domain;
+using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
 
-namespace FileUploadApp.Storage.Filesystem
+namespace FileUploadApp.StreamWrappers
 {
-    internal class DownloadableStreamWrapper : StreamWrapper
+    public class DownloadableStreamWrapper : StreamWrapper
     {
         private readonly string pathToFile;
 
@@ -16,7 +16,7 @@ namespace FileUploadApp.Storage.Filesystem
             this.pathToFile = pathToFile;
         }
 
-        public override Task<byte[]> AsRawBytesAsync()
+        public override Task<byte[]> AsRawBytesAsync(CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }

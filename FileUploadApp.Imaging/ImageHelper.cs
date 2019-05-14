@@ -1,4 +1,4 @@
-﻿using FileUploadApp.Core.Streams;
+﻿using FileUploadApp.StreamWrappers;
 using FileUploadApp.Domain;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
@@ -14,7 +14,7 @@ namespace FileUploadApp.Imaging
 
         public static async Task<Image<Rgba32>> CreateImageAsync(UploadedFile file)
         {
-            var bytes = await file.StreamWrapper.AsRawBytesAsync()
+            var bytes = await file.Stream.AsRawBytesAsync()
                 .ConfigureAwait(false);
 
             var image = Image.Load(bytes);
@@ -42,14 +42,12 @@ namespace FileUploadApp.Imaging
 
                 original.SaveAsJpeg(s);
 
-                var bytea = s.ToArray();
-
                 return new UploadedFile(
                     name: PreviewPrefix + file.Name,
                     contentType: mime,
                     width: newWidth,
                     height: newHeight,
-                    streamWrapper: new ByteaStreamWrapper(bytea));
+                    streamWrapper: new ByteaStreamWrapper(s.ToArray()));
             }
 
         }

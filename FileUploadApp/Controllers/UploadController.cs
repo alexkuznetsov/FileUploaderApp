@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FileUploadApp.Commands;
+using FileUploadApp.Domain;
 using FileUploadApp.Interfaces;
 using FileUploadApp.Services;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,17 +16,21 @@ namespace FileUploadApp.Controllers
     [ApiController]
     public class UploadController : ControllerBase
     {
-        private readonly IUploadService uploadService;
+        private readonly UploadedFilesContext uploadedFilesContext;
+        private readonly IMediator mediator;
 
-        public UploadController(IUploadService uploadService)
+        public UploadController(UploadedFilesContext uploadedFilesContext, IMediator mediator)
         {
-            this.uploadService = uploadService;
+            this.uploadedFilesContext = uploadedFilesContext;
+            this.mediator = mediator;
         }
 
         [HttpPost("")]
-        public IActionResult Post()
+        public async Task<IActionResult> Post()
         {
-            var allFileNames = uploadService.UploadedFiles.Select(x => x.Name)
+            var saveFilesResult = await mediator.Send(new UploadFilesCommand(uploadedFilesContext.GetList()));
+            var allFileNames = saveFilesResult.Result.Select(x => 
+                new { UploadedFileId = x.Id, UploadedFilePreviewId = x.Preview.Id  })
                 .ToArray();
 
             return Ok(allFileNames);

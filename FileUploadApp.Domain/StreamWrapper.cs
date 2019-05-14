@@ -6,10 +6,8 @@ namespace FileUploadApp.Domain
 {
     public abstract class StreamWrapper
     {
-        //public abstract Stream GetStream();
-
         public abstract Task CopyToAsync(Stream target, CancellationToken cancellationToken = default);
 
-        public abstract Task<byte[]> AsRawBytesAsync();
+        public abstract Task<byte[]> AsRawBytesAsync(CancellationToken cancellationToken = default);
     }
 }

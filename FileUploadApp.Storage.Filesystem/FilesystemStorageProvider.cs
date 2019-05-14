@@ -5,23 +5,23 @@ namespace FileUploadApp.Storage.Filesystem
 {
     public class FilesystemStorageProvider : IStorageProvider
     {
-        private readonly string basePath;
+        private readonly StorageConfiguration configuration;
         private readonly SpecHandler specHandler;
 
-        public FilesystemStorageProvider(string basePath, SpecHandler specHandler)
+        public FilesystemStorageProvider(StorageConfiguration configuration, SpecHandler specHandler)
         {
-            this.basePath = basePath;
+            this.configuration = configuration;
             this.specHandler = specHandler;
         }
 
         public IStorage GetStorage()
         {
-            if (!Directory.Exists(basePath))
+            if (!Directory.Exists(configuration.BasePath))
             {
-                Directory.CreateDirectory(basePath);
+                Directory.CreateDirectory(configuration.BasePath);
             }
 
-            return new FileSystemStore(basePath, specHandler);
+            return new FileSystemStore(configuration.BasePath, specHandler);
         }
     }
 }
