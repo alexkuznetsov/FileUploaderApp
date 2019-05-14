@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace FileUploadApp.Domain
+namespace FileUploadApp.Domain.Dirty
 {
     [DataContract]
     public class Base64FilePayload

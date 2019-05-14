@@ -1,10 +1,10 @@
 ﻿namespace FileUploadApp.Domain
 {
-    public class UploadResultRowCore
+    public class UploadResultRowBase
     {
-        public uint Number { get; set; }
-
         public string Id { get; set; }
+
+        public uint Number { get; set; }
 
         public string Name { get; set; }
 

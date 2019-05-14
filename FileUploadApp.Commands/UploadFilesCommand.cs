@@ -6,11 +6,11 @@ namespace FileUploadApp.Commands
 {
     public class UploadFilesCommand : IRequest<UploadResult>
     {
-        public UploadFilesCommand(IEnumerable<UploadedFile> uploadedFiles)
+        public UploadFilesCommand(IEnumerable<Upload> uploadedFiles)
         {
             UploadedFiles = uploadedFiles;
         }
 
-        public IEnumerable<UploadedFile> UploadedFiles { get; }
+        public IEnumerable<Upload> UploadedFiles { get; }
     }
 }

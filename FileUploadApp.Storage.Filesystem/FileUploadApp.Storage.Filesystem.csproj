@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FileUploadApp.Interfaces\FileUploadApp.Interfaces.csproj" />
-    <ProjectReference Include="..\FileUploadApp.StreamWrappers\FileUploadApp.StreamWrappers.csproj" />
+    <ProjectReference Include="..\FileUploadApp.StreamWrappers\FileUploadApp.StreamAdapters.csproj" />
   </ItemGroup>
 
 </Project>

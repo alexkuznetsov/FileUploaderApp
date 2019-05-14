@@ -1,12 +1,13 @@
 ﻿using FileUploadApp.Core.Configuration;
 using FileUploadApp.Interfaces;
+using System;
 using System.Collections.Generic;
 
 namespace FileUploadApp.Services
 {
     public class ContentTypeTestUtility : IContentTypeTestUtility
     {
-        private readonly HashSet<string> contentTypes;
+        private readonly ICollection<string> contentTypes;
         private readonly IReadOnlyDictionary<string, string> mappings;
 
         public ContentTypeTestUtility(AppConfiguration appConfiguration)
@@ -16,6 +17,14 @@ namespace FileUploadApp.Services
         }
 
         public bool IsAllowed(string contentType) => contentTypes.Contains(contentType);
+
+        public string DetectContentType(ReadOnlySpan<byte> bytes)
+        {
+            var base64 = Convert.ToBase64String(bytes, Base64FormattingOptions.None);
+
+            return DetectContentType(base64);
+        }
+
 
         public string DetectContentType(string base64)
         {

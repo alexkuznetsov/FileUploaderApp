@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
-namespace FileUploadApp.Domain
+namespace FileUploadApp.Domain.Dirty
 {
     public class UploadRequest
     {

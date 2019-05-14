@@ -16,10 +16,10 @@ namespace FileUploadApp.Controllers
     [ApiController]
     public class UploadController : ControllerBase
     {
-        private readonly UploadedFilesContext uploadedFilesContext;
+        private readonly UploadsContext uploadedFilesContext;
         private readonly IMediator mediator;
 
-        public UploadController(UploadedFilesContext uploadedFilesContext, IMediator mediator)
+        public UploadController(UploadsContext uploadedFilesContext, IMediator mediator)
         {
             this.uploadedFilesContext = uploadedFilesContext;
             this.mediator = mediator;

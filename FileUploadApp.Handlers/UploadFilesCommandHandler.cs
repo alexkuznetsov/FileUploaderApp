@@ -11,9 +11,9 @@ namespace FileUploadApp.Handlers
 {
     public class UploadFilesCommandHandler : IRequestHandler<UploadFilesCommand, UploadResult>
     {
-        private readonly IStorage storage;
+        private readonly IStorage<Upload, UploadResultRow> storage;
 
-        public UploadFilesCommandHandler(IStorageProvider storageProvider)
+        public UploadFilesCommandHandler(IStorageProvider<Upload, UploadResultRow> storageProvider)
         {
             storage = storageProvider.GetStorage();
         }
@@ -26,7 +26,7 @@ namespace FileUploadApp.Handlers
                 .ContinueWith(x => new UploadResult(x.Result));
         }
 
-        private async Task<UploadResultRow> SaveFileAsync(UploadedFile file)
+        private async Task<UploadResultRow> SaveFileAsync(Upload file)
         {
             var preview = await CreatePreviewAsync(file);
             var savedOriginal = await storage.StoreAsync(file).ConfigureAwait(false);
@@ -37,13 +37,13 @@ namespace FileUploadApp.Handlers
             return savedOriginal;
         }
 
-        private async Task<UploadedFile> CreatePreviewAsync(UploadedFile origin)
+        private async Task<Upload> CreatePreviewAsync(Upload origin)
         {
             using (var image = await ImageHelper.CreateImageAsync(origin)
                 .ConfigureAwait(false))
 
             {
-                return ImageHelper.Resize(origin, image, 100, 100, "image/jpeg");
+                return ImageHelper.Resize(origin, image, 100, 100, origin.ContentType);
             }
         }
     }

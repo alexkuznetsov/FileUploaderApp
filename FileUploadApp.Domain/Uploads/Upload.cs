@@ -1,18 +1,18 @@
 ﻿namespace FileUploadApp.Domain
 {
-    public class UploadedFile : FormFileDescriptor
+    public class Upload : FileDescriptor
     {
         public uint Width { get; private set; }
 
         public uint Height { get; private set; }
 
-        public UploadedFile(
+        public Upload(
             uint num,
             string name,
             string contentType,
             uint width,
             uint height,
-            StreamWrapper streamWrapper) : base(num, name, contentType, streamWrapper)
+            StreamAdapter streamAdapter) : base(num, name, contentType, streamAdapter)
         {
             Width = width;
             Height = height;

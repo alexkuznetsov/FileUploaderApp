@@ -7,18 +7,18 @@ using System.Threading.Tasks;
 
 namespace FileUploadApp.Handlers
 {
-    public class FilesRequestEventHandler : INotificationHandler<FilesRequestEvent>
+    public class FilesRequestEventHandler : INotificationHandler<FileUploadEvent>
     {
         private readonly IContentTypeTestUtility contentTypeChecker;
-        private readonly UploadedFilesContext uploadedFilesContext;
+        private readonly UploadsContext uploadedFilesContext;
 
-        public FilesRequestEventHandler(IContentTypeTestUtility contentTypeChecker, UploadedFilesContext uploadedFilesContext)
+        public FilesRequestEventHandler(IContentTypeTestUtility contentTypeChecker, UploadsContext uploadedFilesContext)
         {
             this.contentTypeChecker = contentTypeChecker;
             this.uploadedFilesContext = uploadedFilesContext;
         }
 
-        public Task Handle(FilesRequestEvent notification, CancellationToken cancellationToken)
+        public Task Handle(FileUploadEvent notification, CancellationToken cancellationToken)
         {
             foreach (var file in notification.FormFileDescriptors)
             {
@@ -28,7 +28,7 @@ namespace FileUploadApp.Handlers
                         number: file.Number,
                         name: file.Name,
                         contentType: file.ContentType,
-                        streamWrapper: file.Stream);
+                        streamAdapter: file.Stream);
                 }
             }
 

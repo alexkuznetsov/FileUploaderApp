@@ -17,18 +17,17 @@ namespace FileUploadApp.Handlers
 
         public Task Handle(UploadRequestEvent notification, CancellationToken cancellationToken)
         {
-            var model = notification.UploadRequest;
-            var isModelOk = model != null;
-            var isFilesNotEmpty = isModelOk && model.Files != null && model.Files.Length > 0;
-            var isLinksNotEmpty = isModelOk && model.Links != null && model.Links.Length > 0;
+            var isModelOk = notification != null;
+            var isFilesNotEmpty = isModelOk && notification.Files != null && notification.Files.Length > 0;
+            var isLinksNotEmpty = isModelOk && notification.Links != null && notification.Links.Length > 0;
 
             if (isFilesNotEmpty)
             {
-                return mediator.Publish(new ProcessImageBase64Event(model.Files), cancellationToken);
+                return mediator.Publish(new ProcessFileDescriptorEvent(notification.Files), cancellationToken);
             }
             else if (isLinksNotEmpty)
             {
-                return mediator.Publish(new ProcessImageUriEvent(model.Links), cancellationToken);
+                return mediator.Publish(new ProcessImageUriEvent(notification.Links), cancellationToken);
             }
 
             else

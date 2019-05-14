@@ -1,13 +1,13 @@
 ﻿using FileUploadApp.Domain;
 using FileUploadApp.Interfaces;
-using FileUploadApp.StreamWrappers;
+using FileUploadApp.StreamAdapters;
 using System;
 using System.IO;
 using System.Threading.Tasks;
 
 namespace FileUploadApp.Storage.Filesystem
 {
-    public class FileSystemStore : IStorage
+    public class FileSystemStore : IStorage<Upload, UploadResultRow>
     {
         private readonly string basePath;
         private readonly SpecHandler specHandler;
@@ -23,7 +23,7 @@ namespace FileUploadApp.Storage.Filesystem
             this.specHandler = specHandler ?? throw new ArgumentNullException(nameof(specHandler));
         }
 
-        public async Task<UploadedFile> ReceiveAsync(string fileId)
+        public async Task<Upload> ReceiveAsync(string fileId)
         {
             var filePath = BuildPathAndCheckDir(fileId);
             var spec = await specHandler.ReadSpecAsync(filePath).ConfigureAwait(false);
@@ -33,18 +33,18 @@ namespace FileUploadApp.Storage.Filesystem
                 throw new ArgumentNullException(nameof(spec), "File saved with errors");
             }
 
-            return new UploadedFile
+            return new Upload
             (
                 num: 0,
                 contentType: spec.ContentType,
                 name: spec.Name,
                 width: spec.Width,
                 height: spec.Height,
-                streamWrapper: new DownloadableStreamWrapper(filePath)
+                streamAdapter: new DownloadableStreamAdapter(filePath)
             );
         }
 
-        public async Task<UploadResultRow> StoreAsync(UploadedFile file)
+        public async Task<UploadResultRow> StoreAsync(Upload file)
         {
             var fileId = Guid.NewGuid().ToString();
             var filePath = BuildPathAndCheckDir(fileId);

@@ -1,10 +1,14 @@
 ﻿using FileUploadApp.Domain;
+using FileUploadApp.Domain.Dirty;
+using FileUploadApp.Events;
 using FileUploadApp.Interfaces;
-using FileUploadApp.StreamWrappers;
+using FileUploadApp.StreamAdapters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,54 +17,77 @@ namespace FileUploadApp.Core
 {
     internal static class HttpContextConvertExtensions
     {
-        private class FormFileWrapper : IFormFileWrapper
+        private class FormFileDecorator : IFormFileDecorator
         {
             private readonly IFormFile formFile;
 
-            public FormFileWrapper(IFormFile formFile)
+            public FormFileDecorator(IFormFile formFile)
             {
                 this.formFile = formFile;
             }
 
             public Task CopyToAsync(Stream target, CancellationToken cancellationToken = default)
                 => formFile.CopyToAsync(target, cancellationToken);
-
-            public Stream GetStream()
-                => formFile.OpenReadStream();
         }
 
-        public static async Task<IEnumerable<FormFileDescriptor>> AssumeAsFilesRequestEvent(this HttpContext httpContext)
+        public static async Task<FileUploadEvent> AssumeAsFilesRequestEvent(this HttpContext httpContext)
         {
             var form = await httpContext.Request.ReadFormAsync();
-            var filesCollection = new List<FormFileDescriptor>();
+            var filesCollection = new List<FileDescriptor>();
             var number = 0U;
 
             foreach (var f in form.Files)
             {
-                filesCollection.Add(new FormFileDescriptor
+                filesCollection.Add(new FileDescriptor
                 (
                     num: number++,
                     contentType: f.ContentType,
                     name: f.FileName,
-                    stream: new FormFileStreamWrapper(new FormFileWrapper(f))
+                    stream: new FormFileStreamAdapter(new FormFileDecorator(f))
                 ));
             }
 
-            return filesCollection;
+            return new FileUploadEvent(filesCollection);
         }
 
-        public static async Task<UploadRequest> AssumeAsUploadRequestEvent(this HttpContext httpContext, IDeserializer deserializer)
+        public static async Task<UploadRequestEvent> AssumeAsUploadRequestEvent(this HttpContext httpContext, IDeserializer deserializer)
         {
             var request = httpContext.Request.EnableRewind();
+            var ctx = await request.DesirializeAsync<UploadRequest>(deserializer).ConfigureAwait(false);
+            var files = ctx.Files.AsFileDesciptors();
 
-            return await request.DesirializeAsync<UploadRequest>(deserializer).ConfigureAwait(false);
+            return new UploadRequestEvent(files.ToArray(), ctx.Links);
         }
 
-        public static async Task<string> AssumeAsPlaintTextRequestEvent(this HttpContext httpContext)
+        public static IEnumerable<FileDescriptor> AsFileDesciptors(this IEnumerable<Base64FilePayload> plds)
+        {
+            var i = 0U;
+            foreach (var p in plds)
+            {
+                var bytea = Convert.FromBase64String(p.Base64).AsMemory();
+                yield return new FileDescriptor(
+                    num: i++,
+                    name: p.Name,
+                    contentType: string.Empty,
+                    stream: new ByteaStreamAdapter(bytea));
+            }
+        }
+
+        public static async Task<PlainTextRequestEvent> AssumeAsPlaintTextRequestEvent(this HttpContext httpContext)
         {
             var request = httpContext.Request.EnableRewind();
+            var text = await request.ReadAsReadonlyMemoryAsync().ConfigureAwait(false);
 
-            return await request.ReadAsPlainTextAsync().ConfigureAwait(false);
+            return new PlainTextRequestEvent(text);
+        }
+
+        private static async Task<ReadOnlyMemory<char>> ReadAsReadonlyMemoryAsync(this HttpRequest request)
+        {
+            using (StreamReader reader = new StreamReader(request.Body, Encoding.UTF8, true, 1024, true))
+            {
+                var result = await reader.ReadToEndAsync().ConfigureAwait(false);
+                return result.AsMemory();
+            }
         }
 
         private static async Task<string> ReadAsPlainTextAsync(this HttpRequest request)

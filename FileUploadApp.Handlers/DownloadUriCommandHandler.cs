@@ -1,4 +1,5 @@
 ﻿using FileUploadApp.Commands;
+using FileUploadApp.Domain.Dirty;
 using FileUploadApp.Services;
 using MediatR;
 using System.Threading;
@@ -18,9 +19,8 @@ namespace FileUploadApp.Handlers
         public async Task<DownloadUriResponse> Handle(DownloadUriCommand request, CancellationToken cancellationToken)
         {
             var download = contentDownloaderFactory.Create(request.Uri);
-            var result = await download.DownloadAsync();
 
-            return new DownloadUriResponse(request.Uri, result);
+            return await download.DownloadAsync(cancellationToken);
         }
     }
 }

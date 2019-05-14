@@ -5,18 +5,23 @@ using System.Threading;
 using System.Threading.Tasks;
 
 
-namespace FileUploadApp.StreamWrappers
+namespace FileUploadApp.StreamAdapters
 {
-    public class DownloadableStreamWrapper : StreamWrapper
+    public class DownloadableStreamAdapter : StreamAdapter
     {
         private readonly string pathToFile;
 
-        public DownloadableStreamWrapper(string pathToFile)
+        public DownloadableStreamAdapter(string pathToFile)
         {
             this.pathToFile = pathToFile;
         }
 
-        public override Task<byte[]> AsRawBytesAsync(CancellationToken cancellationToken = default)
+        public override Task<ReadOnlyMemory<byte>> AsBytesSlice(int len, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<ReadOnlyMemory<byte>> AsRawBytesAsync(CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }

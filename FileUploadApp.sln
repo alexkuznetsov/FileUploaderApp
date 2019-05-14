@@ -23,7 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileUploadApp.Storage.Files
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileUploadApp.Imaging", "FileUploadApp.Imaging\FileUploadApp.Imaging.csproj", "{C0F9E0A9-F41A-425B-9854-54C6047A238B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileUploadApp.StreamWrappers", "FileUploadApp.StreamWrappers\FileUploadApp.StreamWrappers.csproj", "{246D8082-263D-4CB5-88CA-CC392CD50DD6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileUploadApp.StreamAdapters", "FileUploadApp.StreamWrappers\FileUploadApp.StreamAdapters.csproj", "{246D8082-263D-4CB5-88CA-CC392CD50DD6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileUploadApp.Events", "FileUploadApp.Events\FileUploadApp.Events.csproj", "{7154552B-589E-4A95-AC9D-A5789B0889F0}"
 EndProject

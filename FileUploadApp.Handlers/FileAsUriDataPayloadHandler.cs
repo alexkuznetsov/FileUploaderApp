@@ -1,7 +1,10 @@
 ﻿using FileUploadApp.Commands;
+using FileUploadApp.Domain;
 using FileUploadApp.Events;
+using FileUploadApp.StreamAdapters;
 using MediatR;
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,18 +24,25 @@ namespace FileUploadApp.Handlers
         {
             var tasks = notification.Links.AsUriEnumerable()
                          .Select(x => DownloadDataAsync(x.Item1, x.Item2, cancellationToken))
-                         .ToList();
+                         .ToArray();
 
-            await Task.WhenAll(tasks);
+            var result = await Task.WhenAll(tasks);
+            var @event = new ProcessFileDescriptorEvent(result);
+
+            await mediator.Publish(@event);
         }
 
-        private async Task DownloadDataAsync(uint number, Uri uri, CancellationToken cancellationToken)
+        private async Task<FileDescriptor> DownloadDataAsync(uint number, Uri uri, CancellationToken cancellationToken)
         {
             var data = await mediator.Send(new DownloadUriCommand(uri), cancellationToken)
                 .ConfigureAwait(false);
 
-            await mediator.Publish(new AfterDownloadImageUriEvent(number, data.Uri, data.Bytea))
-                .ConfigureAwait(false);
+            return new FileDescriptor(
+                num: number,
+                name: Path.GetFileName(uri.LocalPath),
+                contentType: data.ContentType,
+                stream: new ByteaStreamAdapter(data.Bytea)
+             );
         }
     }
 }

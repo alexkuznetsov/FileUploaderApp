@@ -1,14 +1,14 @@
-﻿using FileUploadApp.Domain;
+﻿using System;
 
 namespace FileUploadApp.Events
 {
     public class PlainTextRequestEvent : GenericEvent
     {
-        public PlainTextRequestEvent(string text)
+        public PlainTextRequestEvent(ReadOnlyMemory<char> text)
         {
             Text = text;
         }
 
-        public string Text { get; }
+        public ReadOnlyMemory<char> Text { get; }
     }
 }

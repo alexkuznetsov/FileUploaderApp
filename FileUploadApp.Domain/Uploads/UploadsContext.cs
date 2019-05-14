@@ -2,22 +2,27 @@
 
 namespace FileUploadApp.Domain
 {
-    public class UploadedFilesContext
+    public class UploadsContext
     {
-        private readonly Queue<UploadedFile> queue = new Queue<UploadedFile>();
+        private readonly Queue<Upload> queue = new Queue<Upload>();
 
-        public void Add(uint number, string name, string contentType, StreamWrapper streamWrapper)
+        public void Add(uint number, string name, string contentType, StreamAdapter streamAdapter)
         {
-            queue.Enqueue(new UploadedFile(
+            Add(new Upload(
                         num: number,
                         name: name,
                         contentType: contentType,
                         height: 0,
                         width: 0,
-                        streamWrapper: streamWrapper));
+                        streamAdapter: streamAdapter));
         }
 
-        public IEnumerable<UploadedFile> GetList()
+        public void Add(Upload upload)
+        {
+            queue.Enqueue(upload);
+        }
+
+        public IEnumerable<Upload> GetList()
         {
             while (queue.Count > 0)
             {

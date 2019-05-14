@@ -1,7 +1,7 @@
 ﻿namespace FileUploadApp.Interfaces
 {
-    public interface IStorageProvider
+    public interface IStorageProvider<TIn, TOut>
     {
-        IStorage GetStorage();
+        IStorage<TIn, TOut> GetStorage();
     }
 }

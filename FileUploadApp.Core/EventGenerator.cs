@@ -23,25 +23,26 @@ namespace FileUploadApp.Core
 
         public async Task GenerateApprochiateEvent(HttpContext httpContext)
         {
+            var @event = await CreateEventAsync(httpContext).ConfigureAwait(false);
+
+            await mediator.Publish(@event).ConfigureAwait(false);
+        }
+
+        private async Task<GenericEvent> CreateEventAsync(HttpContext httpContext)
+        {
             var request = httpContext.Request;
 
             if (request.ContentType == JsonContentType)
             {
-                var uploadRequest = await httpContext.AssumeAsUploadRequestEvent(deserializer);
-
-                await mediator.Publish(new UploadRequestEvent(uploadRequest));
+                return await httpContext.AssumeAsUploadRequestEvent(deserializer).ConfigureAwait(false);
             }
             else if (request.ContentType == TextPlainContentType)
             {
-                var textRequest = await httpContext.AssumeAsPlaintTextRequestEvent();
-
-                await mediator.Publish(new PlainTextRequestEvent(textRequest));
+                return await httpContext.AssumeAsPlaintTextRequestEvent().ConfigureAwait(false);
             }
             else if (request.HasFormContentType)
             {
-                var filesRequest = await httpContext.AssumeAsFilesRequestEvent();
-
-                await mediator.Publish(new FilesRequestEvent(filesRequest));
+                return await httpContext.AssumeAsFilesRequestEvent().ConfigureAwait(false);
             }
             else
                 throw new InvalidOperationException("Mailformed request");

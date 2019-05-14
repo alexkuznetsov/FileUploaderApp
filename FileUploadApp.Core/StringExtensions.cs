@@ -7,9 +7,11 @@ namespace FileUploadApp
     {
         public static IEnumerable<(uint, Uri)> AsUriEnumerable(this string[] source, Action<string> onError = null)
         {
-            for (uint i = 0; i < source.Length; i++)
+            var i = 0U;
+
+            foreach (var link in source)
             {
-                var status = Uri.TryCreate(source[i], UriKind.Absolute, out var result);
+                var status = Uri.TryCreate(link, UriKind.Absolute, out var result);
 
                 if (status)
                 {
@@ -17,8 +19,9 @@ namespace FileUploadApp
                 }
                 else
                 {
-                    onError?.Invoke(source[i]);
+                    onError?.Invoke(link);
                 }
+                i++;
             }
         }
     }

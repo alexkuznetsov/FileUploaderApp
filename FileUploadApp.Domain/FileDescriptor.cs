@@ -1,15 +1,16 @@
 ﻿namespace FileUploadApp.Domain
 {
-    public class FormFileDescriptor
+    public class FileDescriptor
     {
         public uint Number { get; }
+
         public string Name { get; }
 
         public string ContentType { get; }
 
-        public StreamWrapper Stream { get; }
+        public StreamAdapter Stream { get; }
 
-        public FormFileDescriptor(uint num, string name, string contentType, StreamWrapper stream)
+        public FileDescriptor(uint num, string name, string contentType, StreamAdapter stream)
         {
             Number = num;
             Name = name;

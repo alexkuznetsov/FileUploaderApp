@@ -1,12 +1,11 @@
-﻿using FileUploadApp.Domain;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace FileUploadApp.Interfaces
 {
-    public interface IStorage
+    public interface IStorage<TIn, TOut>
     {
-        Task<UploadResultRow> StoreAsync(UploadedFile file);
+        Task<TOut> StoreAsync(TIn file);
 
-        Task<UploadedFile> ReceiveAsync(string fileId);
+        Task<TIn> ReceiveAsync(string fileId);
     }
 }

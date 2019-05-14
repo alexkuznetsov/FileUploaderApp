@@ -51,17 +51,17 @@ namespace FileUploadApp
             services.AddSingleton<ContentDownloaderFactory>();
             services.AddSingleton<SpecHandler>();
             services.AddSingleton(Configuration.BindTo<StorageConfiguration>(ConfigConstants.FileStoreNode));
-            services.AddSingleton<IStorageProvider, FilesystemStorageProvider>();
+            services.AddSingleton<IStorageProvider<Upload, UploadResultRow>, FilesystemStorageProvider>();
 
             services.AddScoped<EventGenerator>();
-            services.AddScoped<UploadedFilesContext>();
+            services.AddScoped<UploadsContext>();
             services.AddScoped<ServiceFactory>(p => p.GetService);
 
             services.Scan(scan => scan
                .FromAssembliesOf(typeof(IMediator)
-                    , typeof(FilesRequestEvent)
+                    , typeof(FileUploadEvent)
                     , typeof(DownloadUriCommand)
-                    , typeof(AfterDownloadImageUriHandler))
+                    , typeof(UploadRequestEventHandler))
                .AddClasses()
                .AsImplementedInterfaces());
 
