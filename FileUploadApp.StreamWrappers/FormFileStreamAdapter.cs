@@ -21,6 +21,14 @@ namespace FileUploadApp.StreamAdapters
             throw new NotImplementedException();
         }
 
+        public override Stream Stream
+        {
+            get
+            {
+                return formFile.GetStream();
+            }
+        }
+
         public override async Task<ReadOnlyMemory<byte>> AsRawBytesAsync(CancellationToken cancellationToken = default)
         {
             using (var s = new MemoryStream())

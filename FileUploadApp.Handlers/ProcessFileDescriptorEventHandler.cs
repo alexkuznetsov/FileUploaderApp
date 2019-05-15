@@ -8,13 +8,14 @@ using System.Threading.Tasks;
 
 namespace FileUploadApp.Handlers
 {
-    public class ProcessFormFileDescriptorEventHandler : INotificationHandler<ProcessFileDescriptorEvent>
+    public class ProcessFileDescriptorEventHandler : INotificationHandler<ProcessFileDescriptorEvent>
     {
-        private readonly IContentTypeTestUtility contentTypeTestUtility;
-        private readonly UploadsContext uploadedFilesContext;
         private static readonly int MinBytesForDetection = 4;
 
-        public ProcessFormFileDescriptorEventHandler(IContentTypeTestUtility contentTypeTestUtility,
+        private readonly IContentTypeTestUtility contentTypeTestUtility;
+        private readonly UploadsContext uploadedFilesContext;
+
+        public ProcessFileDescriptorEventHandler(IContentTypeTestUtility contentTypeTestUtility,
                                          UploadsContext uploadedFilesContext)
         {
             this.contentTypeTestUtility = contentTypeTestUtility;

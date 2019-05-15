@@ -26,11 +26,13 @@ namespace FileUploadApp.StreamAdapters
             throw new NotImplementedException();
         }
 
-        public override Task CopyToAsync(Stream target, CancellationToken cancellationToken = default)
+        public override Stream Stream => File.OpenRead(pathToFile);
+
+        public override async Task CopyToAsync(Stream target, CancellationToken cancellationToken = default)
         {
-            using (var reader = File.OpenRead(pathToFile))
+            using (Stream)
             {
-                return reader.CopyToAsync(target, cancellationToken);
+                await Stream.CopyToAsync(target, cancellationToken).ConfigureAwait(false);
             }
         }
     }

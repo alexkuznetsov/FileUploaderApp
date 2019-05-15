@@ -7,6 +7,8 @@ namespace FileUploadApp.Domain
 {
     public abstract class StreamAdapter
     {
+        public abstract Stream Stream { get; }
+
         public abstract Task CopyToAsync(Stream target, CancellationToken cancellationToken = default);
 
         public abstract Task<ReadOnlyMemory<byte>> AsRawBytesAsync(CancellationToken cancellationToken = default);

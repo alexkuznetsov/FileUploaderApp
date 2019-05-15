@@ -26,10 +26,10 @@ namespace FileUploadApp.Handlers
                          .Select(x => DownloadDataAsync(x.Item1, x.Item2, cancellationToken))
                          .ToArray();
 
-            var result = await Task.WhenAll(tasks);
+            var result = await Task.WhenAll(tasks).ConfigureAwait(false);
             var @event = new ProcessFileDescriptorEvent(result);
 
-            await mediator.Publish(@event);
+            await mediator.Publish(@event).ConfigureAwait(false);
         }
 
         private async Task<FileDescriptor> DownloadDataAsync(uint number, Uri uri, CancellationToken cancellationToken)

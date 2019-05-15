@@ -6,6 +6,7 @@ namespace FileUploadApp.Interfaces
 {
     public interface IFormFileDecorator
     {
+        Stream GetStream();
         Task CopyToAsync(Stream target, CancellationToken cancellationToken = default);
     }
 }

@@ -3,6 +3,8 @@ using FileUploadApp.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FileUploadApp.Core
@@ -23,26 +25,28 @@ namespace FileUploadApp.Core
 
         public async Task GenerateApprochiateEvent(HttpContext httpContext)
         {
-            var @event = await CreateEventAsync(httpContext).ConfigureAwait(false);
+            var events = await CreateEventAsync(httpContext).ConfigureAwait(false);
+            var task = events.Select(x => mediator.Publish(x))
+                .ToArray();
 
-            await mediator.Publish(@event).ConfigureAwait(false);
+            await Task.WhenAll(task);
         }
 
-        private async Task<GenericEvent> CreateEventAsync(HttpContext httpContext)
+        private async Task<IEnumerable<GenericEvent>> CreateEventAsync(HttpContext httpContext)
         {
             var request = httpContext.Request;
 
             if (request.ContentType == JsonContentType)
             {
-                return await httpContext.AssumeAsUploadRequestEvent(deserializer).ConfigureAwait(false);
+                return await httpContext.AssumeAsUploadRequestEvents(deserializer).ConfigureAwait(false);
             }
             else if (request.ContentType == TextPlainContentType)
             {
-                return await httpContext.AssumeAsPlaintTextRequestEvent().ConfigureAwait(false);
+                return await httpContext.AssumeAsPlaintTextRequestEvents().ConfigureAwait(false);
             }
             else if (request.HasFormContentType)
             {
-                return await httpContext.AssumeAsFilesRequestEvent().ConfigureAwait(false);
+                return await httpContext.AssumeAsFilesRequestEvents().ConfigureAwait(false);
             }
             else
                 throw new InvalidOperationException("Mailformed request");

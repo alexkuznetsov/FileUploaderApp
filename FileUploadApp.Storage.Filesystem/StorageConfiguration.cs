@@ -1,6 +1,4 @@
-﻿using System.Runtime.Serialization;
-
-namespace FileUploadApp.Storage.Filesystem
+﻿namespace FileUploadApp.Storage.Filesystem
 {
     public class StorageConfiguration
     {

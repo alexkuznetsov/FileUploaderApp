@@ -15,6 +15,8 @@ namespace FileUploadApp.StreamAdapters
             _bytea = bytea;
         }
 
+        public override Stream Stream => new MemoryStream(_bytea.ToArray());
+
         public override Task<ReadOnlyMemory<byte>> AsRawBytesAsync(CancellationToken cancellationToken = default)
         {
             return Task.FromResult(_bytea);

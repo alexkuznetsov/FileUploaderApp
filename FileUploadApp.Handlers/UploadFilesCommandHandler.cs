@@ -12,10 +12,12 @@ namespace FileUploadApp.Handlers
     public class UploadFilesCommandHandler : IRequestHandler<UploadFilesCommand, UploadResult>
     {
         private readonly IStorage<Upload, UploadResultRow> storage;
+        private readonly AppConfiguration appConfiguration;
 
-        public UploadFilesCommandHandler(IStorageProvider<Upload, UploadResultRow> storageProvider)
-        {
+        public UploadFilesCommandHandler(IStorageProvider<Upload, UploadResultRow> storageProvider, AppConfiguration appConfiguration)
+        { 
             storage = storageProvider.GetStorage();
+            this.appConfiguration = appConfiguration;
         }
 
         public Task<UploadResult> Handle(UploadFilesCommand request, CancellationToken cancellationToken)
@@ -43,7 +45,7 @@ namespace FileUploadApp.Handlers
                 .ConfigureAwait(false))
 
             {
-                return ImageHelper.Resize(origin, image, 100, 100, origin.ContentType);
+                return ImageHelper.Resize(origin, image, appConfiguration.PreviewSize, origin.ContentType);
             }
         }
     }

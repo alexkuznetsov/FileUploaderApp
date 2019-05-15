@@ -1,4 +1,4 @@
-﻿using FileUploadApp.Core.Configuration;
+﻿using FileUploadApp.Domain;
 using FileUploadApp.Domain.Dirty;
 using FileUploadApp.Interfaces;
 using System;

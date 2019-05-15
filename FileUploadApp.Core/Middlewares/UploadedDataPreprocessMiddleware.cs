@@ -1,10 +1,9 @@
-﻿using FileUploadApp.Core;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 
-namespace FileUploadApp.Middlewares
+namespace FileUploadApp.Core.Middlewares
 {
-    internal class UploadedDataPreprocessMiddleware
+    public class UploadedDataPreprocessMiddleware
     {
         private readonly RequestDelegate _next;
 

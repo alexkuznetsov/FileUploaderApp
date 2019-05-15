@@ -1,12 +1,11 @@
 ﻿using FileUploadApp.Commands;
 using FileUploadApp.Core;
-using FileUploadApp.Core.Configuration;
+using FileUploadApp.Core.Middlewares;
 using FileUploadApp.Core.Serialization;
 using FileUploadApp.Domain;
 using FileUploadApp.Events;
 using FileUploadApp.Handlers;
 using FileUploadApp.Interfaces;
-using FileUploadApp.Middlewares;
 using FileUploadApp.Services;
 using FileUploadApp.Storage.Filesystem;
 using MediatR;
@@ -59,9 +58,9 @@ namespace FileUploadApp
 
             services.Scan(scan => scan
                .FromAssembliesOf(typeof(IMediator)
-                    , typeof(FileUploadEvent)
+                    , typeof(GenericEvent)
                     , typeof(DownloadUriCommand)
-                    , typeof(UploadRequestEventHandler))
+                    , typeof(UploadFilesCommandHandler))
                .AddClasses()
                .AsImplementedInterfaces());
 
@@ -71,7 +70,10 @@ namespace FileUploadApp
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            app.UseMiddleware<UploadedDataPreprocessMiddleware>();
+            app.UseWhen(x => x.Request.Path.StartsWithSegments(ConfigConstants.UploadFile), c =>
+            {
+                c.UseMiddleware<UploadedDataPreprocessMiddleware>();
+            });
 
             if (env.IsDevelopment())
             {

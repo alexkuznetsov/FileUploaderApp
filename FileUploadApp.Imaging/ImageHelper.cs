@@ -26,12 +26,12 @@ namespace FileUploadApp.Imaging
             return image;
         }
 
-        public static Upload Resize(Upload file, Image<Rgba32> original, int width, int height, string mime)
+        public static Upload Resize(Upload file, Image<Rgba32> original, System.Drawing.Size size, string mime)
         {
             original.Mutate(x => x
                 .Resize(new ResizeOptions
                 {
-                    Size = new SixLabors.Primitives.Size(width, height),
+                    Size = new SixLabors.Primitives.Size(size.Width, size.Height),
                     Mode = ResizeMode.Pad
                 }));
 
