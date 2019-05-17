@@ -6,6 +6,9 @@ namespace FileUploadApp.Storage.Filesystem
     [DataContract]
     public class Spec
     {
+        [DataMember(Name = "id", IsRequired = true, EmitDefaultValue = false, Order = 3)]
+        public Guid Id { get; set; }
+
         [DataMember(Name = "nm", IsRequired = true, EmitDefaultValue = false, Order = 0)]
         public string Name { get; set; }
 
@@ -15,9 +18,6 @@ namespace FileUploadApp.Storage.Filesystem
         [DataMember(Name = "crat", IsRequired = true, EmitDefaultValue = false, Order = 2)]
         public DateTime CreatedDate { get; set; }
 
-        [DataMember(Name = "pth", IsRequired = true, EmitDefaultValue = false, Order = 3)]
-        public string Path { get; set; }
-
         [DataMember(Name = "wdt", IsRequired = true, EmitDefaultValue = false, Order = 4)]
         public uint Width { get; set; }
 
@@ -26,14 +26,14 @@ namespace FileUploadApp.Storage.Filesystem
 
         public Spec() { }
 
-        public Spec(string name, string cntentType, string path, uint width, uint height, DateTime? dateTime = null)
+        public Spec(Guid id, string name, string contentType, uint width, uint height, DateTime? dateTime = null)
         {
+            Id = id;
             Name = name;
-            ContentType = cntentType;
-            CreatedDate = dateTime ?? DateTime.UtcNow;
-            Path = path;
-            Height = height;
+            ContentType = contentType;
             Width = width;
+            Height = height;
+            CreatedDate = dateTime ?? DateTime.UtcNow;
         }
     }
 }

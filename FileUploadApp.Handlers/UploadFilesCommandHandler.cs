@@ -43,7 +43,7 @@ namespace FileUploadApp.Handlers
         {
             using (var image = await ImageHelper.CreateImageAsync(origin).ConfigureAwait(false))
             {
-                return ImageHelper.Resize(origin, image, appConfiguration.PreviewSize, origin.ContentType);
+                return ImageHelper.Resize(origin, image, appConfiguration.PreviewSize);
             }
         }
     }

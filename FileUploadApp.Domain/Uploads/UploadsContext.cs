@@ -22,7 +22,7 @@ namespace FileUploadApp.Domain
             queue.Enqueue(upload);
         }
 
-        public IEnumerable<Upload> GetList()
+        public IEnumerable<Upload> YieldAll()
         {
             while (queue.Count > 0)
             {

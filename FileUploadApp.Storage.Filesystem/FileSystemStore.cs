@@ -28,7 +28,7 @@ namespace FileUploadApp.Storage.Filesystem
 
         public async Task<Upload> ReceiveAsync(string fileId, CancellationToken cancellationToken = default)
         {
-            var filePath = BuildPathAndCheckDir(fileId);
+            var filePath = BuildPathAndCheckDir(fileId, false);
             var spec = await specHandler.ReadSpecAsync(filePath, cancellationToken).ConfigureAwait(false);
 
             if (spec == null)
@@ -38,9 +38,11 @@ namespace FileUploadApp.Storage.Filesystem
 
             return new Upload
             (
+                id: spec.Id,
+                previewId: Guid.Empty,
                 num: 0,
-                contentType: spec.ContentType,
                 name: spec.Name,
+                contentType: spec.ContentType,
                 width: spec.Width,
                 height: spec.Height,
                 streamAdapter: new DownloadableStreamAdapter(filePath)
@@ -49,16 +51,15 @@ namespace FileUploadApp.Storage.Filesystem
 
         public async Task<UploadResultRow> StoreAsync(Upload file, CancellationToken cancellationToken = default)
         {
-            var fileId = Guid.NewGuid().ToString();
-            var filePath = BuildPathAndCheckDir(fileId);
+            var filePath = BuildPathAndCheckDir(file.Id.ToString(), true);
 
             var spec = await specHandler.WriteSpecAsync(filePath, new Spec
             (
+                id: file.Id,
                 name: file.Name,
-                cntentType: file.ContentType,
-                path: fileId,
-                height: file.Height,
+                contentType: file.ContentType,
                 width: file.Width,
+                height: file.Height,
                 dateTime: DateTime.UtcNow
             ), cancellationToken).ConfigureAwait(false);
 
@@ -70,7 +71,7 @@ namespace FileUploadApp.Storage.Filesystem
 
             return new UploadResultRow
             {
-                Id = spec.Path,
+                Id = spec.Id.ToString(),
                 Name = file.Name,
                 ContentType = spec.ContentType,
                 Number = file.Number,
@@ -79,7 +80,7 @@ namespace FileUploadApp.Storage.Filesystem
             };
         }
 
-        private string BuildPathAndCheckDir(string fileId)
+        private string BuildPathAndCheckDir(string fileId, bool createIfNotExists)
         {
             if (string.IsNullOrWhiteSpace(fileId))
             {
@@ -92,7 +93,7 @@ namespace FileUploadApp.Storage.Filesystem
                 new string(span.Slice(2, 2)),
                 new string(span.Slice(4, 2)));
 
-            if (!Directory.Exists(foldersPath))
+            if (createIfNotExists && !Directory.Exists(foldersPath))
             {
                 Directory.CreateDirectory(foldersPath);
             }

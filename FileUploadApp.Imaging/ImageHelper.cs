@@ -3,6 +3,7 @@ using FileUploadApp.StreamAdapters;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -24,7 +25,7 @@ namespace FileUploadApp.Imaging
             return image;
         }
 
-        public static Upload Resize(Upload file, Image<Rgba32> original, System.Drawing.Size size, string mime)
+        public static Upload Resize(Upload file, Image<Rgba32> original, System.Drawing.Size size)
         {
             original.Mutate(x => x
                 .Resize(new ResizeOptions
@@ -41,12 +42,22 @@ namespace FileUploadApp.Imaging
                 original.SaveAsJpeg(s);
 
                 return new Upload(
-                    num: file.Number,
-                    name: Upload.PreviewPrefix + file.Name,
-                    contentType: mime,
-                    width: newWidth,
-                    height: newHeight,
-                    streamAdapter: new ByteaStreamAdapter(s.ToArray()));
+                        id: file.PreviewId
+                      , previewId: Guid.Empty
+                      , num: file.Number
+                      , name: Upload.PreviewPrefix + file.Name
+                      , contentType: file.ContentType
+                      , width: newWidth
+                      , height: newHeight
+                      , streamAdapter: new ByteaStreamAdapter(s.ToArray()));
+
+                //return new Upload(
+                //    num: file.Number,
+                //    name: Upload.PreviewPrefix + file.Name,
+                //    contentType: file.ContentType,
+                //    width: newWidth,
+                //    height: newHeight,
+                //    streamAdapter: new ByteaStreamAdapter(s.ToArray()));
             }
 
         }
