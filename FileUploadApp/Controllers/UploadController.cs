@@ -1,42 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using FileUploadApp.Requests;
+﻿using FileUploadApp.Core;
 using FileUploadApp.Domain;
-using FileUploadApp.Interfaces;
-using FileUploadApp.Services;
-using MediatR;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading;
 using FileUploadApp.Events;
+using FileUploadApp.Requests;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace FileUploadApp.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
-    public class UploadController : ControllerBase
+    public class UploadController : BaseApiController
     {
         private readonly UploadsContext uploadedFilesContext;
-        private readonly IMediator mediator;
 
-        public UploadController(UploadsContext uploadedFilesContext, IMediator mediator)
+        public UploadController(UploadsContext uploadedFilesContext, IMediator mediator) : base(mediator)
         {
             this.uploadedFilesContext = uploadedFilesContext;
-            this.mediator = mediator;
         }
 
         [HttpPost("")]
-        public async Task<IActionResult> Post(CancellationToken ct = default(CancellationToken))
+        public async Task<IActionResult> Post(CancellationToken ct = default)
         {
-            var files = uploadedFilesContext.GetList();
+            var files = uploadedFilesContext.YieldAll().ToArray();
+
+            if (!files.Any())
+                return NotFound();
+
             var uploadCommand = new UploadFilesEvent(files);
             var receiveQuery = new GetUploadedResultsQuery(files);
 
-            await mediator.Publish(uploadCommand, ct);
+            await PublishAsync(uploadCommand, ct);
 
-            var uploadResult = await mediator.Send(receiveQuery, ct);
+            var uploadResult = await SendAsync(receiveQuery, ct);
 
             return Ok(uploadResult.Result.Select(x => new
             {

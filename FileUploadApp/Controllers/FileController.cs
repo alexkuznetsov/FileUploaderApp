@@ -1,43 +1,30 @@
-﻿using FileUploadApp.Requests;
+﻿using FileUploadApp.Core;
+using FileUploadApp.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System.IO;
 using System.Threading.Tasks;
 
 namespace FileUploadApp.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
-    public class FileController : ControllerBase
+    public class FileController : BaseApiController
     {
-        private readonly IMediator mediator;
-
-        public FileController(IMediator mediator)
+        public FileController(IMediator mediator) : base(mediator)
         {
-            this.mediator = mediator;
+
         }
 
         [HttpGet("{id}")]
         [ResponseCache(Duration = 5, Location = ResponseCacheLocation.Any)]
         public async Task<IActionResult> Get(string id)
         {
-            var response = await mediator.Send(new DownloadUploadByIdQuery(id))
+            var response = await SendAsync(new DownloadUploadByIdQuery(id))
                 .ConfigureAwait(false);
 
             if (response == null)
-                throw new FileNotFoundException();
+                return NotFound();
 
-            return new FileStreamResult(response.Stream.Stream, response.ContentType);
-
-            //using (Response.Body)
-            //{
-            //    Response.StatusCode = 200;
-            //    Response.ContentType = response.ContentType;
-
-            //    await response.Stream.CopyToAsync(Response.Body);
-
-            //    //return File(stream, response.ContentType, response.Name);
-            //}
+            return File(response.Stream.Stream, response.ContentType);
         }
     }
 }
