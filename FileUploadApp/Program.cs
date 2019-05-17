@@ -19,6 +19,7 @@ namespace FileUploadApp
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .UseShutdownTimeout(TimeSpan.FromSeconds(60)) // set timeout value here
                 .UseStartup<Startup>();
     }
 }
