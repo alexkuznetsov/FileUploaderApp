@@ -20,8 +20,7 @@ namespace FileUploadApp.Domain
             uint height,
             StreamAdapter streamAdapter) : this(Guid.NewGuid(), Guid.NewGuid(), num, name, contentType, width, height, streamAdapter)
         {
-            Width = width;
-            Height = height;
+
         }
 
         public Upload(
@@ -35,6 +34,8 @@ namespace FileUploadApp.Domain
            StreamAdapter streamAdapter) : base(id, num, name, contentType, streamAdapter)
         {
             PreviewId = previewId;
+            Width = width;
+            Height = height;
         }
 
         public void SetSize(uint height, uint width)
