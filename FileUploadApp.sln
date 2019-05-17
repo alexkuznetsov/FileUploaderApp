@@ -27,9 +27,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileUploadApp.StreamAdapter
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileUploadApp.Events", "FileUploadApp.Events\FileUploadApp.Events.csproj", "{7154552B-589E-4A95-AC9D-A5789B0889F0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileUploadApp.Commands", "FileUploadApp.Commands\FileUploadApp.Commands.csproj", "{C31AED92-41B2-42EE-8F84-E66A125F3810}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileUploadApp.Requests", "FileUploadApp.Requests\FileUploadApp.Requests.csproj", "{C31AED92-41B2-42EE-8F84-E66A125F3810}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Events", "Events", "{9B5236DA-39D8-4C44-98C0-47E618C19273}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{3D3BAEED-1584-4B94-A3E3-361C4A5C3860}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileUploadApp.Tests", "FileUploadApp.Tests\FileUploadApp.Tests.csproj", "{04A604CF-3760-489B-8DFD-72CD849076D7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,6 +85,10 @@ Global
 		{C31AED92-41B2-42EE-8F84-E66A125F3810}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C31AED92-41B2-42EE-8F84-E66A125F3810}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C31AED92-41B2-42EE-8F84-E66A125F3810}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04A604CF-3760-489B-8DFD-72CD849076D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04A604CF-3760-489B-8DFD-72CD849076D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04A604CF-3760-489B-8DFD-72CD849076D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04A604CF-3760-489B-8DFD-72CD849076D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -97,6 +105,7 @@ Global
 		{7154552B-589E-4A95-AC9D-A5789B0889F0} = {9B5236DA-39D8-4C44-98C0-47E618C19273}
 		{C31AED92-41B2-42EE-8F84-E66A125F3810} = {9B5236DA-39D8-4C44-98C0-47E618C19273}
 		{9B5236DA-39D8-4C44-98C0-47E618C19273} = {2CCF48F5-DAB2-41E1-982F-F023C1ED9215}
+		{04A604CF-3760-489B-8DFD-72CD849076D7} = {3D3BAEED-1584-4B94-A3E3-361C4A5C3860}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AD87DD4E-6017-46E8-BAE2-390993FA2761}

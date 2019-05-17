@@ -3,6 +3,7 @@ using FileUploadApp.Interfaces;
 using FileUploadApp.StreamAdapters;
 using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FileUploadApp.Storage.Filesystem
@@ -12,21 +13,23 @@ namespace FileUploadApp.Storage.Filesystem
         private readonly string basePath;
         private readonly SpecHandler specHandler;
 
-        public FileSystemStore(string basePath, SpecHandler specHandler)
+        internal FileSystemStore(string basePath
+            , ISerializer serializer
+            , IDeserializer deserializer)
         {
-            if (string.IsNullOrWhiteSpace(basePath))
+            if (string.IsNullOrWhiteSpace(basePath) || !Directory.Exists(basePath))
             {
-                throw new ArgumentException("basePath should be a valid absolute path", nameof(basePath));
+                throw new ArgumentException("basePath should be a valid  path", nameof(basePath));
             }
 
             this.basePath = basePath;
-            this.specHandler = specHandler ?? throw new ArgumentNullException(nameof(specHandler));
+            specHandler = new SpecHandler(serializer, deserializer);
         }
 
-        public async Task<Upload> ReceiveAsync(string fileId)
+        public async Task<Upload> ReceiveAsync(string fileId, CancellationToken cancellationToken = default)
         {
             var filePath = BuildPathAndCheckDir(fileId);
-            var spec = await specHandler.ReadSpecAsync(filePath).ConfigureAwait(false);
+            var spec = await specHandler.ReadSpecAsync(filePath, cancellationToken).ConfigureAwait(false);
 
             if (spec == null)
             {
@@ -44,7 +47,7 @@ namespace FileUploadApp.Storage.Filesystem
             );
         }
 
-        public async Task<UploadResultRow> StoreAsync(Upload file)
+        public async Task<UploadResultRow> StoreAsync(Upload file, CancellationToken cancellationToken = default)
         {
             var fileId = Guid.NewGuid().ToString();
             var filePath = BuildPathAndCheckDir(fileId);
@@ -57,12 +60,12 @@ namespace FileUploadApp.Storage.Filesystem
                 height: file.Height,
                 width: file.Width,
                 dateTime: DateTime.UtcNow
-            )).ConfigureAwait(false);
+            ), cancellationToken).ConfigureAwait(false);
 
             using (var wri = File.OpenWrite(filePath))
             {
-                await file.Stream.CopyToAsync(wri).ConfigureAwait(false);
-                await wri.FlushAsync().ConfigureAwait(false);
+                await file.Stream.CopyToAsync(wri, cancellationToken).ConfigureAwait(false);
+                await wri.FlushAsync(cancellationToken).ConfigureAwait(false);
             }
 
             return new UploadResultRow

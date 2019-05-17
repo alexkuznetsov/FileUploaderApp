@@ -1,12 +1,11 @@
 ﻿using FileUploadApp.Domain;
-using MediatR;
 using System.Collections.Generic;
 
-namespace FileUploadApp.Commands
+namespace FileUploadApp.Events
 {
-    public class UploadFilesCommand : IRequest<UploadResult>
+    public class UploadFilesEvent : GenericEvent
     {
-        public UploadFilesCommand(IEnumerable<Upload> uploadedFiles)
+        public UploadFilesEvent(IEnumerable<Upload> uploadedFiles)
         {
             UploadedFiles = uploadedFiles;
         }

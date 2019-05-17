@@ -1,5 +1,5 @@
-﻿using FileUploadApp.Commands;
-using FileUploadApp.Domain;
+﻿using FileUploadApp.Domain;
+using FileUploadApp.Events;
 using FileUploadApp.Imaging;
 using FileUploadApp.Interfaces;
 using MediatR;
@@ -9,22 +9,22 @@ using System.Threading.Tasks;
 
 namespace FileUploadApp.Handlers
 {
-    public class UploadFilesCommandHandler : IRequestHandler<UploadFilesCommand, UploadResult>
+    public class UploadFilesCommandHandler : INotificationHandler<UploadFilesEvent>
     {
         private readonly IStorage<Upload, UploadResultRow> storage;
         private readonly AppConfiguration appConfiguration;
 
         public UploadFilesCommandHandler(IStorageProvider<Upload, UploadResultRow> storageProvider, AppConfiguration appConfiguration)
-        { 
+        {
             storage = storageProvider.GetStorage();
             this.appConfiguration = appConfiguration;
         }
 
-        public Task<UploadResult> Handle(UploadFilesCommand request, CancellationToken cancellationToken)
+        public async Task Handle(UploadFilesEvent notification, CancellationToken cancellationToken)
         {
-            var tasks = request.UploadedFiles.Select(x => SaveFileAsync(x));
+            var tasks = notification.UploadedFiles.Select(x => SaveFileAsync(x));
 
-            return Task.WhenAll(tasks)
+            await Task.WhenAll(tasks)
                 .ContinueWith(x => new UploadResult(x.Result));
         }
 
@@ -41,9 +41,7 @@ namespace FileUploadApp.Handlers
 
         private async Task<Upload> CreatePreviewAsync(Upload origin)
         {
-            using (var image = await ImageHelper.CreateImageAsync(origin)
-                .ConfigureAwait(false))
-
+            using (var image = await ImageHelper.CreateImageAsync(origin).ConfigureAwait(false))
             {
                 return ImageHelper.Resize(origin, image, appConfiguration.PreviewSize, origin.ContentType);
             }

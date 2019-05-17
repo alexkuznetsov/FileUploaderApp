@@ -2,11 +2,11 @@
 using MediatR;
 using System;
 
-namespace FileUploadApp.Commands
+namespace FileUploadApp.Requests
 {
-    public class DownloadUriCommand : IRequest<DownloadUriResponse>
+    public class DownloadUriQuery : IRequest<DownloadUriResponse>
     {
-        public DownloadUriCommand(Uri uri)
+        public DownloadUriQuery(Uri uri)
         {
             Uri = uri;
         }

@@ -1,4 +1,4 @@
-﻿using FileUploadApp.Commands;
+﻿using FileUploadApp.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
@@ -21,7 +21,7 @@ namespace FileUploadApp.Controllers
         [ResponseCache(Duration = 5, Location = ResponseCacheLocation.Any)]
         public async Task<IActionResult> Get(string id)
         {
-            var response = await mediator.Send(new DownloadUploadByIdCommand(id))
+            var response = await mediator.Send(new DownloadUploadByIdQuery(id))
                 .ConfigureAwait(false);
 
             if (response == null)

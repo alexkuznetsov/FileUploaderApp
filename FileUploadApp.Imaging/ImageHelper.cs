@@ -10,8 +10,6 @@ namespace FileUploadApp.Imaging
 {
     public class ImageHelper
     {
-        private static readonly string PreviewPrefix = "p_";
-
         public static async Task<Image<Rgba32>> CreateImageAsync(Upload file)
         {
             var bytes = await file.Stream.AsRawBytesAsync()
@@ -44,7 +42,7 @@ namespace FileUploadApp.Imaging
 
                 return new Upload(
                     num: file.Number,
-                    name: PreviewPrefix + file.Name,
+                    name: Upload.PreviewPrefix + file.Name,
                     contentType: mime,
                     width: newWidth,
                     height: newHeight,

@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FileUploadApp.Commands;
+using FileUploadApp.Requests;
 using FileUploadApp.Domain;
 using FileUploadApp.Interfaces;
 using FileUploadApp.Services;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading;
+using FileUploadApp.Events;
 
 namespace FileUploadApp.Controllers
 {
@@ -26,18 +28,23 @@ namespace FileUploadApp.Controllers
         }
 
         [HttpPost("")]
-        public async Task<IActionResult> Post()
+        public async Task<IActionResult> Post(CancellationToken ct = default(CancellationToken))
         {
-            var saveFilesResult = await mediator.Send(new UploadFilesCommand(uploadedFilesContext.GetList()));
-            var allFileNames = saveFilesResult.Result.Select(x => new
+            var files = uploadedFilesContext.GetList();
+            var uploadCommand = new UploadFilesEvent(files);
+            var receiveQuery = new GetUploadedResultsQuery(files);
+
+            await mediator.Publish(uploadCommand, ct);
+
+            var uploadResult = await mediator.Send(receiveQuery, ct);
+
+            return Ok(uploadResult.Result.Select(x => new
             {
                 number = x.Number,
                 name = x.Name,
                 fileId = x.Id,
                 previewId = x.Preview.Id
-            }).ToArray();
-
-            return Ok(allFileNames);
+            }).ToArray());
         }
     }
 }

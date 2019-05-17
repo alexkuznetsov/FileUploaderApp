@@ -1,4 +1,4 @@
-﻿using FileUploadApp.Commands;
+﻿using FileUploadApp.Requests;
 using FileUploadApp.Core;
 using FileUploadApp.Core.Middlewares;
 using FileUploadApp.Core.Serialization;
@@ -48,7 +48,6 @@ namespace FileUploadApp
             });
 
             services.AddSingleton<ContentDownloaderFactory>();
-            services.AddSingleton<SpecHandler>();
             services.AddSingleton(Configuration.BindTo<StorageConfiguration>(ConfigConstants.FileStoreNode));
             services.AddSingleton<IStorageProvider<Upload, UploadResultRow>, FilesystemStorageProvider>();
 
@@ -59,7 +58,7 @@ namespace FileUploadApp
             services.Scan(scan => scan
                .FromAssembliesOf(typeof(IMediator)
                     , typeof(GenericEvent)
-                    , typeof(DownloadUriCommand)
+                    , typeof(DownloadUriQuery)
                     , typeof(UploadFilesCommandHandler))
                .AddClasses()
                .AsImplementedInterfaces());

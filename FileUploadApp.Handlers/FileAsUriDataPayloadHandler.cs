@@ -1,4 +1,4 @@
-﻿using FileUploadApp.Commands;
+﻿using FileUploadApp.Requests;
 using FileUploadApp.Domain;
 using FileUploadApp.Events;
 using FileUploadApp.StreamAdapters;
@@ -29,12 +29,12 @@ namespace FileUploadApp.Handlers
             var result = await Task.WhenAll(tasks).ConfigureAwait(false);
             var @event = new ProcessFileDescriptorEvent(result);
 
-            await mediator.Publish(@event).ConfigureAwait(false);
+            await mediator.Publish(@event, cancellationToken).ConfigureAwait(false);
         }
 
         private async Task<FileDescriptor> DownloadDataAsync(uint number, Uri uri, CancellationToken cancellationToken)
         {
-            var data = await mediator.Send(new DownloadUriCommand(uri), cancellationToken)
+            var data = await mediator.Send(new DownloadUriQuery(uri), cancellationToken)
                 .ConfigureAwait(false);
 
             return new FileDescriptor(

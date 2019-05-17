@@ -2,10 +2,11 @@
 using FileUploadApp.Interfaces;
 using System.IO;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace FileUploadApp.Storage.Filesystem
 {
-    public class SpecHandler
+    internal class SpecHandler
     {
         private static readonly string SpecFileExtension = ".spec";
 
@@ -20,7 +21,7 @@ namespace FileUploadApp.Storage.Filesystem
 
         private static string FormatSpecFilePath(string file) => file + SpecFileExtension;
 
-        public async Task<Spec> ReadSpecAsync(string file, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<Spec> ReadSpecAsync(string file, CancellationToken cancellationToken = default)
         {
             var specFilePath = FormatSpecFilePath(file);
 
@@ -36,7 +37,7 @@ namespace FileUploadApp.Storage.Filesystem
             return default;
         }
 
-        public async Task<Spec> WriteSpecAsync(string file, Spec spec, System.Threading.CancellationToken cancellationToken = default)
+        public async Task<Spec> WriteSpecAsync(string file, Spec spec, CancellationToken cancellationToken = default)
         {
             var specFilePath = FormatSpecFilePath(file);
 
