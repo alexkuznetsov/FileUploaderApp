@@ -9,23 +9,30 @@ namespace FileUploadApp.Services
     {
         private readonly ICollection<string> contentTypes;
         private readonly IReadOnlyDictionary<string, string> mappings;
+        private readonly AppConfiguration appConfiguration;
 
         public ContentTypeTestUtility(AppConfiguration appConfiguration)
         {
             contentTypes = new HashSet<string>(appConfiguration.AllowedContentTypes);
             mappings = appConfiguration.Mappings;
+            this.appConfiguration = appConfiguration;
         }
 
         public bool IsAllowed(string contentType) => contentTypes.Contains(contentType);
 
         public string DetectContentType(ReadOnlySpan<byte> bytes)
         {
-            var base64 = Convert.ToBase64String(bytes, Base64FormattingOptions.None);
+            foreach (var c in appConfiguration.GetFingerprints())
+            {
+                if (bytes.SequenceEqual(c.Item1))
+                    return c.Item2;
+            }
 
-            return DetectContentType(base64);
+            return MimeConstants.OctetStreamMime;
+
         }
 
-
+        [Obsolete("Данный метод не рекомендуем")]
         public string DetectContentType(string base64)
         {
             foreach (var p in mappings)
@@ -33,21 +40,6 @@ namespace FileUploadApp.Services
                 if (base64.StartsWith(p.Key))
                     return p.Value;
             }
-
-            //if (base64.StartsWith(MimeConstants.PngB64))
-            //    return MimeConstants.PngMime;
-
-            //if (base64.StartsWith(MimeConstants.JpgB64))
-            //    return MimeConstants.JpgMime;
-
-            //if (base64.StartsWith(MimeConstants.BitmapB64))
-            //    return MimeConstants.BitmapMime;
-
-            //if (base64.StartsWith(MimeConstants.TiffB64))
-            //    return MimeConstants.TiffMime;
-
-            //if (base64.StartsWith(MimeConstants.GifB64))
-            //    return MimeConstants.GifMime;
 
             return MimeConstants.OctetStreamMime;
         }
