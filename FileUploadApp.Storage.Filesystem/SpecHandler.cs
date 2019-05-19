@@ -1,8 +1,8 @@
-﻿using System;
-using FileUploadApp.Interfaces;
+﻿using FileUploadApp.Interfaces;
+using System;
 using System.IO;
-using System.Threading.Tasks;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace FileUploadApp.Storage.Filesystem
 {
@@ -30,21 +30,26 @@ namespace FileUploadApp.Storage.Filesystem
                 var contents = await File.ReadAllTextAsync(specFilePath, cancellationToken)
                     .ConfigureAwait(false);
 
-                return await deserializer.DeserializeAsync<Spec>(contents)
-                    .ConfigureAwait(false);
+                return deserializer.Deserialize<Spec>(contents);
             }
 
             return default;
         }
 
-        public async Task<Spec> WriteSpecAsync(string file, Spec spec, CancellationToken cancellationToken = default)
+        public async Task<Spec> WriteSpecAsync(string path, Domain.Upload file, CancellationToken cancellationToken = default)
         {
-            var specFilePath = FormatSpecFilePath(file);
+            var spec = new Spec
+            (
+                id: file.Id,
+                name: file.Name,
+                contentType: file.ContentType,
+                dateTime: DateTime.UtcNow);
+
+            var specFilePath = FormatSpecFilePath(path);
 
             using (var writer = File.CreateText(specFilePath))
             {
-                var contents = await serializer.SerializeAsync(spec)
-                    .ConfigureAwait(false);
+                var contents = serializer.Serialize(spec);
 
                 await writer.WriteAsync(contents.AsMemory(), cancellationToken)
                     .ConfigureAwait(false);

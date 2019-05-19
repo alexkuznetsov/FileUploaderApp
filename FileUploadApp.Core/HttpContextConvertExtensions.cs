@@ -10,28 +10,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace FileUploadApp.Core
 {
     internal static class HttpContextConvertExtensions
     {
-        private class FormFileDecorator : IFormFileDecorator
-        {
-            private readonly IFormFile formFile;
-
-            public FormFileDecorator(IFormFile formFile)
-            {
-                this.formFile = formFile;
-            }
-
-            public Task CopyToAsync(Stream target, CancellationToken cancellationToken = default)
-                => formFile.CopyToAsync(target, cancellationToken);
-
-            public Stream GetStream() => formFile.OpenReadStream();
-        }
-
         public static async Task<IEnumerable<GenericEvent>> AssumeAsUploadRequestEvents(this HttpContext httpContext, IDeserializer deserializer)
         {
             var request = httpContext.Request.EnableRewind();
@@ -62,13 +46,13 @@ namespace FileUploadApp.Core
 
             foreach (var f in form.Files)
             {
-                filesCollection.Add(new FileDescriptor
-                    (
-                        num: number++,
-                        contentType: f.ContentType,
-                        name: f.FileName,
-                        stream: new FormFileStreamAdapter(new FormFileDecorator(f))
-                    ));
+                filesCollection.Add(new FileDescriptor(
+                    id: Guid.NewGuid(),
+                    number: number++,
+                    name: f.Name,
+                    contentType: f.ContentType,
+                    streamAdapter: new FormFileStreamAdapter(new FormFileDecorator(f))
+                ));
             }
 
             return new[] { new ProcessFileDescriptorEvent(filesCollection.ToArray()) };
@@ -82,17 +66,19 @@ namespace FileUploadApp.Core
             return new[] { new PlainTextRequestEvent(text) };
         }
 
-        private static IEnumerable<FileDescriptor> AsFileDesciptors(this IEnumerable<Base64FilePayload> plds)
+        private static IEnumerable<FileDescriptor> AsFileDesciptors(this IEnumerable<Base64FilePayload> files)
         {
-            var i = 0U;
-            foreach (var p in plds)
+            var number = 0U;
+            foreach (var f in files)
             {
-                var bytea = Convert.FromBase64String(p.Base64).AsMemory();
+                var bytea = Convert.FromBase64String(f.Base64).AsMemory();
+
                 yield return new FileDescriptor(
-                    num: i++,
-                    name: p.Name,
+                    id: Guid.NewGuid(),
+                    number: number++,
+                    name: f.Name,
                     contentType: string.Empty,
-                    stream: new ByteaStreamAdapter(bytea));
+                    streamAdapter: new ByteaStreamAdapter(bytea));
             }
         }
 
@@ -117,7 +103,7 @@ namespace FileUploadApp.Core
         {
             var content = await request.ReadAsPlainTextAsync().ConfigureAwait(false);
 
-            return await deserializer.DeserializeAsync<T>(content).ConfigureAwait(false);
+            return deserializer.Deserialize<T>(content);
         }
     }
 }

@@ -33,7 +33,7 @@ namespace FileUploadApp.Storage.Filesystem
 
             if (spec == null)
             {
-                throw new ArgumentNullException(nameof(spec), "File saved with errors");
+                return null;
             }
 
             return new Upload
@@ -43,8 +43,6 @@ namespace FileUploadApp.Storage.Filesystem
                 num: 0,
                 name: spec.Name,
                 contentType: spec.ContentType,
-                width: spec.Width,
-                height: spec.Height,
                 streamAdapter: new DownloadableStreamAdapter(filePath)
             );
         }
@@ -52,16 +50,7 @@ namespace FileUploadApp.Storage.Filesystem
         public async Task<UploadResultRow> StoreAsync(Upload file, CancellationToken cancellationToken = default)
         {
             var filePath = BuildPathAndCheckDir(file.Id.ToString(), true);
-
-            var spec = await specHandler.WriteSpecAsync(filePath, new Spec
-            (
-                id: file.Id,
-                name: file.Name,
-                contentType: file.ContentType,
-                width: file.Width,
-                height: file.Height,
-                dateTime: DateTime.UtcNow
-            ), cancellationToken).ConfigureAwait(false);
+            var spec = await specHandler.WriteSpecAsync(filePath, file, cancellationToken).ConfigureAwait(false);
 
             using (var wri = File.OpenWrite(filePath))
             {
@@ -70,14 +59,11 @@ namespace FileUploadApp.Storage.Filesystem
             }
 
             return new UploadResultRow
-            {
-                Id = spec.Id.ToString(),
-                Name = file.Name,
-                ContentType = spec.ContentType,
-                Number = file.Number,
-                Height = spec.Height,
-                Width = spec.Width,
-            };
+            (
+                id: spec.Id,
+                number: file.Number,
+                name: spec.Name,
+                contentType: spec.ContentType);
         }
 
         private string BuildPathAndCheckDir(string fileId, bool createIfNotExists)
@@ -89,7 +75,8 @@ namespace FileUploadApp.Storage.Filesystem
 
             var span = fileId.ToCharArray();
 
-            var foldersPath = Path.Combine(basePath, new string(span.Slice(0, 2)),
+            var foldersPath = Path.Combine(basePath, 
+                new string(span.Slice(0, 2)),
                 new string(span.Slice(2, 2)),
                 new string(span.Slice(4, 2)));
 

@@ -38,10 +38,11 @@ namespace FileUploadApp.Handlers
                 .ConfigureAwait(false);
 
             return new FileDescriptor(
-                num: number,
+                id: Guid.NewGuid(),
+                number: number,
                 name: Path.GetFileName(uri.LocalPath),
                 contentType: data.ContentType,
-                stream: new ByteaStreamAdapter(data.Bytea)
+                streamAdapter: new ByteaStreamAdapter(data.Bytea)
              );
         }
     }

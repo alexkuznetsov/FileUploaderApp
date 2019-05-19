@@ -5,29 +5,62 @@ using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FileUploadApp.Imaging
 {
-    public class ImageHelper
+    public class ImageHelper : IDisposable
     {
-        public static async Task<Image<Rgba32>> CreateImageAsync(Upload file)
+        private bool disposed;
+
+        private readonly Upload file;
+        private readonly Image<Rgba32> image;
+
+        public static async Task<ImageHelper> FromUploadAsync(Upload file, CancellationToken cancellationToken = default)
         {
-            var bytes = await file.Stream.AsRawBytesAsync()
+            var bytes = await file.Stream.AsRawBytesAsync(cancellationToken)
                 .ConfigureAwait(false);
 
             var image = Image.Load(bytes.ToArray());
 
-            file.SetSize(
-                height: (uint)image.Height,
-                width: (uint)image.Width);
-
-            return image;
+            return new ImageHelper(file, image);
         }
 
-        public static Upload Resize(Upload file, Image<Rgba32> original, System.Drawing.Size size)
+        private ImageHelper(Upload file, Image<Rgba32> image)
         {
-            original.Mutate(x => x
+            this.file = file;
+            this.image = image;
+        }
+
+        ~ImageHelper()
+        {
+            Dispose(false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool disposing)
+        {
+            if (disposed)
+                return;
+
+            if (disposing)
+            {
+                if (image != null)
+                    image.Dispose();
+
+                disposed = true;
+            }
+        }
+
+        public Upload Resize(System.Drawing.Size size)
+        {
+            image.Mutate(x => x
                 .Resize(new ResizeOptions
                 {
                     Size = new SixLabors.Primitives.Size(size.Width, size.Height),
@@ -36,10 +69,7 @@ namespace FileUploadApp.Imaging
 
             using (var s = new MemoryStream())
             {
-                var newHeight = (uint)original.Height;
-                var newWidth = (uint)original.Width;
-
-                original.SaveAsJpeg(s);
+                image.SaveAsJpeg(s);
 
                 return new Upload(
                         id: file.PreviewId
@@ -47,17 +77,7 @@ namespace FileUploadApp.Imaging
                       , num: file.Number
                       , name: Upload.PreviewPrefix + file.Name
                       , contentType: file.ContentType
-                      , width: newWidth
-                      , height: newHeight
                       , streamAdapter: new ByteaStreamAdapter(s.ToArray()));
-
-                //return new Upload(
-                //    num: file.Number,
-                //    name: Upload.PreviewPrefix + file.Name,
-                //    contentType: file.ContentType,
-                //    width: newWidth,
-                //    height: newHeight,
-                //    streamAdapter: new ByteaStreamAdapter(s.ToArray()));
             }
 
         }

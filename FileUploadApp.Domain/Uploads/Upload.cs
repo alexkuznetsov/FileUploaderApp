@@ -4,21 +4,16 @@ namespace FileUploadApp.Domain
 {
     public class Upload : FileDescriptor
     {
-        public static readonly string PreviewPrefix = "p_";
-
-        public uint Width { get; private set; }
-
-        public uint Height { get; private set; }
+        public static readonly string PreviewPrefix = "preview_";
 
         public Guid PreviewId { get; }
 
+        [Obsolete("Требуется избавиться от данного конструктора и перейти на полную версию")]
         public Upload(
             uint num,
             string name,
             string contentType,
-            uint width,
-            uint height,
-            StreamAdapter streamAdapter) : this(Guid.NewGuid(), Guid.NewGuid(), num, name, contentType, width, height, streamAdapter)
+            StreamAdapter streamAdapter) : this(Guid.NewGuid(), Guid.NewGuid(), num, name, contentType, streamAdapter)
         {
 
         }
@@ -29,19 +24,9 @@ namespace FileUploadApp.Domain
            uint num,
            string name,
            string contentType,
-           uint width,
-           uint height,
            StreamAdapter streamAdapter) : base(id, num, name, contentType, streamAdapter)
         {
             PreviewId = previewId;
-            Width = width;
-            Height = height;
-        }
-
-        public void SetSize(uint height, uint width)
-        {
-            Height = height;
-            Width = width;
         }
     }
 }

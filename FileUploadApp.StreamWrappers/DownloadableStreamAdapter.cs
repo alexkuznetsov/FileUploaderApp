@@ -16,7 +16,7 @@ namespace FileUploadApp.StreamAdapters
             this.pathToFile = pathToFile;
         }
 
-        public override Task<ReadOnlyMemory<byte>> AsBytesSlice(int len, CancellationToken cancellationToken = default)
+        public override Task<ReadOnlyMemory<byte>> AsBytesSliceAsync(int len, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }

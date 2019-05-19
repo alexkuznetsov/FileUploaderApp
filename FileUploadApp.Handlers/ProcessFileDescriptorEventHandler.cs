@@ -2,6 +2,7 @@
 using FileUploadApp.Events;
 using FileUploadApp.Interfaces;
 using MediatR;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -37,13 +38,15 @@ namespace FileUploadApp.Handlers
 
             if (string.IsNullOrEmpty(f.ContentType))
             {
-                var bytes = await f.Stream.AsBytesSlice(MinBytesForDetection, cancellationToken);
+                var bytes = await f.Stream.AsBytesSliceAsync(MinBytesForDetection, cancellationToken);
                 contentType = contentTypeTestUtility.DetectContentType(bytes.Span);
             }
 
             if (contentTypeTestUtility.IsAllowed(contentType))
             {
                 uploadedFilesContext.Add(
+                    id: f.Id,
+                    previewId: Guid.Empty,
                     number: f.Number,
                     name: f.Name,
                     contentType: contentType,

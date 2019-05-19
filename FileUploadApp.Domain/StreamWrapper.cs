@@ -13,6 +13,6 @@ namespace FileUploadApp.Domain
 
         public abstract Task<ReadOnlyMemory<byte>> AsRawBytesAsync(CancellationToken cancellationToken = default);
 
-        public abstract Task<ReadOnlyMemory<byte>> AsBytesSlice(int len, CancellationToken cancellationToken = default);
+        public abstract Task<ReadOnlyMemory<byte>> AsBytesSliceAsync(int len, CancellationToken cancellationToken = default);
     }
 }

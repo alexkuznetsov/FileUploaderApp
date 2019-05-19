@@ -1,7 +1,14 @@
-﻿namespace FileUploadApp.Domain
+﻿using System;
+
+namespace FileUploadApp.Domain
 {
-    public class UploadResultRow : UploadResultRowBase
+    public class UploadResultRow : FileEntity
     {
-        public UploadResultRowBase Preview { get; set; }
+        public UploadResultRow(Guid id, uint number, string name, string contentType) :
+            base(id, number, name, contentType)
+        {
+        }
+
+        public FileEntity Preview { get; set; }
     }
 }

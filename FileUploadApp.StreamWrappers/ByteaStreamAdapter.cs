@@ -22,7 +22,7 @@ namespace FileUploadApp.StreamAdapters
             return Task.FromResult(_bytea);
         }
 
-        public override Task<ReadOnlyMemory<byte>> AsBytesSlice(int len, CancellationToken cancellationToken = default)
+        public override Task<ReadOnlyMemory<byte>> AsBytesSliceAsync(int len, CancellationToken cancellationToken = default)
         {
             return Task.FromResult(_bytea.Slice(0, len));
         }

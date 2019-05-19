@@ -30,20 +30,32 @@ namespace FileUploadApp.Handlers
 
         private async Task<UploadResultRow> SaveFileAsync(Upload file)
         {
-            var preview = await CreatePreviewAsync(file);
-            var savedOriginal = await storage.StoreAsync(file).ConfigureAwait(false);
-            var savedPriview = await storage.StoreAsync(preview).ConfigureAwait(false);
+            Upload preview = null;
 
-            savedOriginal.Preview = savedPriview;
+            if (file.IsImage())
+            {
+                preview = await CreatePreviewAsync(file);
+            }
 
-            return savedOriginal;
+            var result = await storage.StoreAsync(file).ConfigureAwait(false);
+
+            if (preview != null)
+            {
+                var previewResult = await storage.StoreAsync(preview).ConfigureAwait(false);
+
+                result.Preview = previewResult;
+            }
+
+            return result;
         }
 
-        private async Task<Upload> CreatePreviewAsync(Upload origin)
+        private async Task<Upload> CreatePreviewAsync(Upload origin, CancellationToken cancellationToken = default)
         {
-            using (var image = await ImageHelper.CreateImageAsync(origin).ConfigureAwait(false))
+            using (var image = await ImageHelper
+                    .FromUploadAsync(origin, cancellationToken)
+                    .ConfigureAwait(false))
             {
-                return ImageHelper.Resize(origin, image, appConfiguration.PreviewSize);
+                return image.Resize(appConfiguration.PreviewSize);
             }
         }
     }

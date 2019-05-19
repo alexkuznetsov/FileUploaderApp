@@ -30,31 +30,17 @@ namespace FileUploadApp.Handlers
 
         private async Task<UploadResultRow> ReceiveAsync(Tuple<Guid, Guid> fileIdPreviewId, CancellationToken cancellationToken)
         {
-            var file = await storage.ReceiveAsync(fileIdPreviewId.Item1.ToString()
-                , cancellationToken);
-            var preview = await storage.ReceiveAsync(fileIdPreviewId.Item2.ToString()
-                , cancellationToken);
+            var file = await storage.ReceiveAsync(fileIdPreviewId.Item1.ToString(), cancellationToken);
+            var row = new UploadResultRow(file.Id, file.Number, file.Name, file.ContentType);
 
-            var row = new UploadResultRow
+            if (file.IsImage())
             {
-                Preview = new UploadResultRowBase()
-            };
+                var preview = await storage.ReceiveAsync(fileIdPreviewId.Item2.ToString(), cancellationToken);
 
-            Fill(row, file);
-            Fill(row.Preview, preview);
+                row.Preview = new FileEntity(preview.Id, preview.Number, preview.Name, preview.ContentType);
+            }
 
             return row;
-        }
-
-        private void Fill<TModel>(TModel model, Upload file)
-            where TModel : UploadResultRowBase
-        {
-            model.ContentType = file.ContentType;
-            model.Height = file.Height;
-            model.Id = file.Id.ToString();
-            model.Name = file.Name;
-            model.Number = file.Number;
-            model.Width = file.Width;
         }
     }
 }

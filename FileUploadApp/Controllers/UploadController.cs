@@ -40,7 +40,7 @@ namespace FileUploadApp.Controllers
                 number = x.Number,
                 name = x.Name,
                 fileId = x.Id,
-                previewId = x.Preview.Id
+                previewId = x.Preview?.Id
             }).ToArray());
         }
     }

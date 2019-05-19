@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace FileUploadApp.Domain
 {
@@ -6,14 +7,14 @@ namespace FileUploadApp.Domain
     {
         private readonly Queue<Upload> queue = new Queue<Upload>();
 
-        public void Add(uint number, string name, string contentType, StreamAdapter streamAdapter)
+        public void Add(Guid id, Guid previewId, uint number, string name, string contentType, StreamAdapter streamAdapter)
         {
             Add(new Upload(
+                        id: id,
+                        previewId: previewId,
                         num: number,
                         name: name,
                         contentType: contentType,
-                        height: 0,
-                        width: 0,
                         streamAdapter: streamAdapter));
         }
 

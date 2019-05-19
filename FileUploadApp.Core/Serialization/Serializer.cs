@@ -1,14 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using FileUploadApp.Interfaces;
+using Newtonsoft.Json;
 
 namespace FileUploadApp.Core.Serialization
 {
-    public class Serializer : Interfaces.ISerializer
+    public class Serializer : ISerializer
     {
-        public Task<string> SerializeAsync(object @object)
-        {
-            var text = Newtonsoft.Json.JsonConvert.SerializeObject(@object);
-
-            return Task.FromResult(text);
-        }
+        public string Serialize(object @object) =>
+            JsonConvert.SerializeObject(@object);
     }
 }

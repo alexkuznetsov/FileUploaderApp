@@ -1,9 +1,7 @@
-﻿using System.Threading.Tasks;
-
-namespace FileUploadApp.Interfaces
+﻿namespace FileUploadApp.Interfaces
 {
     public interface IDeserializer
     {
-        Task<TObject> DeserializeAsync<TObject>(string payload);
+        TObject Deserialize<TObject>(string payload);
     }
 }

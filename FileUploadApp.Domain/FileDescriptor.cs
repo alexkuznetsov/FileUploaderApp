@@ -2,29 +2,18 @@
 
 namespace FileUploadApp.Domain
 {
-    public class FileDescriptor
+    public class FileDescriptor : FileEntity
     {
-        public Guid Id { get; }
-
-        public uint Number { get; }
-
-        public string Name { get; }
-
-        public string ContentType { get; }
-
         public StreamAdapter Stream { get; }
 
+        [Obsolete("Требуется избавиться от данного конструктора")]
         public FileDescriptor(uint num, string name, string contentType, StreamAdapter stream)
             : this(Guid.NewGuid(), num, name, contentType, stream)
         {
         }
 
-        public FileDescriptor(Guid id, uint number, string name, string contentType, StreamAdapter streamAdapter)
+        public FileDescriptor(Guid id, uint number, string name, string contentType, StreamAdapter streamAdapter) : base(id, number, name, contentType)
         {
-            Id = id;
-            Number = number;
-            Name = name;
-            ContentType = contentType;
             Stream = streamAdapter;
         }
     }

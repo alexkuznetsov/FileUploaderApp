@@ -18,21 +18,13 @@ namespace FileUploadApp.Storage.Filesystem
         [DataMember(Name = "crat", IsRequired = true, EmitDefaultValue = false, Order = 2)]
         public DateTime CreatedDate { get; set; }
 
-        [DataMember(Name = "wdt", IsRequired = true, EmitDefaultValue = false, Order = 4)]
-        public uint Width { get; set; }
-
-        [DataMember(Name = "hgt", IsRequired = true, EmitDefaultValue = false, Order = 4)]
-        public uint Height { get; set; }
-
         public Spec() { }
 
-        public Spec(Guid id, string name, string contentType, uint width, uint height, DateTime? dateTime = null)
+        public Spec(Guid id, string name, string contentType, DateTime? dateTime = null)
         {
             Id = id;
             Name = name;
             ContentType = contentType;
-            Width = width;
-            Height = height;
             CreatedDate = dateTime ?? DateTime.UtcNow;
         }
     }
