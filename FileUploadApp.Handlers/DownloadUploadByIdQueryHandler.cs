@@ -9,14 +9,14 @@ namespace FileUploadApp.Handlers
 {
     public class DownloadUploadByIdQueryHandler : IRequestHandler<DownloadUploadByIdQuery, Upload>
     {
-        private readonly IStorage<Upload, UploadResultRow> storage;
+        private readonly IStore<Upload, UploadResultRow> store;
 
-        public DownloadUploadByIdQueryHandler(IStorageProvider<Upload, UploadResultRow> storageProvider)
+        public DownloadUploadByIdQueryHandler(IStore<Upload, UploadResultRow> store)
         {
-            storage = storageProvider.GetStorage();
+            this.store = store;
         }
 
-        public Task<Upload> Handle(DownloadUploadByIdQuery request, CancellationToken cancellationToken)
-            => storage.ReceiveAsync(request.Id, cancellationToken);
+        public Task<Upload> Handle(DownloadUploadByIdQuery request, CancellationToken cancellationToken = default)
+            => store.ReceiveAsync(request.Id, cancellationToken);
     }
 }

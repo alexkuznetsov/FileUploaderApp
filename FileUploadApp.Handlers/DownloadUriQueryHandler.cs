@@ -1,6 +1,6 @@
 ﻿using FileUploadApp.Domain.Dirty;
+using FileUploadApp.Interfaces;
 using FileUploadApp.Requests;
-using FileUploadApp.Services;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,9 +9,9 @@ namespace FileUploadApp.Handlers
 {
     public class DownloadUriQueryHandler : IRequestHandler<DownloadUriQuery, DownloadUriResponse>
     {
-        private readonly ContentDownloaderFactory contentDownloaderFactory;
+        private readonly IContentDownloaderFactory<DownloadUriResponse> contentDownloaderFactory;
 
-        public DownloadUriQueryHandler(ContentDownloaderFactory contentDownloaderFactory)
+        public DownloadUriQueryHandler(IContentDownloaderFactory<DownloadUriResponse> contentDownloaderFactory)
         {
             this.contentDownloaderFactory = contentDownloaderFactory;
         }

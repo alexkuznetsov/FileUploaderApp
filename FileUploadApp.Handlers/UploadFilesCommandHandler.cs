@@ -11,12 +11,12 @@ namespace FileUploadApp.Handlers
 {
     public class UploadFilesCommandHandler : INotificationHandler<UploadFilesEvent>
     {
-        private readonly IStorage<Upload, UploadResultRow> storage;
+        private readonly IStore<Upload, UploadResultRow> store;
         private readonly AppConfiguration appConfiguration;
 
-        public UploadFilesCommandHandler(IStorageProvider<Upload, UploadResultRow> storageProvider, AppConfiguration appConfiguration)
+        public UploadFilesCommandHandler(IStore<Upload, UploadResultRow> store, AppConfiguration appConfiguration)
         {
-            storage = storageProvider.GetStorage();
+            this.store = store;
             this.appConfiguration = appConfiguration;
         }
 
@@ -30,13 +30,13 @@ namespace FileUploadApp.Handlers
 
         private async Task<UploadResultRow> SaveFileAsync(Upload file)
         {
-            var result = await storage.StoreAsync(file).ConfigureAwait(false);
+            var result = await store.StoreAsync(file).ConfigureAwait(false);
 
             if (file.IsImage())
             {
                 var preview = await CreatePreviewAsync(file);
 
-                result.Preview = await storage.StoreAsync(preview).ConfigureAwait(false);
+                result.Preview = await store.StoreAsync(preview).ConfigureAwait(false);
             }
 
             return result;

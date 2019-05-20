@@ -17,7 +17,7 @@
         public static readonly string GifB64 = "R0lG";
         public static readonly string GifMime = "image/gif";
 
-
+        public static readonly string SevenZipMime = "application/x-7z-compressed";
         public static readonly string OctetStreamMime = "binary/octet-stream";
     }
 }

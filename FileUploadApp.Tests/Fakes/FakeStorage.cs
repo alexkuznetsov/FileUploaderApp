@@ -1,15 +1,15 @@
 ﻿using FileUploadApp.Domain;
+using FileUploadApp.Storage;
 using System;
 
-namespace FileUploadApp.Storage.Filesystem
+namespace FileUploadApp.Tests.Fakes
 {
-    public class FileSystemStore : Store<Upload, UploadResultRow>
+    internal class FakeStorage : Store<Upload, UploadResultRow>
     {
-        public FileSystemStore(
+        public FakeStorage(
               IStoreBackend<Guid, Metadata> metadataRepository
             , IStoreBackend<Guid, Upload> storeBackend
-            , IFileStreamProvider<Guid, StreamAdapter> fileStreamProvider) :
-                base(metadataRepository, storeBackend, fileStreamProvider)
+            , IFileStreamProvider<Guid, StreamAdapter> fileStreamProvider) : base(metadataRepository, storeBackend, fileStreamProvider)
         {
         }
 

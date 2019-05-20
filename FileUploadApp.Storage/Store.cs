@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FileUploadApp.Storage
 {
-    public abstract class Store<TIn, TOut> : IStorage<TIn, TOut>
+    public abstract class Store<TIn, TOut> : IStore<TIn, TOut>
     {
         private readonly IStoreBackend<Guid, Metadata> metaRepository;
         private readonly IStoreBackend<Guid, TIn> storeBackend;

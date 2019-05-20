@@ -3,16 +3,16 @@ using System.IO;
 
 namespace FileUploadApp.Storage.Filesystem
 {
-    public class FilesystemPathExpander : IPathExpander<Guid>
+    public abstract class FileStoreBackendBase
     {
-        private readonly StorageConfiguration storageConfiguration;
-
-        public FilesystemPathExpander(StorageConfiguration storageConfiguration)
+        protected FileStoreBackendBase(StorageConfiguration storageConfiguration)
         {
-            this.storageConfiguration = storageConfiguration;
+            StorageConfiguration = storageConfiguration;
         }
 
-        public string BuildPathAndCheckDir(Guid fileId, bool createIfNotExists)
+        protected StorageConfiguration StorageConfiguration { get; }
+
+        protected string BuildPathAndCheckDir(Guid fileId, bool createIfNotExists)
         {
             if (Guid.Empty.Equals(fileId))
             {
@@ -22,7 +22,7 @@ namespace FileUploadApp.Storage.Filesystem
             var fileIdStr = fileId.ToString();
             var span = fileIdStr.ToCharArray();
 
-            var foldersPath = Path.Combine(storageConfiguration.BasePath,
+            var foldersPath = Path.Combine(StorageConfiguration.BasePath,
                 new string(span.Slice(0, 2)),
                 new string(span.Slice(2, 2)),
                 new string(span.Slice(4, 2)));

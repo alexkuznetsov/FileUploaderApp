@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FileUploadApp.Core
@@ -20,16 +21,16 @@ namespace FileUploadApp.Core
             this.mediator = mediator;
         }
 
-        public async Task GenerateApprochiateEvent(HttpContext httpContext)
+        public async Task GenerateApprochiateEventAsync(HttpContext httpContext, CancellationToken cancellactionToken = default)
         {
-            var events = await CreateEventAsync(httpContext).ConfigureAwait(false);
+            var events = await CreateEventAsync(httpContext, cancellactionToken).ConfigureAwait(false);
             var task = events.Select(x => mediator.Publish(x))
                 .ToArray();
 
             await Task.WhenAll(task);
         }
 
-        private async Task<IEnumerable<GenericEvent>> CreateEventAsync(HttpContext httpContext)
+        private async Task<IEnumerable<GenericEvent>> CreateEventAsync(HttpContext httpContext, CancellationToken cancellactionToken)
         {
             var request = httpContext.Request;
 
@@ -43,7 +44,7 @@ namespace FileUploadApp.Core
             }
             else if (request.HasFormContentType)
             {
-                return await httpContext.AssumeAsFilesRequestEvents().ConfigureAwait(false);
+                return await httpContext.AssumeAsFilesRequestEvents(cancellactionToken).ConfigureAwait(false);
             }
             else
                 throw new InvalidOperationException("Mailformed request");

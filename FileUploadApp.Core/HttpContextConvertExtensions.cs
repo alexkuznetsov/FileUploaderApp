@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FileUploadApp.Core
@@ -24,9 +25,9 @@ namespace FileUploadApp.Core
             return new UploadRequestEventBuilder(rq).BuildEvents();
         }
 
-        public static async Task<IEnumerable<GenericEvent>> AssumeAsFilesRequestEvents(this HttpContext httpContext)
+        public static async Task<IEnumerable<GenericEvent>> AssumeAsFilesRequestEvents(this HttpContext httpContext, CancellationToken cancellactionToken = default)
         {
-            var form = await httpContext.Request.ReadFormAsync();
+            var form = await httpContext.Request.ReadFormAsync(cancellactionToken);
             var filesCollection = new List<FileDescriptor>();
             var number = 0U;
 

@@ -6,24 +6,25 @@ using System.Threading.Tasks;
 
 namespace FileUploadApp.Storage.Filesystem
 {
-    public class MetadataFSStoreBackend : IStoreBackend<Guid, Metadata>
+    public class MetadataFSStoreBackend : FileStoreBackendBase, IStoreBackend<Guid, Metadata>
     {
         private static readonly string SpecFileExtension = ".spec";
 
-        private readonly IPathExpander<Guid> pathExpander;
         private readonly ISerializer serializer;
         private readonly IDeserializer deserializer;
 
-        public MetadataFSStoreBackend(IPathExpander<Guid> pathExpander, ISerializer serializer, IDeserializer deserializer)
+        public MetadataFSStoreBackend(StorageConfiguration storageConfiguration
+            , ISerializer serializer
+            , IDeserializer deserializer)
+            : base(storageConfiguration)
         {
-            this.pathExpander = pathExpander;
             this.serializer = serializer;
             this.deserializer = deserializer;
         }
 
         public async Task SaveAsync(Metadata file, CancellationToken cancellationToken = default)
         {
-            var path = pathExpander.BuildPathAndCheckDir(file.Id, true);
+            var path = BuildPathAndCheckDir(file.Id, true);
             var specFilePath = FormatSpecFilePath(path);
 
             using (var writer = File.CreateText(specFilePath))
@@ -35,11 +36,9 @@ namespace FileUploadApp.Storage.Filesystem
             }
         }
 
-        private static string FormatSpecFilePath(string file) => file + SpecFileExtension;
-
         public async Task<Metadata> FindAsync(Guid key, CancellationToken cancellationToken = default)
         {
-            var path = pathExpander.BuildPathAndCheckDir(key, false);
+            var path = BuildPathAndCheckDir(key, false);
             var specFilePath = FormatSpecFilePath(path);
 
             if (File.Exists(specFilePath))
@@ -52,5 +51,7 @@ namespace FileUploadApp.Storage.Filesystem
 
             return default;
         }
+
+        private static string FormatSpecFilePath(string file) => file + SpecFileExtension;
     }
 }

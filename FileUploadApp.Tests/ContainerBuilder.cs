@@ -14,6 +14,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using FileUploadApp.Tests.Fakes;
+using FileUploadApp.Domain.Dirty;
 
 namespace FileUploadApp.Tests
 {
@@ -28,11 +30,14 @@ namespace FileUploadApp.Tests
             {"conf:AllowedContentTypes:3", "image/x-windows-bmp"  },
             {"conf:AllowedContentTypes:4", "image/gif"            },
             {"conf:AllowedContentTypes:5", "image/tiff"           },
+            {"conf:AllowedContentTypes:6", "application/x-7z-compressed" },
+
             {"Mappings:iVBORw", "image/png"},
             {"Mappings:/9j/4A", "image/jpeg"},
             {"Mappings:Qk0="  , "image/bmp"},
             {"Mappings:SUkq"  , "image/tiff"},
-            {"Mappings:R0lG"  , "image/gif" }
+            {"Mappings:R0lG"  , "image/gif" },
+            {"Mappings:N3q8rw=="  , "application/x-7z-compressed" }
         };
 
         internal static class ConfigConstants
@@ -71,9 +76,14 @@ namespace FileUploadApp.Tests
                 };
             });
 
-            services.AddSingleton<ContentDownloaderFactory>();
+            services.AddSingleton<IContentDownloaderFactory<DownloadUriResponse>, ContentDownloaderFactory>();
             services.AddSingleton(configuration.BindTo<StorageConfiguration>(ConfigConstants.FileStoreNode));
-            services.AddSingleton<IStorageProvider<Upload, UploadResultRow>, FilesystemStorageProvider>();
+
+            services.AddSingleton<IStoreBackend<Guid, Upload>, FakeStoreBackend>();
+            services.AddSingleton<IStoreBackend<Guid, Metadata>, FakeMetadataStoreBackend>();
+
+            services.AddSingleton<IFileStreamProvider<Guid, StreamAdapter>, FakeStoreBackend>();
+            services.AddSingleton<IStore<Upload, UploadResultRow>,FakeStorage>();
 
             services.AddScoped<EventGenerator>();
             services.AddScoped<UploadsContext>();

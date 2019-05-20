@@ -7,6 +7,8 @@ namespace FileUploadApp.Domain
     {
         private readonly Queue<Upload> queue = new Queue<Upload>();
 
+        public int Count => queue.Count;
+
         public void Add(Guid id, Guid previewId, uint number, string name, string contentType, StreamAdapter streamAdapter)
         {
             Add(new Upload(

@@ -7,13 +7,10 @@ using System.Threading.Tasks;
 
 namespace FileUploadApp.Storage.Filesystem
 {
-    public class FilesystemStoreBackend : IStoreBackend<Guid, Upload>, IFileStreamProvider<Guid, StreamAdapter>
+    public class FilesystemStoreBackend : FileStoreBackendBase, IStoreBackend<Guid, Upload>, IFileStreamProvider<Guid, StreamAdapter>
     {
-        private readonly IPathExpander<Guid> pathExpander;
-
-        public FilesystemStoreBackend(IPathExpander<Guid> pathExpander)
+        public FilesystemStoreBackend(StorageConfiguration storageConfiguration):base(storageConfiguration)
         {
-            this.pathExpander = pathExpander;
         }
 
         public Task<Upload> FindAsync(Guid key, CancellationToken cancellationToken = default)
@@ -23,14 +20,15 @@ namespace FileUploadApp.Storage.Filesystem
 
         public StreamAdapter GetStreamAdapter(Guid id)
         {
-            var path = pathExpander.BuildPathAndCheckDir(id, false);
+            var path = BuildPathAndCheckDir(id, false);
 
             return new DownloadableStreamAdapter(path);
         }
 
         public async Task SaveAsync(Upload upload, CancellationToken cancellationToken = default)
         {
-            var filePath = pathExpander.BuildPathAndCheckDir(upload.Id, true);
+            var filePath = BuildPathAndCheckDir(upload.Id, true);
+
             using (var wri = File.OpenWrite(filePath))
             {
                 await upload.Stream.CopyToAsync(wri, cancellationToken).ConfigureAwait(false);

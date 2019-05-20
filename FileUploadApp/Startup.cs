@@ -19,6 +19,7 @@ using System.Linq;
 using System.Net.Http;
 using FileUploadApp.Storage;
 using System;
+using FileUploadApp.Domain.Dirty;
 
 namespace FileUploadApp
 {
@@ -49,14 +50,14 @@ namespace FileUploadApp
                 };
             });
 
-            services.AddSingleton<ContentDownloaderFactory>();
+            services.AddSingleton<IContentDownloaderFactory<DownloadUriResponse>, ContentDownloaderFactory>();
 
             services.AddSingleton(Configuration.BindTo<StorageConfiguration>(ConfigConstants.FileStoreNode));
-            services.AddSingleton<IPathExpander<Guid>, FilesystemPathExpander>();
+
             services.AddSingleton<IStoreBackend<Guid, Upload>, FilesystemStoreBackend>();
-            services.AddSingleton<IFileStreamProvider<Guid, StreamAdapter>, FilesystemStoreBackend>();
             services.AddSingleton<IStoreBackend<Guid, Metadata>, MetadataFSStoreBackend>();
-            services.AddSingleton<IStorageProvider<Upload, UploadResultRow>, FilesystemStorageProvider>();
+            services.AddSingleton<IFileStreamProvider<Guid, StreamAdapter>, FilesystemStoreBackend>();
+            services.AddSingleton<IStore<Upload, UploadResultRow>, FileSystemStore>();
 
             services.AddScoped<EventGenerator>();
             services.AddScoped<UploadsContext>();

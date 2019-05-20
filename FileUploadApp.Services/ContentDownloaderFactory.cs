@@ -1,10 +1,12 @@
 ﻿using FileUploadApp.Domain;
+using FileUploadApp.Domain.Dirty;
+using FileUploadApp.Interfaces;
 using System;
 using System.Net.Http;
 
 namespace FileUploadApp.Services
 {
-    public class ContentDownloaderFactory
+    public class ContentDownloaderFactory : IContentDownloaderFactory<DownloadUriResponse>
     {
         private readonly HttpClientHandler delegatingHandler;
         private readonly AppConfiguration configuration;
@@ -15,6 +17,6 @@ namespace FileUploadApp.Services
             this.configuration = configuration;
         }
 
-        public ContentDownloader Create(Uri uri) => new ContentDownloader(configuration, delegatingHandler, uri);
+        public IContentDownloader<DownloadUriResponse> Create(Uri uri) => new ContentDownloader(configuration, delegatingHandler, uri);
     }
 }
