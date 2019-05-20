@@ -1,4 +1,5 @@
-﻿using FileUploadApp.Domain;
+﻿using FileUploadApp.Core;
+using FileUploadApp.Domain;
 using FileUploadApp.Interfaces;
 using System;
 using System.Collections.Generic;
