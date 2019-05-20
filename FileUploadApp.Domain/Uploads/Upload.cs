@@ -8,16 +8,6 @@ namespace FileUploadApp.Domain
 
         public Guid PreviewId { get; }
 
-        [Obsolete("Требуется избавиться от данного конструктора и перейти на полную версию")]
-        public Upload(
-            uint num,
-            string name,
-            string contentType,
-            StreamAdapter streamAdapter) : this(Guid.NewGuid(), Guid.NewGuid(), num, name, contentType, streamAdapter)
-        {
-
-        }
-
         public Upload(
            Guid id,
            Guid previewId,
