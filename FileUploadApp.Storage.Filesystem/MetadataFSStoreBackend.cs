@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FileUploadApp.Storage.Filesystem
 {
-    internal class MetadataFSStoreBackend : IStoreBackend<Guid, Metadata>
+    public class MetadataFSStoreBackend : IStoreBackend<Guid, Metadata>
     {
         private static readonly string SpecFileExtension = ".spec";
 

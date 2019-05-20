@@ -46,7 +46,7 @@ namespace FileUploadApp.Handlers
             {
                 uploadedFilesContext.Add(
                     id: f.Id,
-                    previewId: Guid.Empty,
+                    previewId: Guid.NewGuid(),
                     number: f.Number,
                     name: f.Name,
                     contentType: contentType,

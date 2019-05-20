@@ -3,7 +3,7 @@ using System.IO;
 
 namespace FileUploadApp.Storage.Filesystem
 {
-    internal class FilesystemPathExpander : IPathExpander<Guid>
+    public class FilesystemPathExpander : IPathExpander<Guid>
     {
         private readonly StorageConfiguration storageConfiguration;
 

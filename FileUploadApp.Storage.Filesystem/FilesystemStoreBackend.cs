@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FileUploadApp.Storage.Filesystem
 {
-    internal class FilesystemStoreBackend : IStoreBackend<Guid, Upload>, IFileStreamProvider<Guid, StreamAdapter>
+    public class FilesystemStoreBackend : IStoreBackend<Guid, Upload>, IFileStreamProvider<Guid, StreamAdapter>
     {
         private readonly IPathExpander<Guid> pathExpander;
 

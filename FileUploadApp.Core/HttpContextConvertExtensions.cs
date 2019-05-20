@@ -35,7 +35,7 @@ namespace FileUploadApp.Core
                 filesCollection.Add(new FileDescriptor(
                     id: Guid.NewGuid(),
                     number: number++,
-                    name: f.Name,
+                    name: f.FileName,
                     contentType: f.ContentType,
                     streamAdapter: new FormFileStreamAdapter(new FormFileDecorator(f))
                 ));
