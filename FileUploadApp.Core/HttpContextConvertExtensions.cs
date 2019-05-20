@@ -1,41 +1,27 @@
-﻿using FileUploadApp.Domain;
+﻿using FileUploadApp.Core.Infrastructure;
+using FileUploadApp.Domain;
 using FileUploadApp.Domain.Dirty;
 using FileUploadApp.Events;
 using FileUploadApp.Interfaces;
 using FileUploadApp.StreamAdapters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace FileUploadApp.Core
 {
-    internal static class HttpContextConvertExtensions
+    public static class HttpContextConvertExtensions
     {
-        public static async Task<IEnumerable<GenericEvent>> AssumeAsUploadRequestEvents(this HttpContext httpContext, IDeserializer deserializer)
+        public static async Task<IEnumerable<GenericEvent>> AssumeAsUploadRequestEvents(this HttpContext httpContext)
         {
-            var request = httpContext.Request.EnableRewind();
-            var rq = await request.DesirializeAsync<UploadRequest>(deserializer).ConfigureAwait(false);
-            var events = new List<GenericEvent>();
+            var rq = await httpContext.DeserializeRequestAsync<UploadRequest>().ConfigureAwait(false);
 
-            return ConvertIfAny(rq?.Files?.AsFileDesciptors(), (f) => new ProcessFileDescriptorEvent(f.ToArray()))
-                .Concat(ConvertIfAny(rq?.Links, (f) => new ProcessImageUriEvent(f.ToArray())))
-                .ToArray();
-        }
-
-        private static IEnumerable<GenericEvent> ConvertIfAny<TRequest, TEvent>(IEnumerable<TRequest> source, Func<IEnumerable<TRequest>, TEvent> builder)
-            where TEvent : GenericEvent
-        {
-            var isFilesNotEmpty = source != null && source?.Count() > 0;
-
-            if (isFilesNotEmpty)
-            {
-                yield return builder(source);
-            }
+            return new UploadRequestEventBuilder(rq).BuildEvents();
         }
 
         public static async Task<IEnumerable<GenericEvent>> AssumeAsFilesRequestEvents(this HttpContext httpContext)
@@ -66,29 +52,20 @@ namespace FileUploadApp.Core
             return new[] { new PlainTextRequestEvent(text) };
         }
 
-        private static IEnumerable<FileDescriptor> AsFileDesciptors(this IEnumerable<Base64FilePayload> files)
-        {
-            var number = 0U;
-            foreach (var f in files)
-            {
-                var bytea = Convert.FromBase64String(f.Base64).AsMemory();
-
-                yield return new FileDescriptor(
-                    id: Guid.NewGuid(),
-                    number: number++,
-                    name: f.Name,
-                    contentType: string.Empty,
-                    streamAdapter: new ByteaStreamAdapter(bytea));
-            }
-        }
-
         private static async Task<ReadOnlyMemory<char>> ReadAsReadonlyMemoryAsync(this HttpRequest request)
         {
-            using (StreamReader reader = new StreamReader(request.Body, Encoding.UTF8, true, 1024, true))
-            {
-                var result = await reader.ReadToEndAsync().ConfigureAwait(false);
-                return result.AsMemory();
-            }
+            var result = await request.ReadAsPlainTextAsync().ConfigureAwait(false);
+
+            return result.AsMemory();
+        }
+
+        private static async Task<T> DeserializeRequestAsync<T>(this HttpContext httpContext)
+        {
+            var deserializer = httpContext.RequestServices.GetRequiredService<IDeserializer>();
+            var request = httpContext.Request.EnableRewind();
+            var content = await request.ReadAsPlainTextAsync().ConfigureAwait(false);
+
+            return deserializer.Deserialize<T>(content);
         }
 
         private static async Task<string> ReadAsPlainTextAsync(this HttpRequest request)
@@ -97,13 +74,6 @@ namespace FileUploadApp.Core
             {
                 return await reader.ReadToEndAsync().ConfigureAwait(false);
             }
-        }
-
-        private static async Task<T> DesirializeAsync<T>(this HttpRequest request, IDeserializer deserializer)
-        {
-            var content = await request.ReadAsPlainTextAsync().ConfigureAwait(false);
-
-            return deserializer.Deserialize<T>(content);
         }
     }
 }

@@ -2,6 +2,7 @@
 
 namespace FileUploadApp.Domain.Dirty
 {
+    [DataContract]
     public class UploadRequest
     {
         [DataMember(Name = "files", IsRequired = false, EmitDefaultValue = false)]

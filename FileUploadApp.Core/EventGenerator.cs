@@ -1,5 +1,4 @@
 ﻿using FileUploadApp.Events;
-using FileUploadApp.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -14,12 +13,10 @@ namespace FileUploadApp.Core
         private static readonly string JsonContentType = "application/json";
         private static readonly string TextPlainContentType = "text/plain";
 
-        private readonly IDeserializer deserializer;
         private readonly IMediator mediator;
 
-        public EventGenerator(IDeserializer deserializer, IMediator mediator)
+        public EventGenerator(IMediator mediator)
         {
-            this.deserializer = deserializer;
             this.mediator = mediator;
         }
 
@@ -38,7 +35,7 @@ namespace FileUploadApp.Core
 
             if (request.ContentType == JsonContentType)
             {
-                return await httpContext.AssumeAsUploadRequestEvents(deserializer).ConfigureAwait(false);
+                return await httpContext.AssumeAsUploadRequestEvents().ConfigureAwait(false);
             }
             else if (request.ContentType == TextPlainContentType)
             {
