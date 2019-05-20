@@ -5,9 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FileUploadApp.Domain\FileUploadApp.Domain.csproj" />
     <ProjectReference Include="..\FileUploadApp.Interfaces\FileUploadApp.Interfaces.csproj" />
-    <ProjectReference Include="..\FileUploadApp.Storage\FileUploadApp.Storage.csproj" />
-    <ProjectReference Include="..\FileUploadApp.StreamWrappers\FileUploadApp.StreamAdapters.csproj" />
   </ItemGroup>
 
 </Project>

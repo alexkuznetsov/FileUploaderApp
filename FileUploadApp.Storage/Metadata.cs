@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace FileUploadApp.Storage.Filesystem
+namespace FileUploadApp.Storage
 {
     [DataContract]
-    public class Spec
+    public class Metadata
     {
         [DataMember(Name = "id", IsRequired = true, EmitDefaultValue = false, Order = 3)]
         public Guid Id { get; set; }
@@ -18,9 +18,9 @@ namespace FileUploadApp.Storage.Filesystem
         [DataMember(Name = "crat", IsRequired = true, EmitDefaultValue = false, Order = 2)]
         public DateTime CreatedDate { get; set; }
 
-        public Spec() { }
+        public Metadata() { }
 
-        public Spec(Guid id, string name, string contentType, DateTime? dateTime = null)
+        public Metadata(Guid id, string name, string contentType, DateTime? dateTime = null)
         {
             Id = id;
             Name = name;

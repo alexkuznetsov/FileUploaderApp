@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="7.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="2.2.4" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.1.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="1.4.0" />
+    <PackageReference Include="MSTest.TestFramework" Version="1.4.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FileUploadApp.Core\FileUploadApp.Core.csproj" />
+    <ProjectReference Include="..\FileUploadApp.Domain\FileUploadApp.Domain.csproj" />
+    <ProjectReference Include="..\FileUploadApp.Events\FileUploadApp.Events.csproj" />
+    <ProjectReference Include="..\FileUploadApp.Handlers\FileUploadApp.Handlers.csproj" />
+    <ProjectReference Include="..\FileUploadApp.Imaging\FileUploadApp.Imaging.csproj" />
+    <ProjectReference Include="..\FileUploadApp.Interfaces\FileUploadApp.Interfaces.csproj" />
+    <ProjectReference Include="..\FileUploadApp.Services\FileUploadApp.Services.csproj" />
+    <ProjectReference Include="..\FileUploadApp.Storage.Filesystem\FileUploadApp.Storage.Filesystem.csproj" />
+    <ProjectReference Include="..\FileUploadApp.StreamWrappers\FileUploadApp.StreamAdapters.csproj" />
+    <ProjectReference Include="..\FileUploadApp\FileUploadApp.csproj" />
+  </ItemGroup>
+
+</Project>

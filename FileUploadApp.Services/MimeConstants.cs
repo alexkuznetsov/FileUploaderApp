@@ -1,23 +1,23 @@
 ﻿namespace FileUploadApp.Services
 {
-    internal static class MimeConstants
+    public static class MimeConstants
     {
-        internal static readonly string PngB64 = "iVBORw";
-        internal static readonly string PngMime = "image/png";
+        public static readonly string PngB64 = "iVBORw";
+        public static readonly string PngMime = "image/png";
 
-        internal static readonly string JpgB64 = "/9j/4A";
-        internal static readonly string JpgMime = "image/jpeg";
+        public static readonly string JpgB64 = "/9j/4A";
+        public static readonly string JpgMime = "image/jpeg";
 
-        internal static readonly string BitmapB64 = "Qk0=";
-        internal static readonly string BitmapMime = "image/bmp";
+        public static readonly string BitmapB64 = "Qk0=";
+        public static readonly string BitmapMime = "image/bmp";
 
-        internal static readonly string TiffB64 = "SUkq";
-        internal static readonly string TiffMime = "image/tiff";
+        public static readonly string TiffB64 = "SUkq";
+        public static readonly string TiffMime = "image/tiff";
 
-        internal static readonly string GifB64 = "R0lG";
-        internal static readonly string GifMime = "image/gif";
+        public static readonly string GifB64 = "R0lG";
+        public static readonly string GifMime = "image/gif";
 
 
-        internal static readonly string OctetStreamMime = "binary/octet-stream";
+        public static readonly string OctetStreamMime = "binary/octet-stream";
     }
 }

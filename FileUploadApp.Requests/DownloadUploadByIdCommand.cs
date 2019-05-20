@@ -1,15 +1,16 @@
 ﻿using FileUploadApp.Domain;
 using MediatR;
+using System;
 
 namespace FileUploadApp.Requests
 {
     public class DownloadUploadByIdQuery : IRequest<Upload>
     {
-        public DownloadUploadByIdQuery(string id)
+        public DownloadUploadByIdQuery(Guid id)
         {
             Id = id;
         }
 
-        public string Id { get; }
+        public Guid Id { get; }
     }
 }

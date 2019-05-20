@@ -1,6 +1,7 @@
 ﻿using FileUploadApp.Domain;
 using FileUploadApp.Interfaces;
 using FileUploadApp.Requests;
+using FileUploadApp.Storage;
 using MediatR;
 using System;
 using System.Linq;
@@ -30,12 +31,12 @@ namespace FileUploadApp.Handlers
 
         private async Task<UploadResultRow> ReceiveAsync(Tuple<Guid, Guid> fileIdPreviewId, CancellationToken cancellationToken)
         {
-            var file = await storage.ReceiveAsync(fileIdPreviewId.Item1.ToString(), cancellationToken);
+            var file = await storage.ReceiveAsync(fileIdPreviewId.Item1, cancellationToken);
             var row = new UploadResultRow(file.Id, file.Number, file.Name, file.ContentType);
 
             if (file.IsImage())
             {
-                var preview = await storage.ReceiveAsync(fileIdPreviewId.Item2.ToString(), cancellationToken);
+                var preview = await storage.ReceiveAsync(fileIdPreviewId.Item2, cancellationToken);
 
                 row.Preview = new FileEntity(preview.Id, preview.Number, preview.Name, preview.ContentType);
             }

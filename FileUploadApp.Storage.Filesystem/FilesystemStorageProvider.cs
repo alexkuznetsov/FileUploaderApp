@@ -25,7 +25,11 @@ namespace FileUploadApp.Storage.Filesystem
                 Directory.CreateDirectory(configuration.BasePath);
             }
 
-            return new FileSystemStore(configuration.BasePath, serializer, deserializer);
+            var pathExpander = new FilesystemPathExpander(configuration);
+            var storeBackend = new FilesystemStoreBackend(pathExpander);
+            var metaDataStoreBackend = new MetadataFSStoreBackend(pathExpander, serializer, deserializer);
+
+            return new FileSystemStore(metaDataStoreBackend, storeBackend, storeBackend);
         }
     }
 }

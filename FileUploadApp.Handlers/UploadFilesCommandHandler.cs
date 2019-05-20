@@ -30,20 +30,13 @@ namespace FileUploadApp.Handlers
 
         private async Task<UploadResultRow> SaveFileAsync(Upload file)
         {
-            Upload preview = null;
+            var result = await storage.StoreAsync(file).ConfigureAwait(false);
 
             if (file.IsImage())
             {
-                preview = await CreatePreviewAsync(file);
-            }
+                var preview = await CreatePreviewAsync(file);
 
-            var result = await storage.StoreAsync(file).ConfigureAwait(false);
-
-            if (preview != null)
-            {
-                var previewResult = await storage.StoreAsync(preview).ConfigureAwait(false);
-
-                result.Preview = previewResult;
+                result.Preview = await storage.StoreAsync(preview).ConfigureAwait(false);
             }
 
             return result;

@@ -1,91 +1,30 @@
 ﻿using FileUploadApp.Domain;
-using FileUploadApp.Interfaces;
-using FileUploadApp.StreamAdapters;
 using System;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace FileUploadApp.Storage.Filesystem
 {
-    public class FileSystemStore : IStorage<Upload, UploadResultRow>
+
+    public class FileSystemStore : Store<Upload, UploadResultRow>
     {
-        private readonly string basePath;
-        private readonly SpecHandler specHandler;
-
-        internal FileSystemStore(string basePath
-            , ISerializer serializer
-            , IDeserializer deserializer)
+        public FileSystemStore(IStoreBackend<Guid, Metadata> metadataRepository
+            , IStoreBackend<Guid, Upload> storeBackend
+            , IFileStreamProvider<Guid, StreamAdapter> fileStreamProvider) : base(metadataRepository, storeBackend, fileStreamProvider)
         {
-            if (string.IsNullOrWhiteSpace(basePath) || !Directory.Exists(basePath))
-            {
-                throw new ArgumentException("basePath should be a valid  path", nameof(basePath));
-            }
-
-            this.basePath = basePath;
-            specHandler = new SpecHandler(serializer, deserializer);
         }
 
-        public async Task<Upload> ReceiveAsync(string fileId, CancellationToken cancellationToken = default)
+        protected override Upload CreateFromSpec(Metadata metadata, StreamAdapter streamAdapter)
         {
-            var filePath = BuildPathAndCheckDir(fileId, false);
-            var spec = await specHandler.ReadSpecAsync(filePath, cancellationToken).ConfigureAwait(false);
-
-            if (spec == null)
-            {
-                return null;
-            }
-
-            return new Upload
-            (
-                id: spec.Id,
-                previewId: Guid.Empty,
-                num: 0,
-                name: spec.Name,
-                contentType: spec.ContentType,
-                streamAdapter: new DownloadableStreamAdapter(filePath)
-            );
+            return new Upload(metadata.Id, Guid.Empty, 0U, metadata.Name, metadata.ContentType, streamAdapter);
         }
 
-        public async Task<UploadResultRow> StoreAsync(Upload file, CancellationToken cancellationToken = default)
+        protected override Metadata CreateMetadata(Upload @in)
         {
-            var filePath = BuildPathAndCheckDir(file.Id.ToString(), true);
-            var spec = await specHandler.WriteSpecAsync(filePath, file, cancellationToken).ConfigureAwait(false);
-
-            using (var wri = File.OpenWrite(filePath))
-            {
-                await file.Stream.CopyToAsync(wri, cancellationToken).ConfigureAwait(false);
-                await wri.FlushAsync(cancellationToken).ConfigureAwait(false);
-            }
-
-            return new UploadResultRow
-            (
-                id: spec.Id,
-                number: file.Number,
-                name: spec.Name,
-                contentType: spec.ContentType);
+            return new Metadata(@in.Id, @in.Name, @in.ContentType, DateTime.UtcNow);
         }
 
-        private string BuildPathAndCheckDir(string fileId, bool createIfNotExists)
+        protected override UploadResultRow CreateSaveResult(Metadata metadata, Upload @in)
         {
-            if (string.IsNullOrWhiteSpace(fileId))
-            {
-                throw new ArgumentException("fileId can not be null or empty string", nameof(fileId));
-            }
-
-            var span = fileId.ToCharArray();
-
-            var foldersPath = Path.Combine(basePath, 
-                new string(span.Slice(0, 2)),
-                new string(span.Slice(2, 2)),
-                new string(span.Slice(4, 2)));
-
-            if (createIfNotExists && !Directory.Exists(foldersPath))
-            {
-                Directory.CreateDirectory(foldersPath);
-            }
-
-            return Path.Combine(foldersPath, fileId);
+            return new UploadResultRow(metadata.Id, @in.Number, metadata.Name, metadata.ContentType);
         }
     }
 }
