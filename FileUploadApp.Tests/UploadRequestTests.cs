@@ -1,4 +1,4 @@
-﻿using FileUploadApp.Core.Infrastructure;
+﻿using FileUploadApp.Core;
 using FileUploadApp.Domain.Dirty;
 using FileUploadApp.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,12 +37,13 @@ namespace FileUploadApp.Tests
         {
             var json = TestContext.Properties["json"].ToString();
             var deserializer = serviceProvider.GetRequiredService<IDeserializer>();
+            var contentTypeTestUtility = serviceProvider.GetRequiredService<IContentTypeTestUtility>();
             var @object = deserializer.Deserialize<UploadRequest>(json);
 
             Assert.IsNotNull(@object);
             Assert.IsTrue(@object.Files.Length == 1);
 
-            var data = @object.Files.AsFileDesciptors();
+            var data = @object.Files.AsFileDesciptors(contentTypeTestUtility);
 
             Assert.IsNotNull(data);
             Assert.IsTrue(data.Count() == 1);
@@ -54,12 +55,13 @@ namespace FileUploadApp.Tests
         {
             var json = TestContext.Properties["json"].ToString();
             var deserializer = serviceProvider.GetRequiredService<IDeserializer>();
+            var contentTypeTestUtility = serviceProvider.GetRequiredService<IContentTypeTestUtility>();
             var @object = deserializer.Deserialize<UploadRequest>(json);
 
             Assert.IsNotNull(@object);
             Assert.IsTrue(@object.Files.Length == 1);
 
-            var data = @object.Files.AsFileDesciptors();
+            var data = @object.Files.AsFileDesciptors(contentTypeTestUtility);
 
             Assert.IsNotNull(data);
             Assert.IsTrue(data.Count() == 1);
@@ -71,12 +73,13 @@ namespace FileUploadApp.Tests
         {
             var json = TestContext.Properties["json"].ToString();
             var deserializer = serviceProvider.GetRequiredService<IDeserializer>();
+            var contentTypeTestUtility = serviceProvider.GetRequiredService<IContentTypeTestUtility>();
             var @object = deserializer.Deserialize<UploadRequest>(json);
 
             Assert.IsNotNull(@object);
             Assert.IsTrue(@object.Files.Length == 1);
 
-            var data = @object.Files.AsFileDesciptors();
+            var data = @object.Files.AsFileDesciptors(contentTypeTestUtility);
 
             Assert.IsNotNull(data);
             Assert.IsTrue(data.Count() == 1);
@@ -88,12 +91,13 @@ namespace FileUploadApp.Tests
         {
             var json = TestContext.Properties["json"].ToString();
             var deserializer = serviceProvider.GetRequiredService<IDeserializer>();
+            var contentTypeTestUtility = serviceProvider.GetRequiredService<IContentTypeTestUtility>();
             var @object = deserializer.Deserialize<UploadRequest>(json);
 
             Assert.IsNotNull(@object);
             Assert.IsTrue(@object.Files.Length == 1);
 
-            var data = @object.Files.AsFileDesciptors();
+            var data = @object.Files.AsFileDesciptors(contentTypeTestUtility);
 
             Assert.IsNotNull(data);
             Assert.IsTrue(data.Count() == 1);
@@ -122,12 +126,13 @@ namespace FileUploadApp.Tests
         {
             var json = TestContext.Properties["json"].ToString();
             var deserializer = serviceProvider.GetRequiredService<IDeserializer>();
+            var contentTypeTestUtility = serviceProvider.GetRequiredService<IContentTypeTestUtility>();
             var @object = deserializer.Deserialize<UploadRequest>(json);
 
             Assert.IsNotNull(@object);
             Assert.IsTrue(@object.Files.Length == 1);
             Assert.IsTrue(@object.Links.Length == 2);
-            _ = @object.Files.AsFileDesciptors().ToArray();
+            _ = @object.Files.AsFileDesciptors(contentTypeTestUtility).ToArray();
         }
 
         [TestMethod]
@@ -137,12 +142,13 @@ namespace FileUploadApp.Tests
         {
             var json = TestContext.Properties["json"].ToString();
             var deserializer = serviceProvider.GetRequiredService<IDeserializer>();
+            var contentTypeTestUtility = serviceProvider.GetRequiredService<IContentTypeTestUtility>();
             var @object = deserializer.Deserialize<UploadRequest>(json);
 
             Assert.IsNotNull(@object);
             Assert.IsTrue(@object.Files.Length == 1);
             Assert.IsTrue(@object.Links.Length == 2);
-            _ = @object.Files.AsFileDesciptors().ToArray();
+            _ = @object.Files.AsFileDesciptors(contentTypeTestUtility).ToArray();
         }
 
         [TestMethod]
@@ -152,12 +158,13 @@ namespace FileUploadApp.Tests
         {
             var json = TestContext.Properties["json"].ToString();
             var deserializer = serviceProvider.GetRequiredService<IDeserializer>();
+            var contentTypeTestUtility = serviceProvider.GetRequiredService<IContentTypeTestUtility>();
             var @object = deserializer.Deserialize<UploadRequest>(json);
 
             Assert.IsNotNull(@object);
             Assert.IsTrue(@object.Files.Length == 1);
             Assert.IsTrue(@object.Links.Length == 2);
-            _ = @object.Files.AsFileDesciptors().ToArray();
+            _ = @object.Files.AsFileDesciptors(contentTypeTestUtility).ToArray();
         }
 
         [TestMethod]
@@ -167,12 +174,13 @@ namespace FileUploadApp.Tests
         {
             var json = TestContext.Properties["json"].ToString();
             var deserializer = serviceProvider.GetRequiredService<IDeserializer>();
+            var contentTypeTestUtility = serviceProvider.GetRequiredService<IContentTypeTestUtility>();
             var @object = deserializer.Deserialize<UploadRequest>(json);
 
             Assert.IsNotNull(@object);
             Assert.IsTrue(@object.Files.Length == 1);
             Assert.IsTrue(@object.Links.Length == 2);
-            _ = @object.Files.AsFileDesciptors().ToArray();
+            _ = @object.Files.AsFileDesciptors(contentTypeTestUtility).ToArray();
         }
 
         [TestMethod]
@@ -182,12 +190,13 @@ namespace FileUploadApp.Tests
         {
             var json = TestContext.Properties["json"].ToString();
             var deserializer = serviceProvider.GetRequiredService<IDeserializer>();
+            var contentTypeTestUtility = serviceProvider.GetRequiredService<IContentTypeTestUtility>();
             var @object = deserializer.Deserialize<UploadRequest>(json);
 
             Assert.IsNotNull(@object);
             Assert.IsTrue(@object.Files.Length == 1);
             Assert.IsTrue(@object.Links.Length == 2);
-            _ = @object.Files.AsFileDesciptors().ToArray();
+            _ = @object.Files.AsFileDesciptors(contentTypeTestUtility).ToArray();
         }
 
         [TestMethod]
@@ -197,12 +206,13 @@ namespace FileUploadApp.Tests
         {
             var json = TestContext.Properties["json"].ToString();
             var deserializer = serviceProvider.GetRequiredService<IDeserializer>();
+            var contentTypeTestUtility = serviceProvider.GetRequiredService<IContentTypeTestUtility>();
             var @object = deserializer.Deserialize<UploadRequest>(json);
 
             Assert.IsNotNull(@object);
             Assert.IsTrue(@object.Files.Length == 1);
             Assert.IsTrue(@object.Links.Length == 2);
-            _ = @object.Files.AsFileDesciptors().ToArray();
+            _ = @object.Files.AsFileDesciptors(contentTypeTestUtility).ToArray();
         }
     }
 }

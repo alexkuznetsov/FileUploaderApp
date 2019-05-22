@@ -85,8 +85,6 @@ namespace FileUploadApp.Tests
             services.AddSingleton<IFileStreamProvider<Guid, StreamAdapter>, FakeStoreBackend>();
             services.AddSingleton<IStore<Upload, UploadResultRow>,FakeStorage>();
 
-            services.AddScoped<EventGenerator>();
-            services.AddScoped<UploadsContext>();
             services.AddScoped<ServiceFactory>(p => p.GetService);
 
             services.Scan(scan => scan

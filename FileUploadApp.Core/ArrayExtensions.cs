@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace FileUploadApp.Storage.Filesystem
+namespace FileUploadApp.Core
 {
-    internal static class ArrayExtensions
+    public static class ArrayExtensions
     {
         public static T[] Slice<T>(this T[] source, int from, int len)
         {

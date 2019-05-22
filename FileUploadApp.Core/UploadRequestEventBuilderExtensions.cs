@@ -1,17 +1,18 @@
 ﻿using FileUploadApp.Domain;
 using FileUploadApp.Domain.Dirty;
+using FileUploadApp.Interfaces;
 using FileUploadApp.StreamAdapters;
 using System;
 using System.Collections.Generic;
 
-namespace FileUploadApp.Core.Infrastructure
+namespace FileUploadApp.Core
 {
     public static class UploadRequestEventBuilderExtensions
     {
         private static readonly string CharsetToken = "charset";
         private static readonly string Base64Token = "base64";
 
-        public static IEnumerable<FileDescriptor> AsFileDesciptors(this IEnumerable<Base64FilePayload> files)
+        public static IEnumerable<Upload> AsFileDesciptors(this IEnumerable<Base64FilePayload> files, IContentTypeTestUtility contentTypeTestUtility)
         {
             var number = 0U;
 
@@ -64,12 +65,21 @@ namespace FileUploadApp.Core.Infrastructure
                     contentType = string.Empty;
                 }
 
-                yield return new FileDescriptor(
-                    id: Guid.NewGuid(),
-                    number: number++,
-                    name: f.Name,
-                    contentType: contentType,
-                    streamAdapter: new ByteaStreamAdapter(bytea));
+                if (string.IsNullOrEmpty(contentType))
+                {
+                    contentType = contentTypeTestUtility.DetectContentType(bytea.Slice(0, 4).AsSpan());
+                }
+
+                if (contentTypeTestUtility.IsAllowed(contentType))
+                {
+                    yield return new Upload(
+                        id: Guid.NewGuid(),
+                        previewId: Guid.NewGuid(),
+                        num: number++,
+                        name: f.Name,
+                        contentType: contentType,
+                        streamAdapter: new ByteaStreamAdapter(bytea));
+                }
             }
         }
 

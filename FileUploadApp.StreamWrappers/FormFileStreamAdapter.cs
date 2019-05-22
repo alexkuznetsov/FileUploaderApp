@@ -16,7 +16,7 @@ namespace FileUploadApp.StreamAdapters
             this.formFile = formFile;
         }
 
-        public override Task<ReadOnlyMemory<byte>> AsBytesSliceAsync(int len, CancellationToken cancellationToken = default)
+        public override Task<byte[]> AsBytesSliceAsync(int len, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }
@@ -29,16 +29,16 @@ namespace FileUploadApp.StreamAdapters
             }
         }
 
-        public override async Task<ReadOnlyMemory<byte>> AsRawBytesAsync(CancellationToken cancellationToken = default)
+        public override async Task<byte[]> AsRawBytesAsync(CancellationToken cancellationToken = default)
         {
             using (var s = new MemoryStream())
             {
                 await CopyToAsync(s, cancellationToken);
-                return s.ToArray().AsMemory();
+                return s.ToArray();
             }
         }
 
-        public override Task CopyToAsync(Stream target, CancellationToken cancellationToken = default)
-            => formFile.CopyToAsync(target, cancellationToken);
+        public override async Task CopyToAsync(Stream target, CancellationToken cancellationToken = default)
+            => await formFile.CopyToAsync(target, cancellationToken).ConfigureAwait(false);
     }
 }

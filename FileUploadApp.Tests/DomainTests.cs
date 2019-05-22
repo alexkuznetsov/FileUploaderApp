@@ -1,13 +1,8 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.Extensions.DependencyInjection;
-using FileUploadApp.Domain;
-using FileUploadApp.Services;
+﻿using FileUploadApp.Domain.Dirty;
 using FileUploadApp.Interfaces;
-using FileUploadApp.Domain.Dirty;
-using FileUploadApp.Core;
-using System.Linq;
-using FileUploadApp.StreamAdapters;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace FileUploadApp.Tests
 {
@@ -57,66 +52,6 @@ namespace FileUploadApp.Tests
             Assert.IsNotNull(@object);
             Assert.IsTrue(@object.Files.Length == 1);
             Assert.IsTrue(@object.Links.Length == 2);
-        }
-
-        [TestMethod]
-        public void Test_UploadsContext_ShouldBeScoped()
-        {
-            using (var scope = serviceProvider.CreateScope())
-            {
-                var uploadCtx = scope.ServiceProvider.GetRequiredService<UploadsContext>();
-
-                Assert.IsNotNull(uploadCtx);
-
-                uploadCtx.Add(
-                    Guid.Parse("de70da0d-636a-4344-b7e9-0c38373dfd46"),
-                    Guid.Parse("54c91594-7ecf-4ba3-880a-99d387a3eb66"),
-                    0,
-                    "name.jpg",
-                    "image/jpeg",
-                    new ByteaStreamAdapter(new byte[] { }));
-
-                var files = uploadCtx.YieldAll().ToArray();
-
-                Assert.IsNotNull(files.Count() == 1);
-                Assert.IsNotNull(uploadCtx.YieldAll().Count() == 0);
-
-                Assert.IsTrue(files[0].Id.Equals(Guid.Parse("de70da0d-636a-4344-b7e9-0c38373dfd46")));
-                Assert.IsTrue(files[0].PreviewId.Equals(Guid.Parse("54c91594-7ecf-4ba3-880a-99d387a3eb66")));
-                Assert.IsTrue(files[0].Name.Equals("name.jpg"));
-                Assert.IsTrue(files[0].ContentType.Equals("image/jpeg"));
-                Assert.IsTrue(files[0].Stream is ByteaStreamAdapter);
-            }
-
-            //Создадим scope и заполним загрузку
-            using (var scope = serviceProvider.CreateScope())
-            {
-                var uploadCtx = scope.ServiceProvider.GetRequiredService<UploadsContext>();
-
-                Assert.IsNotNull(uploadCtx);
-
-                uploadCtx.Add(
-                    Guid.Parse("de70da0d-636a-4344-b7e9-0c38373dfd46"),
-                    Guid.Parse("54c91594-7ecf-4ba3-880a-99d387a3eb66"),
-                    0,
-                    "name.jpg",
-                    "image/jpeg",
-                    new ByteaStreamAdapter(new byte[] { }));
-
-                var uploadCtx2 = scope.ServiceProvider.GetRequiredService<UploadsContext>();
-
-                Assert.AreEqual(uploadCtx, uploadCtx2);
-            }
-
-            //Создадим scope и убедимся, что контекст пуст
-            using (var scope = serviceProvider.CreateScope())
-            {
-                var uploadCtx = scope.ServiceProvider.GetRequiredService<UploadsContext>();
-
-                Assert.IsNotNull(uploadCtx);
-
-                Assert.IsNotNull(uploadCtx.YieldAll().Count() == 0);
-            }
         }
     }
 }

@@ -4,7 +4,7 @@ namespace FileUploadApp.Domain.Dirty
 {
     public class DownloadUriResponse
     {
-        public DownloadUriResponse(Uri uri, string contentType, ReadOnlyMemory<byte> bytea)
+        public DownloadUriResponse(Uri uri, string contentType, byte[] bytea)
         {
             Uri = uri;
             Bytea = bytea;
@@ -15,6 +15,6 @@ namespace FileUploadApp.Domain.Dirty
 
         public Uri Uri { get; }
 
-        public ReadOnlyMemory<byte> Bytea { get; }
+        public byte[] Bytea { get; }
     }
 }

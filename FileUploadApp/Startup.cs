@@ -1,6 +1,4 @@
 ﻿using FileUploadApp.Requests;
-using FileUploadApp.Core;
-using FileUploadApp.Core.Middlewares;
 using FileUploadApp.Core.Serialization;
 using FileUploadApp.Domain;
 using FileUploadApp.Events;
@@ -35,7 +33,11 @@ namespace FileUploadApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc(options =>
+            {
+                options.EnableEndpointRouting = false;
+            })
+            .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddSingleton(Configuration.BindTo<AppConfiguration>(ConfigConstants.ConfNode));
             services.AddSingleton<IContentTypeTestUtility, ContentTypeTestUtility>();
@@ -59,8 +61,6 @@ namespace FileUploadApp
             services.AddSingleton<IFileStreamProvider<Guid, StreamAdapter>, FilesystemStoreBackend>();
             services.AddSingleton<IStore<Upload, UploadResultRow>, FileSystemStore>();
 
-            services.AddScoped<EventGenerator>();
-            services.AddScoped<UploadsContext>();
             services.AddScoped<ServiceFactory>(p => p.GetService);
 
             services.Scan(scan => scan
@@ -71,16 +71,25 @@ namespace FileUploadApp
                .AddClasses()
                .AsImplementedInterfaces());
 
-            services.AddTransient<UploadedDataPreprocessMiddleware>();
+            //services.AddTransient<UploadedDataPreprocessMiddleware>();
+            services.AddCors((s) =>
+            {
+                s.AddDefaultPolicy((c) =>
+                {
+                    c.AllowAnyOrigin();
+                    c.AllowAnyHeader();
+                    c.WithMethods("OPTIONS", "GET", "POST");
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            app.UseWhen(x => x.Request.Path.StartsWithSegments(ConfigConstants.UploadFile), c =>
-            {
-                c.UseMiddleware<UploadedDataPreprocessMiddleware>();
-            });
+            //app.UseWhen(x => x.Request.Path.StartsWithSegments(ConfigConstants.UploadFile), c =>
+            //{
+            //    c.UseMiddleware<UploadedDataPreprocessMiddleware>();
+            //});
 
             if (env.IsDevelopment())
             {
@@ -94,6 +103,7 @@ namespace FileUploadApp
 
             app.UseHttpsRedirection();
             app.UseMvc();
+            app.UseCors();
         }
     }
 }

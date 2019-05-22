@@ -6,6 +6,8 @@ namespace FileUploadApp.Domain
     {
         public static readonly string PreviewPrefix = "preview_";
 
+        public static readonly Upload Empty = new Upload(Guid.Empty, Guid.Empty, 0U, string.Empty, string.Empty, null);
+
         public Guid PreviewId { get; }
 
         public Upload(

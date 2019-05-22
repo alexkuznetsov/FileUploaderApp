@@ -19,8 +19,7 @@ namespace FileUploadApp.Controllers
         [ResponseCache(Duration = 5, Location = ResponseCacheLocation.Any)]
         public async Task<IActionResult> Get(Guid id)
         {
-            var response = await SendAsync(new DownloadUploadByIdQuery(id))
-                .ConfigureAwait(false);
+            var response = await SendAsync(new DownloadUploadByIdQuery(id));
 
             if (response == null)
                 return NotFound();

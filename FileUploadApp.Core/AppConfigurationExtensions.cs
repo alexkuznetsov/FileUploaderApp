@@ -18,7 +18,6 @@ namespace FileUploadApp.Core
 
                 yield return (mimeCache.GetOrAdd(k.Value, converted), k.Value);
             }
-
         }
     }
 }

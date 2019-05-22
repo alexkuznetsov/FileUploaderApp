@@ -26,13 +26,13 @@ namespace FileUploadApp.Services
         public async Task<DownloadUriResponse> DownloadAsync(CancellationToken cancellationToken = default)
         {
             using (var client = GetClient())
+            using (var message = await client.GetAsync(_address, cancellationToken).ConfigureAwait(false))
+            using(message.Content)
             {
-                var message = await client.GetAsync(_address, cancellationToken);
-                var content = message.Content;
                 var contentType = message.Content.Headers.ContentType;
-                var data = await content.ReadAsByteArrayAsync();
+                var data = await message.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
 
-                return new DownloadUriResponse(_address, contentType.MediaType, data.AsMemory());
+                return new DownloadUriResponse(_address, contentType.MediaType, data);
             }
         }
 

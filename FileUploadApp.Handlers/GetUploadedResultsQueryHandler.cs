@@ -20,22 +20,20 @@ namespace FileUploadApp.Handlers
 
         public async Task<UploadResult> Handle(GetUploadedResultsQuery request, CancellationToken cancellationToken)
         {
-            var tasks = request.Ids.Select(x => ReceiveAsync(x, cancellationToken))
-                .ToArray();
-
-            var results = await Task.WhenAll(tasks);
+            var tasks = request.Ids.Select(x => ReceiveAsync(x, cancellationToken)).ToArray();
+            var results = await Task.WhenAll(tasks).ConfigureAwait(false);
 
             return new UploadResult(results);
         }
 
         private async Task<UploadResultRow> ReceiveAsync(Tuple<Guid, Guid> fileIdPreviewId, CancellationToken cancellationToken)
         {
-            var file = await store.ReceiveAsync(fileIdPreviewId.Item1, cancellationToken);
+            var file = await store.ReceiveAsync(fileIdPreviewId.Item1, cancellationToken).ConfigureAwait(false);
             var row = new UploadResultRow(file.Id, file.Number, file.Name, file.ContentType);
 
             if (file.IsImage())
             {
-                var preview = await store.ReceiveAsync(fileIdPreviewId.Item2, cancellationToken);
+                var preview = await store.ReceiveAsync(fileIdPreviewId.Item2, cancellationToken).ConfigureAwait(false);
 
                 row.Preview = new FileEntity(preview.Id, preview.Number, preview.Name, preview.ContentType);
             }

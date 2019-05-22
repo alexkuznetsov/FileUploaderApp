@@ -13,6 +13,7 @@
     <ProjectReference Include="..\FileUploadApp.Domain\FileUploadApp.Domain.csproj" />
     <ProjectReference Include="..\FileUploadApp.Events\FileUploadApp.Events.csproj" />
     <ProjectReference Include="..\FileUploadApp.Interfaces\FileUploadApp.Interfaces.csproj" />
+    <ProjectReference Include="..\FileUploadApp.Requests\FileUploadApp.Requests.csproj" />
     <ProjectReference Include="..\FileUploadApp.StreamWrappers\FileUploadApp.StreamAdapters.csproj" />
   </ItemGroup>
 

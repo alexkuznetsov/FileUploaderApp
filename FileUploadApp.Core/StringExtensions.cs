@@ -5,7 +5,7 @@ namespace FileUploadApp
 {
     public static class StringExtensions
     {
-        public static IEnumerable<(uint, Uri)> AsUriEnumerable(this IEnumerable<string> source, Action<string> onError = null)
+        public static IEnumerable<(uint, Uri)> AsOrderedUriEnumerable(this IEnumerable<string> source, Action<string> onError = null)
         {
             var i = 0U;
 

@@ -16,7 +16,7 @@ namespace FileUploadApp.Handlers
             this.store = store;
         }
 
-        public Task<Upload> Handle(DownloadUploadByIdQuery request, CancellationToken cancellationToken = default)
-            => store.ReceiveAsync(request.Id, cancellationToken);
+        public async Task<Upload> Handle(DownloadUploadByIdQuery request, CancellationToken cancellationToken = default)
+            => await store.ReceiveAsync(request.Id, cancellationToken).ConfigureAwait(false);
     }
 }

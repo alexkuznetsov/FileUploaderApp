@@ -1,13 +1,16 @@
-﻿using FileUploadApp.Domain.Dirty;
+﻿using FileUploadApp.Domain;
+using FileUploadApp.Domain.Dirty;
 using FileUploadApp.Interfaces;
 using FileUploadApp.Requests;
 using FileUploadApp.Services;
+using FileUploadApp.StreamAdapters;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -34,7 +37,24 @@ namespace FileUploadApp.Tests
                     , ServiceLifetime.Scoped);
 
                 s.Replace(sd);
+
+                var fakeHandler = CreateFakeRequestHandlerForDownloadUriQuery();
+                sd = new ServiceDescriptor(
+                      typeof(IRequestHandler<DownloadUriQuery, Upload>)
+                    , (_) => CreateFakeRequestHandlerForDownloadUriQuery()
+                    , ServiceLifetime.Scoped);
+
+                s.Replace(sd);
             });
+        }
+
+        private IRequestHandler<DownloadUriQuery, Upload> CreateFakeRequestHandlerForDownloadUriQuery()
+        {
+            var mock = new Mock<IRequestHandler<DownloadUriQuery, Upload>>();
+            mock.Setup(x => x.Handle(It.IsAny<DownloadUriQuery>(), It.IsAny<CancellationToken>()))
+                .Returns(Task.FromResult(FakeUpload));
+
+            return mock.Object;
         }
 
         private IContentDownloaderFactory<DownloadUriResponse> CreateFakeContentDownloaderFactory()
@@ -58,6 +78,14 @@ namespace FileUploadApp.Tests
             return mock.Object;
         }
 
+        private Upload FakeUpload
+            => new Upload(Guid.Parse("22b07b19-3083-4e78-a3da-1af171def587")
+                , Guid.Parse("953a0102-39dd-4164-89cb-92d3867c0739")
+                , 0U
+                , Path.GetFileName(FakeDownloadUriResponse.Uri.LocalPath)
+                , FakeDownloadUriResponse.ContentType
+                , new ByteaStreamAdapter(ImageArray));
+
         private DownloadUriResponse FakeDownloadUriResponse
             => new DownloadUriResponse(RequestUri, MimeConstants.BitmapMime, ImageArray);
 
@@ -79,7 +107,7 @@ namespace FileUploadApp.Tests
         [TestMethod]
         public async Task Test_QueryShouldReturnValidEntity()
         {
-            var req = new DownloadUriQuery(RequestUri);
+            var req = new DownloadUriQuery(0U, RequestUri);
 
             using (var scope = serviceProvider.CreateScope())
             {
@@ -87,9 +115,11 @@ namespace FileUploadApp.Tests
                 var response = await mediator.Send(req);
 
                 Assert.IsNotNull(response);
-                Assert.AreEqual(response.Uri, RequestUri);
-                Assert.AreEqual(response.ContentType, MimeConstants.BitmapMime);
-                Assert.IsTrue(ImageArray.AsSpan().SequenceEqual(response.Bytea.Span));
+                Assert.AreEqual(response.ContentType, FakeUpload.ContentType);
+                Assert.AreEqual(response.Id, FakeUpload.Id);
+                Assert.AreEqual(response.Name, FakeUpload.Name);
+                Assert.AreEqual(response.Number, FakeUpload.Number);
+                Assert.AreEqual(response.PreviewId, FakeUpload.PreviewId);
             }
         }
     }
