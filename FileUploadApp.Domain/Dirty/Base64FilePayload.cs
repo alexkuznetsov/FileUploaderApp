@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 
 namespace FileUploadApp.Domain.Dirty
@@ -7,7 +6,7 @@ namespace FileUploadApp.Domain.Dirty
     [DataContract]
     public class Base64FilePayload
     {
-        public static readonly string DataToken = "data";
+        public const string DataToken = "data";
 
         [DataMember(Name = "name", IsRequired = true, Order = 0)]
         [Required]

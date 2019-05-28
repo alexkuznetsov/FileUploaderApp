@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace FileUploadApp.Storage.Filesystem
 {
-    public class MetadataFSStoreBackend : FileStoreBackendBase, IStoreBackend<Guid, Metadata>
+    public class MetadataFsStoreBackend : FileStoreBackendBase, IStoreBackend<Guid, Metadata>
     {
-        private static readonly string SpecFileExtension = ".spec";
+        private const string SpecFileExtension = ".spec";
 
         private readonly ISerializer serializer;
         private readonly IDeserializer deserializer;
 
-        public MetadataFSStoreBackend(StorageConfiguration storageConfiguration
+        public MetadataFsStoreBackend(StorageConfiguration storageConfiguration
             , ISerializer serializer
             , IDeserializer deserializer)
             : base(storageConfiguration)
@@ -41,15 +41,13 @@ namespace FileUploadApp.Storage.Filesystem
             var path = BuildPathAndCheckDir(key, false);
             var specFilePath = FormatSpecFilePath(path);
 
-            if (File.Exists(specFilePath))
-            {
-                var contents = await File.ReadAllTextAsync(specFilePath, cancellationToken)
-                    .ConfigureAwait(false);
+            if (!File.Exists(specFilePath)) return default;
+            
+            var contents = await File.ReadAllTextAsync(specFilePath, cancellationToken)
+                .ConfigureAwait(false);
 
-                return deserializer.Deserialize<Metadata>(contents);
-            }
+            return deserializer.Deserialize<Metadata>(contents);
 
-            return default;
         }
 
         private static string FormatSpecFilePath(string file) => file + SpecFileExtension;

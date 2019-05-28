@@ -1,6 +1,5 @@
 ﻿using FileUploadApp.Domain;
 using FileUploadApp.Interfaces;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,7 +15,7 @@ namespace FileUploadApp.Storage
             , IStoreBackend<TKey, TIn> storeBackend
             , IFileStreamProvider<TKey, StreamAdapter> fileStreamProvider)
         {
-            this.metaRepository = metadataRepository;
+            metaRepository = metadataRepository;
             this.storeBackend = storeBackend;
             this.fileStreamProvider = fileStreamProvider;
         }

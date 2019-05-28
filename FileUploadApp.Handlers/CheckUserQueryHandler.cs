@@ -23,12 +23,9 @@ namespace FileUploadApp.Handlers
             if (user == null)
                 return CheckUserResult.NotFound;
 
-            var isPasswValid = checkUserService.Authenticate(user, password: request.Password);
+            var isPasswordValid = checkUserService.Authenticate(user, password: request.Password);
 
-            if (!isPasswValid)
-                return CheckUserResult.WrongPassw;
-
-            return CheckUserResult.Ok(user);
+            return !isPasswordValid ? CheckUserResult.WrongPassword : CheckUserResult.Ok(user);
         }
     }
 }

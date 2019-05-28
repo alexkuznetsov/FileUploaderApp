@@ -1,6 +1,7 @@
 ﻿using FileUploadApp.Domain;
 using Microsoft.Extensions.DependencyInjection;
 using System.Data.Common;
+using System.Diagnostics;
 
 namespace FileUploadApp.Core.DbProviderFactories
 {
@@ -26,6 +27,7 @@ namespace FileUploadApp.Core.DbProviderFactories
                 var connection = factory.CreateConnection();
                 var conf = r.GetRequiredService<AppConfiguration>();
 
+                Debug.Assert(connection != null, nameof(connection) + " != null");
                 connection.ConnectionString = conf.ConnectionString.ConnectionString;
 
                 return connection;

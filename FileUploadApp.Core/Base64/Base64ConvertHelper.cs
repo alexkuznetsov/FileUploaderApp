@@ -8,20 +8,20 @@ namespace FileUploadApp.Core
     {
         public static byte[] ConvertToBytes(ReadOnlySpan<char> sliced)
         {
-            byte[] bytea;
+            byte[] byteArr;
             var bytes = BufferPool.GetBuffer(Base64.GetMaxDecodedFromUtf8Length(sliced.Length));
 
             try
             {
                 if (Convert.TryFromBase64Chars(sliced, bytes, out var bytesWritten))
                 {
-                    bytea = new byte[bytesWritten];
-                    Buffer.BlockCopy(bytes, 0, bytea, 0, bytesWritten);
+                    byteArr = new byte[bytesWritten];
+                    Buffer.BlockCopy(bytes, 0, byteArr, 0, bytesWritten);
                 }
                 else
                 {
                     var chars = sliced.ToArray();
-                    bytea = Convert.FromBase64CharArray(chars, 0, chars.Length);
+                    byteArr = Convert.FromBase64CharArray(chars, 0, chars.Length);
                 }
             }
             finally
@@ -29,7 +29,7 @@ namespace FileUploadApp.Core
                 BufferPool.ReleaseBufferToPool(ref bytes);
             }
 
-            return bytea;
+            return byteArr;
         }
     }
 }

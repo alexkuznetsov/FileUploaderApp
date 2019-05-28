@@ -21,10 +21,10 @@ namespace FileUploadApp.Services
 
         public string DetectContentType(ReadOnlySpan<byte> bytes)
         {
-            foreach (var c in appConfiguration.GetFingerprints())
+            foreach (var (ctBytes, contentType) in appConfiguration.GetFingerprints())
             {
-                if (bytes.SequenceEqual(c.Item1))
-                    return c.Item2;
+                if (bytes.SequenceEqual(ctBytes))
+                    return contentType;
             }
 
             return MimeConstants.OctetStreamMime;

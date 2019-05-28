@@ -1,19 +1,18 @@
 ﻿using System;
-using System.Linq;
 
 namespace FileUploadApp.Core
 {
     public static partial class Base64Parser
     {
-        private static readonly string CharsetToken = "charset";
-        private static readonly string Base64Token = "base64";
+        private const string CharsetToken = "charset";
+        private const string Base64Token = "base64";
 
         public static Base64ParserResult Parse(ReadOnlySpan<char> data, string fileName)
         {
             var commaPos = data.IndexOf(',');
 
             if (commaPos == -1)
-                throw new ArgumentException("Invalid data paylod for " + fileName);
+                throw new ArgumentException("Invalid data payload for " + fileName);
 
             var headerEnumerator = data.Slice(0, commaPos).ToLower().Split(';');
             headerEnumerator.MoveNext();
@@ -63,7 +62,7 @@ namespace FileUploadApp.Core
             var colonPos = data.IndexOf(',');
 
             if (colonPos == -1)
-                throw new ArgumentException("Invalid data paylod for " + fileName);
+                throw new ArgumentException("Invalid data payload for " + fileName);
 
             var arrHeader = data.Substring(0, colonPos).ToLowerInvariant().Split(';');
 
@@ -76,7 +75,7 @@ namespace FileUploadApp.Core
                 if (arrHeader[1].StartsWith(CharsetToken))
                 {
                     var charsetPart = arrHeader[1].Split('=');
-                    _ = charsetPart[1];//TODO Charset now not using
+                    _ = charsetPart[1]; //TODO Charset now not using
                 }
                 else if (arrHeader[1].Equals(Base64Token))
                 {
@@ -89,14 +88,14 @@ namespace FileUploadApp.Core
                 }
             }
 
-            byte[] bytea;
+            byte[] byteArr;
 
             if (isBase64)
-                bytea = Convert.FromBase64String(data.Substring(colonPos + 1));
+                byteArr = Convert.FromBase64String(data.Substring(colonPos + 1));
             else
                 throw new ArgumentException("Invalid encoding type for " + fileName);
 
-            return new Base64ParserResult(contentType, bytea);
+            return new Base64ParserResult(contentType, byteArr);
         }
     }
 }

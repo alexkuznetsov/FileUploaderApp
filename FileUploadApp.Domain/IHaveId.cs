@@ -1,6 +1,6 @@
 ﻿namespace FileUploadApp.Domain
 {
-    public interface IHaveId<TId>
+    public interface IHaveId<out TId>
     {
         TId Id { get; }
     }

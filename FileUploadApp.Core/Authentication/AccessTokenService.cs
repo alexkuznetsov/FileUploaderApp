@@ -10,16 +10,16 @@ namespace FileUploadApp.Core.Authentication
 {
     internal class AccessTokenService : IAccessTokenService
     {
-        private static readonly string DeactivatedField = "deactivated";
-        private static readonly string AuthorizationField = "authorization";
+        private const string DeactivatedField = "deactivated";
+        private const string AuthorizationField = "authorization";
 
         private readonly IDistributedCache _cache;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IOptions<JwtOptions> _jwtOptions;
 
         public AccessTokenService(IDistributedCache cache,
-                IHttpContextAccessor httpContextAccessor,
-                IOptions<JwtOptions> jwtOptions)
+            IHttpContextAccessor httpContextAccessor,
+            IOptions<JwtOptions> jwtOptions)
         {
             _cache = cache;
             _httpContextAccessor = httpContextAccessor;
@@ -38,11 +38,11 @@ namespace FileUploadApp.Core.Authentication
         public async Task DeactivateAsync(string userId, string token)
         {
             await _cache.SetStringAsync(GetKey(token),
-                    DeactivatedField, new DistributedCacheEntryOptions
-                    {
-                        AbsoluteExpirationRelativeToNow =
-                            TimeSpan.FromMinutes(_jwtOptions.Value.ExpiryMinutes)
-                    }).ConfigureAwait(false);
+                DeactivatedField, new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow =
+                        TimeSpan.FromMinutes(_jwtOptions.Value.ExpiryMinutes)
+                }).ConfigureAwait(false);
         }
 
         private string GetCurrent()

@@ -6,7 +6,8 @@ namespace FileUploadApp.Domain
     {
         public StreamAdapter Stream { get; }
 
-        public FileDescriptor(Guid id, uint number, string name, string contentType, StreamAdapter streamAdapter) : base(id, number, name, contentType)
+        protected FileDescriptor(Guid id, uint number, string name, string contentType, StreamAdapter streamAdapter) :
+            base(id, number, name, contentType)
         {
             Stream = streamAdapter;
         }

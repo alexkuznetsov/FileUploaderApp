@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
-namespace FileUploadApp.Domain.Authtentication
+namespace FileUploadApp.Domain.Authentication
 {
+    [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global")]
     public class AuthenticationRequest
     {
         [Required]

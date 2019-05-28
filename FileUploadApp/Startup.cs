@@ -58,7 +58,7 @@ namespace FileUploadApp
             services.AddSingleton(Configuration.BindTo<StorageConfiguration>(ConfigConstants.FileStoreNode));
 
             services.AddSingleton<IStoreBackend<Guid, Upload>, FilesystemStoreBackend>();
-            services.AddSingleton<IStoreBackend<Guid, Metadata>, MetadataFSStoreBackend>();
+            services.AddSingleton<IStoreBackend<Guid, Metadata>, MetadataFsStoreBackend>();
             services.AddSingleton<IFileStreamProvider<Guid, StreamAdapter>, FilesystemStoreBackend>();
             services.AddSingleton<IStore<Guid, Upload, UploadResultRow>, FileSystemStore>();
 

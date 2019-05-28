@@ -43,7 +43,7 @@ namespace FileUploadApp.Tests
             Assert.IsNotNull(@object);
             Assert.IsTrue(@object.Files.Length == 1);
 
-            var data = @object.Files.AsFileDesciptors(contentTypeTestUtility);
+            var data = @object.Files.AsFileDescriptors(contentTypeTestUtility);
 
             Assert.IsNotNull(data);
             Assert.IsTrue(data.Count() == 1);
@@ -61,7 +61,7 @@ namespace FileUploadApp.Tests
             Assert.IsNotNull(@object);
             Assert.IsTrue(@object.Files.Length == 1);
 
-            var data = @object.Files.AsFileDesciptors(contentTypeTestUtility);
+            var data = @object.Files.AsFileDescriptors(contentTypeTestUtility);
 
             Assert.IsNotNull(data);
             Assert.IsTrue(data.Count() == 1);
@@ -79,7 +79,7 @@ namespace FileUploadApp.Tests
             Assert.IsNotNull(@object);
             Assert.IsTrue(@object.Files.Length == 1);
 
-            var data = @object.Files.AsFileDesciptors(contentTypeTestUtility);
+            var data = @object.Files.AsFileDescriptors(contentTypeTestUtility);
 
             Assert.IsNotNull(data);
             Assert.IsTrue(data.Count() == 1);
@@ -97,7 +97,7 @@ namespace FileUploadApp.Tests
             Assert.IsNotNull(@object);
             Assert.IsTrue(@object.Files.Length == 1);
 
-            var data = @object.Files.AsFileDesciptors(contentTypeTestUtility);
+            var data = @object.Files.AsFileDescriptors(contentTypeTestUtility);
 
             Assert.IsNotNull(data);
             Assert.IsTrue(data.Count() == 1);
@@ -132,7 +132,7 @@ namespace FileUploadApp.Tests
             Assert.IsNotNull(@object);
             Assert.IsTrue(@object.Files.Length == 1);
             Assert.IsTrue(@object.Links.Length == 2);
-            _ = @object.Files.AsFileDesciptors(contentTypeTestUtility).ToArray();
+            _ = @object.Files.AsFileDescriptors(contentTypeTestUtility).ToArray();
         }
 
         [TestMethod]
@@ -148,7 +148,7 @@ namespace FileUploadApp.Tests
             Assert.IsNotNull(@object);
             Assert.IsTrue(@object.Files.Length == 1);
             Assert.IsTrue(@object.Links.Length == 2);
-            _ = @object.Files.AsFileDesciptors(contentTypeTestUtility).ToArray();
+            _ = @object.Files.AsFileDescriptors(contentTypeTestUtility).ToArray();
         }
 
         [TestMethod]
@@ -164,7 +164,7 @@ namespace FileUploadApp.Tests
             Assert.IsNotNull(@object);
             Assert.IsTrue(@object.Files.Length == 1);
             Assert.IsTrue(@object.Links.Length == 2);
-            _ = @object.Files.AsFileDesciptors(contentTypeTestUtility).ToArray();
+            _ = @object.Files.AsFileDescriptors(contentTypeTestUtility).ToArray();
         }
 
         [TestMethod]
@@ -180,7 +180,7 @@ namespace FileUploadApp.Tests
             Assert.IsNotNull(@object);
             Assert.IsTrue(@object.Files.Length == 1);
             Assert.IsTrue(@object.Links.Length == 2);
-            _ = @object.Files.AsFileDesciptors(contentTypeTestUtility).ToArray();
+            _ = @object.Files.AsFileDescriptors(contentTypeTestUtility).ToArray();
         }
 
         [TestMethod]
@@ -196,7 +196,7 @@ namespace FileUploadApp.Tests
             Assert.IsNotNull(@object);
             Assert.IsTrue(@object.Files.Length == 1);
             Assert.IsTrue(@object.Links.Length == 2);
-            _ = @object.Files.AsFileDesciptors(contentTypeTestUtility).ToArray();
+            _ = @object.Files.AsFileDescriptors(contentTypeTestUtility).ToArray();
         }
 
         [TestMethod]
@@ -212,7 +212,7 @@ namespace FileUploadApp.Tests
             Assert.IsNotNull(@object);
             Assert.IsTrue(@object.Files.Length == 1);
             Assert.IsTrue(@object.Links.Length == 2);
-            _ = @object.Files.AsFileDesciptors(contentTypeTestUtility).ToArray();
+            _ = @object.Files.AsFileDescriptors(contentTypeTestUtility).ToArray();
         }
     }
 }

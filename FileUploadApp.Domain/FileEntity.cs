@@ -4,7 +4,7 @@ namespace FileUploadApp.Domain
 {
     public class FileEntity : IHaveId<Guid>
     {
-        private static readonly string StrImageMime = "image/";
+        private const string StrImageMime = "image/";
 
         public FileEntity(Guid id, uint number, string name, string contentType)
         {

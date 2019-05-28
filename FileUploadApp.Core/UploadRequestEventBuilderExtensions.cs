@@ -9,10 +9,9 @@ namespace FileUploadApp.Core
 {
     public static class UploadRequestEventBuilderExtensions
     {
-        public static IEnumerable<Upload> AsFileDesciptors(this IEnumerable<Base64FilePayload> files, IContentTypeTestUtility contentTypeTestUtility)
+        public static IEnumerable<Upload> AsFileDescriptors(this IEnumerable<Base64FilePayload> files, IContentTypeTestUtility contentTypeTestUtility)
         {
             var number = 0U;
-            ReadOnlyMemory<byte> bytea;
 
             foreach (var rawFile in files)
             {
@@ -20,19 +19,20 @@ namespace FileUploadApp.Core
 
                 var data = rawFile.RawData.AsSpan();
 
+                ReadOnlyMemory<byte> byteArr;
                 if (data.StartsWith(Base64FilePayload.DataToken.AsSpan(), StringComparison.InvariantCultureIgnoreCase))
                 {
-                    (contentType, bytea) = Base64Parser.Parse(data, rawFile.Name);
+                    (contentType, byteArr) = Base64Parser.Parse(data, rawFile.Name);
                 }
                 else
                 {
-                    bytea = Base64ConvertHelper.ConvertToBytes(data);
+                    byteArr = Base64ConvertHelper.ConvertToBytes(data);
                     contentType = string.Empty;
                 }
 
                 if (string.IsNullOrEmpty(contentType))
                 {
-                    contentType = contentTypeTestUtility.DetectContentType(bytea.Slice(0, 4).Span);
+                    contentType = contentTypeTestUtility.DetectContentType(byteArr.Slice(0, 4).Span);
                 }
 
                 if (contentTypeTestUtility.IsAllowed(contentType))
@@ -43,7 +43,7 @@ namespace FileUploadApp.Core
                         num: number++,
                         name: rawFile.Name,
                         contentType: contentType,
-                        streamAdapter: new ByteaStreamAdapter(bytea));
+                        streamAdapter: new ByteaStreamAdapter(byteArr));
                 }
             }
         }

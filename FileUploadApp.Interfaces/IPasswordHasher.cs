@@ -1,4 +1,4 @@
-﻿namespace FileUploadApp.Services.Accounts
+﻿namespace FileUploadApp.Interfaces
 {
     public interface IPasswordHasher
     {

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 
+// ReSharper disable once CheckNamespace
 namespace FileUploadApp
 {
     public static class ConfigurationExtensions

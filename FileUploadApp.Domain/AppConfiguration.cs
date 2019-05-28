@@ -5,14 +5,14 @@ namespace FileUploadApp.Domain
 {
     public class AppConfiguration
     {
-        public class CSSettings
+        public class CsSettings
         {
             public string ProviderName { get; set; }
 
             public string ConnectionString { get; set; }
         }
 
-        public CSSettings ConnectionString { get; set; } = new CSSettings
+        public CsSettings ConnectionString { get; set; } = new CsSettings
         {
             ConnectionString = "Data Source=localhost;Initial Catalog=authcatalog;Integrated Security=True;",
             ProviderName = "System.Data.SqlClient"

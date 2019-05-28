@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 
 namespace FileUploadApp.Storage.Filesystem
 {
-    public class FilesystemStoreBackend : FileStoreBackendBase, IStoreBackend<Guid, Upload>, IFileStreamProvider<Guid, StreamAdapter>
+    public class FilesystemStoreBackend : FileStoreBackendBase
+        , IStoreBackend<Guid, Upload>
+        , IFileStreamProvider<Guid, StreamAdapter>
     {
         public FilesystemStoreBackend(StorageConfiguration storageConfiguration):base(storageConfiguration)
         {

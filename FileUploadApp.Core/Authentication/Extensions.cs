@@ -10,7 +10,7 @@ namespace FileUploadApp.Core.Authentication
 {
     public static class AuthenticationExtensions
     {
-        private static readonly string SectionName = "jwt";
+        private const string SectionName = "jwt";
 
         public static void AddJwt(this IServiceCollection services)
         {

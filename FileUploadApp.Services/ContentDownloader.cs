@@ -10,7 +10,7 @@ namespace FileUploadApp.Services
 {
     public class ContentDownloader : IContentDownloader<DownloadUriResponse>
     {
-        private static readonly string UserAgentField = "User-Agent";
+        private const string UserAgentField = "User-Agent";
 
         private readonly AppConfiguration _configuration;
         private readonly HttpClientHandler _sharedHandler;

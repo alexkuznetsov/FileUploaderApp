@@ -36,14 +36,13 @@ namespace FileUploadApp.Handlers
             logger.LogInformation($"saving file {file.Name}. Content type: {file.ContentType}");
             var result = await store.StoreAsync(file).ConfigureAwait(false);
 
-            if (file.IsImage())
-            {
-                logger.LogInformation($"saving preview for file {file.Name}. Content type: {file.ContentType}");
+            if (!file.IsImage()) return result;
+            
+            logger.LogInformation($"saving preview for file {file.Name}. Content type: {file.ContentType}");
 
-                var preview = ImageHelper.Resize(appConfiguration.PreviewSize, file);
+            var preview = ImageHelper.Resize(appConfiguration.PreviewSize, file);
 
-                result.Preview = await store.StoreAsync(preview).ConfigureAwait(false);
-            }
+            result.Preview = await store.StoreAsync(preview).ConfigureAwait(false);
 
             return result;
         }

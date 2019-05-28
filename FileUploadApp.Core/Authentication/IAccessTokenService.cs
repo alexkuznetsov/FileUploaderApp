@@ -7,7 +7,7 @@ namespace FileUploadApp.Core.Authentication
 
     }
 
-    internal interface IAccessTokenService<TUserId>
+    internal interface IAccessTokenService<in TUserId>
     {
         Task<bool> IsTokenAlive();
         Task DeactivateCurrentAsync(TUserId userId);

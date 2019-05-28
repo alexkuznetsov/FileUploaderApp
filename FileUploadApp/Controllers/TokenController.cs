@@ -1,11 +1,11 @@
 ﻿using FileUploadApp.Core;
-using FileUploadApp.Domain.Authtentication;
 using FileUploadApp.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading;
 using System.Threading.Tasks;
+using FileUploadApp.Domain.Authentication;
 
 namespace FileUploadApp.Controllers
 {

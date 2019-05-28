@@ -1,37 +1,39 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace FileUploadApp.Domain
 {
     public class CheckUserResult
     {
-        public static readonly CheckUserResult NotFound = new CheckUserResult(null, false);
+        public static readonly CheckUserResult NotFound = new CheckUserResult(null);
 
-        public static readonly CheckUserResult WrongPassw = new CheckUserResult(null, false);
+        public static readonly CheckUserResult WrongPassword = new CheckUserResult(null);
 
-        public static CheckUserResult Ok(User user) => new CheckUserResult(user, true);
+        public static CheckUserResult Ok(User user) => new CheckUserResult(user);
 
-        public CheckUserResult(User user, bool status)
+        private CheckUserResult(User user)
         {
             User = user;
-            Status = status;
         }
 
         public User User { get; }
-        public bool Status { get; }
 
         public bool UserNotFound() => ReferenceEquals(this, NotFound);
-        public bool UserPasswordMismatch() => ReferenceEquals(this, WrongPassw);
+        public bool UserPasswordMismatch() => ReferenceEquals(this, WrongPassword);
     }
+
+    [DataContract]
     public class User : IHaveId<int>
     {
-        public int Id { get; set; }
+        [DataMember] public int Id { get; set; }
 
-        public DateTime CreatedAt { get; set; }
+        [DataMember] public DateTime CreatedAt { get; set; }
 
-        public DateTime? UpdatedAt { get; set; }
+        [DataMember] public DateTime? UpdatedAt { get; set; }
 
-        public string Username { get; set; }
+        [DataMember] public string Username { get; set; }
 
-        public string Passwhash { get; set; }
+        // ReSharper disable once IdentifierTypo
+        [DataMember] public string Passwhash { get; set; }
     }
 }

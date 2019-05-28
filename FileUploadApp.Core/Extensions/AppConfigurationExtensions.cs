@@ -8,15 +8,15 @@ namespace FileUploadApp.Core
     public static class AppConfigurationExtensions
     {
         private static readonly ConcurrentDictionary<string, byte[]>
-            mimeCache = new ConcurrentDictionary<string, byte[]>();
+            MimeCache = new ConcurrentDictionary<string, byte[]>();
 
         public static IEnumerable<(byte[], string)> GetFingerprints(this AppConfiguration appConfiguration)
         {
-            foreach (var k in appConfiguration.Mappings)
+            foreach (var (key, value) in appConfiguration.Mappings)
             {
-                var converted = Convert.FromBase64String(k.Key);
+                var converted = Convert.FromBase64String(key);
 
-                yield return (mimeCache.GetOrAdd(k.Value, converted), k.Value);
+                yield return (MimeCache.GetOrAdd(value, converted), value);
             }
         }
     }

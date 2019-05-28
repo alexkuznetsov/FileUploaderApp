@@ -1,5 +1,4 @@
 ﻿using FileUploadApp.Domain;
-using FileUploadApp.Domain.Dirty;
 using MediatR;
 using System;
 

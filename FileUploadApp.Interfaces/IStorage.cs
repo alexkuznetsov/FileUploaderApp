@@ -1,10 +1,9 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 
 namespace FileUploadApp.Interfaces
 {
-    public interface IStore<TKey, TIn, TOut>
+    public interface IStore<in TKey, TIn, TOut>
     {
         Task<TOut> StoreAsync(TIn file, CancellationToken cancellationToken = default);
 

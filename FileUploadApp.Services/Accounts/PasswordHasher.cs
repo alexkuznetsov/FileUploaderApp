@@ -1,14 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
-using System.Text;
+using FileUploadApp.Interfaces;
 
 namespace FileUploadApp.Services.Accounts
 {
     public sealed class PasswordHasher : IPasswordHasher
     {
-        private const int PBKDF2IterCount = 1000; // default for Rfc2898DeriveBytes
-        private const int PBKDF2SubkeyLength = 256 / 8; // 256 bits
+        private const int Pbkdf2IterCount = 1000; // default for Rfc2898DeriveBytes
+        private const int Pbkdf2SubKeyLength = 256 / 8; // 256 bits
         private const int SaltSize = 128 / 8; // 128 bits
 
         /* =======================
@@ -16,9 +17,9 @@ namespace FileUploadApp.Services.Accounts
          * =======================
          * 
          * Version 0:
-         * PBKDF2 with HMAC-SHA1, 128-bit salt, 256-bit subkey, 1000 iterations.
+         * PBKDF2 with HMAC-SHA1, 128-bit salt, 256-bit subKey, 1000 iterations.
          * (See also: SDL crypto guidelines v5.1, Part III)
-         * Format: { 0x00, salt, subkey }
+         * Format: { 0x00, salt, subKey }
          */
 
         public string HashPassword(string password)
@@ -30,18 +31,18 @@ namespace FileUploadApp.Services.Accounts
 
             // Produce a version 0 (see comment above) password hash.
             byte[] salt;
-            byte[] subkey;
+            byte[] subKey;
 
-            using (var deriveBytes = new Rfc2898DeriveBytes(password, SaltSize, PBKDF2IterCount))
+            using (var deriveBytes = new Rfc2898DeriveBytes(password, SaltSize, Pbkdf2IterCount))
             {
                 salt = deriveBytes.Salt;
-                subkey = deriveBytes.GetBytes(PBKDF2SubkeyLength);
+                subKey = deriveBytes.GetBytes(Pbkdf2SubKeyLength);
             }
 
-            byte[] outputBytes = new byte[1 + SaltSize + PBKDF2SubkeyLength];
+            var outputBytes = new byte[1 + SaltSize + Pbkdf2SubKeyLength];
 
             Buffer.BlockCopy(salt, 0, outputBytes, 1, SaltSize);
-            Buffer.BlockCopy(subkey, 0, outputBytes, 1 + SaltSize, PBKDF2SubkeyLength);
+            Buffer.BlockCopy(subKey, 0, outputBytes, 1 + SaltSize, Pbkdf2SubKeyLength);
 
             return Convert.ToBase64String(outputBytes);
         }
@@ -53,55 +54,54 @@ namespace FileUploadApp.Services.Accounts
             {
                 throw new ArgumentNullException(nameof(hashedPassword));
             }
+
             if (password == null)
             {
                 throw new ArgumentNullException(nameof(password));
             }
 
-            byte[] hashedPasswordBytes = Convert.FromBase64String(hashedPassword);
+            var hashedPasswordBytes = Convert.FromBase64String(hashedPassword);
 
             // Verify a version 0 (see comment above) password hash.
 
-            if (hashedPasswordBytes.Length != (1 + SaltSize + PBKDF2SubkeyLength) || hashedPasswordBytes[0] != 0x00)
+            if (hashedPasswordBytes.Length != (1 + SaltSize + Pbkdf2SubKeyLength) || hashedPasswordBytes[0] != 0x00)
             {
                 // Wrong length or version header.
                 return false;
             }
 
-            byte[] salt = new byte[SaltSize];
+            var salt = new byte[SaltSize];
             Buffer.BlockCopy(hashedPasswordBytes, 1, salt, 0, SaltSize);
-            byte[] storedSubkey = new byte[PBKDF2SubkeyLength];
-            Buffer.BlockCopy(hashedPasswordBytes, 1 + SaltSize, storedSubkey, 0, PBKDF2SubkeyLength);
+            var storedSubKey = new byte[Pbkdf2SubKeyLength];
+            Buffer.BlockCopy(hashedPasswordBytes, 1 + SaltSize, storedSubKey, 0, Pbkdf2SubKeyLength);
 
-            byte[] generatedSubkey;
+            byte[] generatedSubKey;
 
-            using (var deriveBytes = new Rfc2898DeriveBytes(password, salt, PBKDF2IterCount))
+            using (var deriveBytes = new Rfc2898DeriveBytes(password, salt, Pbkdf2IterCount))
             {
-                generatedSubkey = deriveBytes.GetBytes(PBKDF2SubkeyLength);
+                generatedSubKey = deriveBytes.GetBytes(Pbkdf2SubKeyLength);
             }
 
-            return ByteArraysEqual(storedSubkey, generatedSubkey);
+            return ByteArraysEqual(storedSubKey, generatedSubKey);
         }
-
-       
 
         // Compares two byte arrays for equality. The method is specifically written so that the loop is not optimized.
         [MethodImpl(MethodImplOptions.NoOptimization)]
-        private static bool ByteArraysEqual(byte[] a, byte[] b)
+        private static bool ByteArraysEqual(IReadOnlyList<byte> a, IReadOnlyList<byte> b)
         {
             if (ReferenceEquals(a, b))
             {
                 return true;
             }
 
-            if (a == null || b == null || a.Length != b.Length)
+            if (a == null || b == null || a.Count != b.Count)
             {
                 return false;
             }
 
-            bool areSame = true;
+            var areSame = true;
 
-            for (int i = 0; i < a.Length; i++)
+            for (var i = 0; i < a.Count; i++)
             {
                 areSame &= (a[i] == b[i]);
             }

@@ -15,10 +15,10 @@ namespace FileUploadApp.Core
                 this.bytes = bytes;
             }
 
-            internal void Deconstruct(out string contentType, out ReadOnlyMemory<byte> bytea)
+            internal void Deconstruct(out string outContentType, out ReadOnlyMemory<byte> outByteArr)
             {
-                contentType = new string(this.contentType);
-                bytea = bytes;
+                outContentType = new string(contentType);
+                outByteArr = bytes;
             }
         }
     }

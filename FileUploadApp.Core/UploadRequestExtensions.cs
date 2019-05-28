@@ -12,7 +12,7 @@ namespace FileUploadApp.Core
     {
         public static IEnumerable<Upload> AsUploads(this UploadRequest uploadRequest, IContentTypeTestUtility contentTypeTestUtility)
             => uploadRequest.Files?
-                .AsFileDesciptors(contentTypeTestUtility) ?? new Upload[] { };
+                .AsFileDescriptors(contentTypeTestUtility) ?? new Upload[] { };
 
         public static IEnumerable<DownloadUriQuery> AsDownloadUriQueries(this UploadRequest uploadRequest, Action<string> onError = default)
             => uploadRequest.Links?

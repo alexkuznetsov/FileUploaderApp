@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace FileUploadApp.Storage
 {
-    public interface IStoreBackend<TKey, TIn>
+    public interface IStoreBackend<in TKey, TIn>
     {
         Task SaveAsync(TIn file, CancellationToken cancellationToken = default);
 

@@ -31,12 +31,11 @@ namespace FileUploadApp.Handlers
             var file = await store.ReceiveAsync(fileIdPreviewId.Item1, cancellationToken).ConfigureAwait(false);
             var row = new UploadResultRow(file.Id, file.Number, file.Name, file.ContentType);
 
-            if (file.IsImage())
-            {
-                var preview = await store.ReceiveAsync(fileIdPreviewId.Item2, cancellationToken).ConfigureAwait(false);
+            if (!file.IsImage()) return row;
+            
+            var preview = await store.ReceiveAsync(fileIdPreviewId.Item2, cancellationToken).ConfigureAwait(false);
 
-                row.Preview = new FileEntity(preview.Id, preview.Number, preview.Name, preview.ContentType);
-            }
+            row.Preview = new FileEntity(preview.Id, preview.Number, preview.Name, preview.ContentType);
 
             return row;
         }

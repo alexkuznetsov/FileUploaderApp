@@ -10,16 +10,16 @@ namespace FileUploadApp.Services.Accounts
     {
         private readonly IPasswordHasher _hasher;
 
-        private DbConnection DBContext { get; set; }
+        private DbConnection DbContext { get; set; }
 
         public CheckUserService(DbConnection dBContext, IPasswordHasher hasher)
         {
-            DBContext = dBContext;
+            DbContext = dBContext;
             _hasher = hasher;
         }
 
         public async Task<User> FindByNameAsync(string username)
-            => await DBContext.FindClientByUserNameAsync(username).ConfigureAwait(false);
+            => await DbContext.FindClientByUserNameAsync(username).ConfigureAwait(false);
 
         public async Task<bool> AuthenticateAsync(string username, string password)
         {

@@ -11,11 +11,11 @@ namespace FileUploadApp.Storage.Filesystem
             StorageConfiguration = storageConfiguration;
         }
 
-        protected StorageConfiguration StorageConfiguration { get; }
+        private StorageConfiguration StorageConfiguration { get; }
 
         protected string BuildPathAndCheckDir(Guid fileId, bool createIfNotExists)
         {
-            if (Guid.Empty.Equals(fileId))
+            if (fileId == null || fileId.Equals(Guid.Empty))
             {
                 throw new ArgumentException("fileId can not be null or empty", nameof(fileId));
             }

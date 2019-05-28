@@ -13,9 +13,9 @@ namespace FileUploadApp.Core
     {
         public static async Task<IEnumerable<Upload>> AsUploadFilesEventAsync(this HttpContext httpContext
             , IContentTypeTestUtility contentTypeTestUtility
-            , CancellationToken cancellactionToken = default)
+            , CancellationToken cancellationToken = default)
         {
-            var form = await httpContext.Request.ReadFormAsync(cancellactionToken);
+            var form = await httpContext.Request.ReadFormAsync(cancellationToken);
             var filesCollection = new List<Upload>();
             var number = 0U;
 
