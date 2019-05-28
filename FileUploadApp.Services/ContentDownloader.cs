@@ -27,7 +27,6 @@ namespace FileUploadApp.Services
         {
             using (var client = GetClient())
             using (var message = await client.GetAsync(_address, cancellationToken).ConfigureAwait(false))
-            using(message.Content)
             {
                 var contentType = message.Content.Headers.ContentType;
                 var data = await message.Content.ReadAsByteArrayAsync().ConfigureAwait(false);

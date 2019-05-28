@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="IMG_0162.JPG.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="IMG_0162.JPG.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.11.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FileUploadApp.Core\FileUploadApp.Core.csproj" />
+  </ItemGroup>
+
+</Project>

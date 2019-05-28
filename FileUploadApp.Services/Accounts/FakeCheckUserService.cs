@@ -1,0 +1,32 @@
+﻿using FileUploadApp.Domain;
+using FileUploadApp.Interfaces;
+using System;
+using System.Threading.Tasks;
+
+namespace FileUploadApp.Services.Accounts
+{
+    public sealed class FakeCheckUserService : ICheckUserService<User>
+    {
+        public bool Authenticate(User user, string password)
+            => user.Passwhash == password;
+
+        public async Task<bool> AuthenticateAsync(string username, string password)
+        {
+            var user = await FindByNameAsync(username).ConfigureAwait(false);
+
+            return Authenticate(user, password);
+        }
+
+        public Task<User> FindByNameAsync(string username)
+        {
+            return Task.FromResult(new User
+            {
+                CreatedAt = DateTime.Now,
+                Id = 1,
+                Passwhash = "1qaz!QAZ",
+                UpdatedAt = null,
+                Username = username
+            });
+        }
+    }
+}

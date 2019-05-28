@@ -2,7 +2,7 @@
 
 namespace FileUploadApp.Domain
 {
-    public class FileEntity
+    public class FileEntity : IHaveId<Guid>
     {
         private static readonly string StrImageMime = "image/";
 

@@ -16,16 +16,6 @@ namespace FileUploadApp.StreamAdapters
             this.pathToFile = pathToFile;
         }
 
-        public override Task<byte[]> AsBytesSliceAsync(int len, CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override Task<byte[]> AsRawBytesAsync(CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
-        }
-
         public override Stream Stream => File.OpenRead(pathToFile);
 
         public override async Task CopyToAsync(Stream target, CancellationToken cancellationToken = default)

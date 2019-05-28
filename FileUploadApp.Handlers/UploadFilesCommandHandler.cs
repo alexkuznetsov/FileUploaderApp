@@ -4,6 +4,7 @@ using FileUploadApp.Imaging;
 using FileUploadApp.Interfaces;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,11 +13,11 @@ namespace FileUploadApp.Handlers
 {
     public class UploadFilesCommandHandler : INotificationHandler<UploadFilesEvent>
     {
-        private readonly IStore<Upload, UploadResultRow> store;
+        private readonly IStore<Guid, Upload, UploadResultRow> store;
         private readonly AppConfiguration appConfiguration;
         private readonly ILogger<UploadFilesCommandHandler> logger;
 
-        public UploadFilesCommandHandler(IStore<Upload, UploadResultRow> store, AppConfiguration appConfiguration, ILogger<UploadFilesCommandHandler> logger)
+        public UploadFilesCommandHandler(IStore<Guid, Upload, UploadResultRow> store, AppConfiguration appConfiguration, ILogger<UploadFilesCommandHandler> logger)
         {
             this.store = store;
             this.appConfiguration = appConfiguration;

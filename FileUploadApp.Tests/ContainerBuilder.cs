@@ -83,7 +83,7 @@ namespace FileUploadApp.Tests
             services.AddSingleton<IStoreBackend<Guid, Metadata>, FakeMetadataStoreBackend>();
 
             services.AddSingleton<IFileStreamProvider<Guid, StreamAdapter>, FakeStoreBackend>();
-            services.AddSingleton<IStore<Upload, UploadResultRow>,FakeStorage>();
+            services.AddSingleton<IStore<Guid, Upload, UploadResultRow>, FakeStorage>();
 
             services.AddScoped<ServiceFactory>(p => p.GetService);
 

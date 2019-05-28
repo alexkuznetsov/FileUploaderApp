@@ -11,9 +11,9 @@ namespace FileUploadApp.Handlers
 {
     public class GetUploadedResultsQueryHandler : IRequestHandler<GetUploadedResultsQuery, UploadResult>
     {
-        private readonly IStore<Upload, UploadResultRow> store;
+        private readonly IStore<Guid, Upload, UploadResultRow> store;
 
-        public GetUploadedResultsQueryHandler(IStore<Upload, UploadResultRow> store)
+        public GetUploadedResultsQueryHandler(IStore<Guid, Upload, UploadResultRow> store)
         {
             this.store = store;
         }

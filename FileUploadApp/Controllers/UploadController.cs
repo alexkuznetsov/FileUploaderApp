@@ -5,8 +5,10 @@ using FileUploadApp.Events;
 using FileUploadApp.Interfaces;
 using FileUploadApp.Requests;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -16,13 +18,16 @@ namespace FileUploadApp.Controllers
 {
 
     [Route("api/[controller]")]
+    [Authorize]
     public class UploadController : BaseApiController
     {
         private readonly IContentTypeTestUtility contentTypeTestUtility;
+        private readonly ILogger<UploadController> logger;
 
-        public UploadController(IMediator mediator, IContentTypeTestUtility contentTypeTestUtility) : base(mediator)
+        public UploadController(IMediator mediator, IContentTypeTestUtility contentTypeTestUtility, ILogger<UploadController> logger) : base(mediator)
         {
             this.contentTypeTestUtility = contentTypeTestUtility;
+            this.logger = logger;
         }
 
         [HttpPost("")]
@@ -31,16 +36,13 @@ namespace FileUploadApp.Controllers
         {
             var files = await HttpContext.AsUploadFilesEventAsync(contentTypeTestUtility, ct);
 
-            if (!files.Any())
-                return NotFound();
-
             return await UploadCoreAsync(files);
         }
 
         [HttpPost("")]
         public async Task<IActionResult> PostJson(UploadRequest uploadRequest, CancellationToken ct = default)
         {
-            var commands = uploadRequest.AsDownloadUriQueries().ToArray();
+            var commands = uploadRequest.AsDownloadUriQueries((e) => logger.LogError("Fail to parse URI: {0}", e)).ToArray();
             var files = uploadRequest.AsUploads(contentTypeTestUtility);
 
             if (commands.Any())
@@ -56,6 +58,9 @@ namespace FileUploadApp.Controllers
 
         private async Task<IActionResult> UploadCoreAsync(IEnumerable<Upload> files, CancellationToken cancellationToken = default)
         {
+            if (!files.Any())
+                return NotFound();
+
             var uploadCommand = new UploadFilesEvent(files);
             var receiveQuery = new GetUploadedResultsQuery(files);
 

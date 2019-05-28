@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 
 namespace FileUploadApp.Interfaces
 {
-    public interface IStore<TIn, TOut>
+    public interface IStore<TKey, TIn, TOut>
     {
         Task<TOut> StoreAsync(TIn file, CancellationToken cancellationToken = default);
 
-        Task<TIn> ReceiveAsync(Guid fileId, CancellationToken cancellationToken = default);
+        Task<TIn> ReceiveAsync(TKey fileId, CancellationToken cancellationToken = default);
     }
 }

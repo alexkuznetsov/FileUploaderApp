@@ -20,6 +20,7 @@ namespace FileUploadApp
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .UseKestrel(o => { o.Limits.MaxRequestBodySize = null; })
                 .ConfigureLogging((hostingContext, logging) =>
                 {
                     logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
@@ -27,9 +28,9 @@ namespace FileUploadApp
                     logging.AddDebug();
                     logging.AddSerilog();
                 })
-                .UseSerilog((ctx, logConf) =>
+                .UseSerilog((builder, logConfig) =>
                 {
-                    logConf.ReadFrom.Configuration(ctx.Configuration)
+                    logConfig.ReadFrom.Configuration(builder.Configuration)
                         .Enrich.FromLogContext()
                         .MinimumLevel.Information();
                 })

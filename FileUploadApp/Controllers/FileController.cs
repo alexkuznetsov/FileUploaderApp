@@ -3,6 +3,7 @@ using FileUploadApp.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FileUploadApp.Controllers
@@ -17,9 +18,9 @@ namespace FileUploadApp.Controllers
 
         [HttpGet("{id}")]
         [ResponseCache(Duration = 5, Location = ResponseCacheLocation.Any)]
-        public async Task<IActionResult> Get(Guid id)
+        public async Task<IActionResult> Get(Guid id, CancellationToken cancellationToken = default)
         {
-            var response = await SendAsync(new DownloadUploadByIdQuery(id));
+            var response = await SendAsync(new DownloadUploadByIdQuery(id), cancellationToken);
 
             if (response == null)
                 return NotFound();

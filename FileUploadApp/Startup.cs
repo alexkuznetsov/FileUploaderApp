@@ -1,10 +1,14 @@
-﻿using FileUploadApp.Requests;
+﻿using FileUploadApp.Core.Authentication;
 using FileUploadApp.Core.Serialization;
 using FileUploadApp.Domain;
+using FileUploadApp.Domain.Dirty;
 using FileUploadApp.Events;
 using FileUploadApp.Handlers;
 using FileUploadApp.Interfaces;
+using FileUploadApp.Requests;
 using FileUploadApp.Services;
+using FileUploadApp.Services.Accounts;
+using FileUploadApp.Storage;
 using FileUploadApp.Storage.Filesystem;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -12,12 +16,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-
+using System;
 using System.Linq;
 using System.Net.Http;
-using FileUploadApp.Storage;
-using System;
-using FileUploadApp.Domain.Dirty;
 
 namespace FileUploadApp
 {
@@ -59,7 +60,7 @@ namespace FileUploadApp
             services.AddSingleton<IStoreBackend<Guid, Upload>, FilesystemStoreBackend>();
             services.AddSingleton<IStoreBackend<Guid, Metadata>, MetadataFSStoreBackend>();
             services.AddSingleton<IFileStreamProvider<Guid, StreamAdapter>, FilesystemStoreBackend>();
-            services.AddSingleton<IStore<Upload, UploadResultRow>, FileSystemStore>();
+            services.AddSingleton<IStore<Guid, Upload, UploadResultRow>, FileSystemStore>();
 
             services.AddScoped<ServiceFactory>(p => p.GetService);
 
@@ -71,7 +72,6 @@ namespace FileUploadApp
                .AddClasses()
                .AsImplementedInterfaces());
 
-            //services.AddTransient<UploadedDataPreprocessMiddleware>();
             services.AddCors((s) =>
             {
                 s.AddDefaultPolicy((c) =>
@@ -81,6 +81,11 @@ namespace FileUploadApp
                     c.WithMethods("OPTIONS", "GET", "POST");
                 });
             });
+
+
+            services.AddJwt();
+            services.AddSingleton<ICheckUserService<User>, FakeCheckUserService>();
+            //services.AddDbConnection();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -101,8 +106,11 @@ namespace FileUploadApp
                 app.UseHsts();
             }
 
+            app.UseAccessTokenValidator(/*"/auth/login"*/);
             app.UseHttpsRedirection();
+            app.UseAuthentication();
             app.UseMvc();
+
             app.UseCors();
         }
     }

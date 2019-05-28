@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace FileUploadApp
 {
-    public static class StringExtensions
+    internal static class StringExtensions
     {
         public static IEnumerable<(uint, Uri)> AsOrderedUriEnumerable(this IEnumerable<string> source, Action<string> onError = null)
         {
