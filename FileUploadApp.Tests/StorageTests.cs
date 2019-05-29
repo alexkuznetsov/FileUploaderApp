@@ -17,8 +17,7 @@ namespace FileUploadApp.Tests
         [TestInitialize]
         public void Initialize()
         {
-            var builder = new ContainerBuilder();
-            serviceProvider = builder.Create();
+            serviceProvider = ContainerBuilder.Create();
         }
 
         [TestCleanup]

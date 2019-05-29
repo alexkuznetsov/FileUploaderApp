@@ -17,7 +17,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Linq;
 using System.Net.Http;
 
 namespace FileUploadApp
@@ -34,23 +33,17 @@ namespace FileUploadApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc(options =>
-            {
-                options.EnableEndpointRouting = false;
-            })
-            .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc(options => { options.EnableEndpointRouting = false; })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddSingleton(Configuration.BindTo<AppConfiguration>(ConfigConstants.ConfNode));
             services.AddSingleton<IContentTypeTestUtility, ContentTypeTestUtility>();
             services.AddSingleton<ISerializer, Serializer>();
             services.AddSingleton<IDeserializer, Deserializer>();
-            services.AddSingleton((r) =>
+            services.AddSingleton((r) => new HttpClientHandler
             {
-                return new HttpClientHandler
-                {
-                    AllowAutoRedirect = true,
-                    AutomaticDecompression = System.Net.DecompressionMethods.Deflate | System.Net.DecompressionMethods.GZip
-                };
+                AllowAutoRedirect = true,
+                AutomaticDecompression = System.Net.DecompressionMethods.Deflate | System.Net.DecompressionMethods.GZip
             });
 
             services.AddSingleton<IContentDownloaderFactory<DownloadUriResponse>, ContentDownloaderFactory>();
@@ -65,12 +58,12 @@ namespace FileUploadApp
             services.AddScoped<ServiceFactory>(p => p.GetService);
 
             services.Scan(scan => scan
-               .FromAssembliesOf(typeof(IMediator)
+                .FromAssembliesOf(typeof(IMediator)
                     , typeof(GenericEvent)
                     , typeof(DownloadUriQuery)
                     , typeof(UploadFilesCommandHandler))
-               .AddClasses()
-               .AsImplementedInterfaces());
+                .AddClasses()
+                .AsImplementedInterfaces());
 
             services.AddCors((s) =>
             {
@@ -106,7 +99,7 @@ namespace FileUploadApp
                 app.UseHsts();
             }
 
-            app.UseAccessTokenValidator(/*"/auth/login"*/);
+            app.UseAccessTokenValidator( /*"/auth/login"*/);
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseMvc();

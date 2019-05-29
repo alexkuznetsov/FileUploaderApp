@@ -9,7 +9,7 @@ namespace FileUploadApp.Tests.Fakes
 {
     internal class FakeStoreBackend : IStoreBackend<Guid, Upload>, IFileStreamProvider<Guid, StreamAdapter>
     {
-        readonly Dictionary<Guid, Upload> keyValuePairs = new Dictionary<Guid, Upload>();
+        private readonly Dictionary<Guid, Upload> keyValuePairs = new Dictionary<Guid, Upload>();
 
         public Task<Upload> FindAsync(Guid key, CancellationToken cancellationToken = default)
         {

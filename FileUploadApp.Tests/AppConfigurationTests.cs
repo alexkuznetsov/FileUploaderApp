@@ -14,8 +14,7 @@ namespace FileUploadApp.Tests
         [TestInitialize]
         public void Initialize()
         {
-            var builder = new ContainerBuilder();
-            serviceProvider = builder.Create();
+            serviceProvider = ContainerBuilder.Create();
         }
 
         [TestCleanup]
@@ -52,7 +51,7 @@ namespace FileUploadApp.Tests
         {
             var appConf = serviceProvider.GetRequiredService<AppConfiguration>();
 
-            Assert.IsNotNull(appConf.PreviewSize);
+            Assert.IsTrue(appConf.PreviewSize != null);
             Assert.IsTrue(appConf.PreviewSize.Width == 100);
             Assert.IsTrue(appConf.PreviewSize.Height == 100);
         }
@@ -67,7 +66,7 @@ namespace FileUploadApp.Tests
         }
 
         [TestMethod]
-        public void Test_AppConfiguration_AllowedContentTypes_ShouldContainsDefualtMimes()
+        public void Test_AppConfiguration_AllowedContentTypes_ShouldContainsDefaultMimes()
         {
             var appConf = serviceProvider.GetRequiredService<AppConfiguration>();
 

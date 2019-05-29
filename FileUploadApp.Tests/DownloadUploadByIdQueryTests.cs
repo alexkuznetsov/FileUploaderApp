@@ -20,15 +20,13 @@ namespace FileUploadApp.Tests
         [TestInitialize]
         public void Initialize()
         {
-            var builder = new ContainerBuilder();
-
-            serviceProvider = builder.Create((s) =>
+            serviceProvider = ContainerBuilder.Create((s) =>
             {
                 #region Replace by mocked
 
                 var fakeMetaStore = CreateFakeMetadataStore();
                 var sd = new ServiceDescriptor(
-                      typeof(IStoreBackend<Guid, Metadata>)
+                    typeof(IStoreBackend<Guid, Metadata>)
                     , (_) => fakeMetaStore
                     , ServiceLifetime.Scoped);
 
@@ -37,7 +35,7 @@ namespace FileUploadApp.Tests
                 var fakeUploadsStore = CreateFakeUploadStore();
 
                 sd = new ServiceDescriptor(
-                      typeof(IStoreBackend<Guid, Upload>)
+                    typeof(IStoreBackend<Guid, Upload>)
                     , (_) => fakeUploadsStore
                     , ServiceLifetime.Scoped);
 
@@ -46,9 +44,9 @@ namespace FileUploadApp.Tests
                 var fakeFileStmAdapter = CreateFakeStreamAdapter();
 
                 sd = new ServiceDescriptor(
-                     typeof(IFileStreamProvider<Guid, StreamAdapter>)
-                   , (_) => fakeFileStmAdapter
-                   , ServiceLifetime.Scoped);
+                    typeof(IFileStreamProvider<Guid, StreamAdapter>)
+                    , (_) => fakeFileStmAdapter
+                    , ServiceLifetime.Scoped);
 
                 s.Replace(sd);
 
@@ -72,7 +70,7 @@ namespace FileUploadApp.Tests
 
             using (var scope = serviceProvider.CreateScope())
             {
-                var mediator = serviceProvider.GetRequiredService<IMediator>();
+                var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
                 var response = await mediator.Send(req);
 
                 Assert.IsNotNull(response);

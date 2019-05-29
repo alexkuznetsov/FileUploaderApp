@@ -19,14 +19,12 @@ namespace FileUploadApp.Tests
         [TestInitialize]
         public void Initialize()
         {
-            var builder = new ContainerBuilder();
-
-            serviceProvider = builder.Create((s) =>
+            serviceProvider = ContainerBuilder.Create((s) =>
             {
-                var fakeDownldFactory = CreateFakeContentDownloaderFactory();
+                var fakeContentDownloaderFactory = CreateFakeContentDownloaderFactory();
                 var sd = new ServiceDescriptor(
                       typeof(IContentDownloaderFactory<DownloadUriResponse>)
-                    , (_) => fakeDownldFactory
+                    , (_) => fakeContentDownloaderFactory
                     , ServiceLifetime.Scoped);
 
                 s.Replace(sd);
@@ -34,7 +32,7 @@ namespace FileUploadApp.Tests
                 var fakeHandler = CreateFakeRequestHandlerForDownloadUriQuery();
                 sd = new ServiceDescriptor(
                       typeof(IRequestHandler<DownloadUriQuery, Upload>)
-                    , (_) => CreateFakeRequestHandlerForDownloadUriQuery()
+                    , (_) => fakeHandler
                     , ServiceLifetime.Scoped);
 
                 s.Replace(sd);
@@ -57,7 +55,7 @@ namespace FileUploadApp.Tests
 
             using (var scope = serviceProvider.CreateScope())
             {
-                var mediator = serviceProvider.GetRequiredService<IMediator>();
+                var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
                 var response = await mediator.Send(req);
 
                 Assert.IsNotNull(response);

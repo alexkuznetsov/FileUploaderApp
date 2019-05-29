@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Threading.Tasks;
+using FileUploadApp.Requests;
+using MediatR;
 
 namespace FileUploadApp.Tests
 {
@@ -15,8 +17,7 @@ namespace FileUploadApp.Tests
         [TestInitialize]
         public void Initialize()
         {
-            var builder = new ContainerBuilder();
-            serviceProvider = builder.Create();
+            serviceProvider = ContainerBuilder.Create();
         }
 
         [TestCleanup]
@@ -36,6 +37,10 @@ namespace FileUploadApp.Tests
 
             Assert.IsNotNull(user);
             Assert.AreEqual(user.Username, "rex");
+            Assert.IsTrue(user.Id >0);
+            Assert.IsTrue(user.CreatedAt > DateTime.MinValue);
+            Assert.IsTrue(user.UpdatedAt == null);
+            Assert.IsFalse(string.IsNullOrEmpty(user.Passwhash));
         }
 
         [TestMethod]
@@ -58,9 +63,19 @@ namespace FileUploadApp.Tests
             Assert.AreEqual(user.Username, "rex");
             Assert.IsTrue(status);
         }
+        
+        [TestMethod]
+        public async Task Test_CheckHandlerShouldAuthenticateCorrectUser()
+        {
+            var mediator = serviceProvider.GetRequiredService<IMediator>();
+            var result = await mediator.Send(new CheckUserQuery("rex", "1qaz!QAZ"));
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(result.User.Username, "rex");
+        }
 
         [TestMethod]
-        public async Task Test_CheckServiceShouldntAuthenticateCorrectUserWithWrongPassword()
+        public async Task Test_CheckServiceShouldNotAuthenticateCorrectUserWithWrongPassword()
         {
             var svc = serviceProvider.GetRequiredService<ICheckUserService<User>>();
             var user = await svc.FindByNameAsync("rex");

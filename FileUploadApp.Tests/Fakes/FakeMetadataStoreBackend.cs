@@ -8,7 +8,7 @@ namespace FileUploadApp.Tests.Fakes
 {
     internal class FakeMetadataStoreBackend : IStoreBackend<Guid, Metadata>
     {
-        readonly Dictionary<Guid, Metadata> keyValuePairs = new Dictionary<Guid, Metadata>();
+        private readonly Dictionary<Guid, Metadata> keyValuePairs = new Dictionary<Guid, Metadata>();
 
         public Task<Metadata> FindAsync(Guid key, CancellationToken cancellationToken = default)
         {

@@ -1,5 +1,4 @@
 ﻿using FileUploadApp.Requests;
-using FileUploadApp.Core;
 using FileUploadApp.Core.Serialization;
 using FileUploadApp.Domain;
 using FileUploadApp.Events;
@@ -16,21 +15,14 @@ using System.Collections.Generic;
 using System.Net.Http;
 using FileUploadApp.Tests.Fakes;
 using FileUploadApp.Domain.Dirty;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using Serilog;
 using FileUploadApp.Services.Accounts;
 
 namespace FileUploadApp.Tests
 {
-    class ContainerBuilder
+    internal class ContainerBuilder
     {
-        public static Dictionary<string, string> arrayDict = new Dictionary<string, string>
+        private static readonly Dictionary<string, string> ArrayDict = new Dictionary<string, string>
         {
             {"fileStore:BasePath", "d:\\temp\\uploads"},
             {"conf:AllowedContentTypes:0", "image/jpeg"           },
@@ -49,17 +41,16 @@ namespace FileUploadApp.Tests
             {"Mappings:N3q8rw=="  , "application/x-7z-compressed" }
         };
 
-        internal static class ConfigConstants
+        private static class ConfigConstants
         {
-            public static readonly string ConfNode = "conf";
-            public static readonly string FileStoreNode = "fileStore";
-            public static readonly string UploadFile = "/api/upload";
+            public const string ConfNode = "conf";
+            public const string FileStoreNode = "fileStore";
         }
 
-        IConfiguration CreateConfiguration(IServiceCollection services)
+        private static IConfiguration CreateConfiguration(IServiceCollection services)
         {
             var configBuilder = new ConfigurationBuilder();
-            configBuilder.AddInMemoryCollection(arrayDict);
+            configBuilder.AddInMemoryCollection(ArrayDict);
             var configuration = configBuilder.Build();
 
             services.AddSingleton(configuration);
@@ -67,7 +58,7 @@ namespace FileUploadApp.Tests
             return configuration;
         }
 
-        public IServiceProvider Create(Action<IServiceCollection> configureServices = null)
+        public static IServiceProvider Create(Action<IServiceCollection> configureServices = null)
         {
             var services = new ServiceCollection();
 
@@ -77,13 +68,10 @@ namespace FileUploadApp.Tests
             services.AddSingleton<IContentTypeTestUtility, ContentTypeTestUtility>();
             services.AddSingleton<ISerializer, Serializer>();
             services.AddSingleton<IDeserializer, Deserializer>();
-            services.AddSingleton((r) =>
+            services.AddSingleton((r) => new HttpClientHandler
             {
-                return new HttpClientHandler
-                {
-                    AllowAutoRedirect = true,
-                    AutomaticDecompression = System.Net.DecompressionMethods.Deflate | System.Net.DecompressionMethods.GZip
-                };
+                AllowAutoRedirect = true,
+                AutomaticDecompression = System.Net.DecompressionMethods.Deflate | System.Net.DecompressionMethods.GZip
             });
 
             services.AddSingleton<IContentDownloaderFactory<DownloadUriResponse>, ContentDownloaderFactory>();

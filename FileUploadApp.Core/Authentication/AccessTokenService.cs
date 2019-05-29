@@ -52,7 +52,7 @@ namespace FileUploadApp.Core.Authentication
 
             return authorizationHeader == StringValues.Empty
                 ? string.Empty
-                : authorizationHeader.Single().Split(' ').Last();
+                : authorizationHeader[0].Split(' ').Last();
         }
 
         private static string GetKey(string token)
