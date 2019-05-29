@@ -16,6 +16,15 @@ using System.Collections.Generic;
 using System.Net.Http;
 using FileUploadApp.Tests.Fakes;
 using FileUploadApp.Domain.Dirty;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Serilog;
+using FileUploadApp.Services.Accounts;
 
 namespace FileUploadApp.Tests
 {
@@ -61,6 +70,7 @@ namespace FileUploadApp.Tests
         public IServiceProvider Create(Action<IServiceCollection> configureServices = null)
         {
             var services = new ServiceCollection();
+
             var configuration = CreateConfiguration(services);
 
             services.AddSingleton(configuration.BindTo<AppConfiguration>(ConfigConstants.ConfNode));
@@ -79,11 +89,12 @@ namespace FileUploadApp.Tests
             services.AddSingleton<IContentDownloaderFactory<DownloadUriResponse>, ContentDownloaderFactory>();
             services.AddSingleton(configuration.BindTo<StorageConfiguration>(ConfigConstants.FileStoreNode));
 
-            services.AddSingleton<IStoreBackend<Guid, Upload>, FakeStoreBackend>();
-            services.AddSingleton<IStoreBackend<Guid, Metadata>, FakeMetadataStoreBackend>();
+            var fakeStoreBackend = new FakeStoreBackend();
 
-            services.AddSingleton<IFileStreamProvider<Guid, StreamAdapter>, FakeStoreBackend>();
-            services.AddSingleton<IStore<Guid, Upload, UploadResultRow>, FakeStorage>();
+            services.AddSingleton<IStoreBackend<Guid, Metadata>, FakeMetadataStoreBackend>();
+            services.AddSingleton<IStoreBackend<Guid, Upload>, FakeStoreBackend>((_) => fakeStoreBackend);
+            services.AddSingleton<IFileStreamProvider<Guid, StreamAdapter>, FakeStoreBackend>((_) => fakeStoreBackend);
+            services.AddSingleton<IStore<Guid, Upload, UploadResultRow>, FileSystemStore>();
 
             services.AddScoped<ServiceFactory>(p => p.GetService);
 
@@ -94,6 +105,18 @@ namespace FileUploadApp.Tests
                     , typeof(UploadFilesCommandHandler))
                .AddClasses()
                .AsImplementedInterfaces());
+
+            services.AddSingleton<ICheckUserService<User>, FakeCheckUserService>();
+
+            Log.Logger = new LoggerConfiguration()
+               .ReadFrom.Configuration(configuration)
+               .Enrich.FromLogContext()
+               .CreateLogger();
+
+            services.AddLogging((c) =>
+            {
+                c.AddSerilog(Log.Logger);
+            });
 
             configureServices?.Invoke(services);
 

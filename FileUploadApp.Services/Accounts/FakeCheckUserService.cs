@@ -19,14 +19,17 @@ namespace FileUploadApp.Services.Accounts
 
         public Task<User> FindByNameAsync(string username)
         {
-            return Task.FromResult(new User
-            {
-                CreatedAt = DateTime.Now,
-                Id = 1,
-                Passwhash = "1qaz!QAZ",
-                UpdatedAt = null,
-                Username = username
-            });
+            if (username.Equals("rex"))
+                return Task.FromResult(new User
+                {
+                    CreatedAt = DateTime.Now,
+                    Id = 1,
+                    Passwhash = "1qaz!QAZ",
+                    UpdatedAt = null,
+                    Username = username
+                });
+
+            return Task.FromResult<User>(null);
         }
     }
 }

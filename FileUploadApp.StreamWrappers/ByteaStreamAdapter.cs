@@ -11,27 +11,12 @@ namespace FileUploadApp.StreamAdapters
         private readonly ReadOnlyMemory<byte> _bytea;
 
         public ByteaStreamAdapter(ReadOnlyMemory<byte> bytea)
-        {
-            _bytea = bytea.ToArray();
-        }
+            => _bytea = bytea;
 
         public override Stream Stream
-        {
-            get
-            {
-                var str = new MemoryStream();
-                str.Write(_bytea.Span);
-
-                return str;
-            }
-        }
+            => new MemoryStream(_bytea.ToArray());
 
         public override async Task CopyToAsync(Stream target, CancellationToken cancellationToken = default)
-        {
-            using (Stream)
-            {
-                await Stream.CopyToAsync(target, cancellationToken).ConfigureAwait(false);
-            }
-        }
+            => await target.WriteAsync(_bytea, cancellationToken).ConfigureAwait(false);
     }
 }

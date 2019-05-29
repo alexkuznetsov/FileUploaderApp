@@ -40,7 +40,7 @@ namespace FileUploadApp.Handlers
             
             logger.LogInformation($"saving preview for file {file.Name}. Content type: {file.ContentType}");
 
-            var preview = ImageHelper.Resize(appConfiguration.PreviewSize, file);
+            var preview = await ImageHelper.Resize(appConfiguration.PreviewSize, file).ConfigureAwait(false);
 
             result.Preview = await store.StoreAsync(preview).ConfigureAwait(false);
 
