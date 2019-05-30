@@ -1,6 +1,6 @@
-﻿using FileUploadApp.Core;
-using System;
+﻿using System;
 using System.IO;
+using FileUploadApp.Core;
 
 namespace FileUploadApp.Storage.Filesystem
 {

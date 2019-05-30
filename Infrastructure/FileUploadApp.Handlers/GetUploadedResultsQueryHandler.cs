@@ -28,12 +28,13 @@ namespace FileUploadApp.Handlers
 
         private async Task<UploadResultRow> ReceiveAsync(Tuple<Guid, Guid> fileIdPreviewId, CancellationToken cancellationToken)
         {
-            var file = await store.ReceiveAsync(fileIdPreviewId.Item1, cancellationToken).ConfigureAwait(false);
+            var (fileId, previewId) = fileIdPreviewId;
+            var file = await store.ReceiveAsync(fileId, cancellationToken).ConfigureAwait(false);
             var row = new UploadResultRow(file.Id, file.Number, file.Name, file.ContentType);
 
             if (!file.IsImage()) return row;
             
-            var preview = await store.ReceiveAsync(fileIdPreviewId.Item2, cancellationToken).ConfigureAwait(false);
+            var preview = await store.ReceiveAsync(previewId, cancellationToken).ConfigureAwait(false);
 
             row.Preview = new FileEntity(preview.Id, preview.Number, preview.Name, preview.ContentType);
 

@@ -8,15 +8,15 @@ namespace FileUploadApp.StreamAdapters
 {
     public class ByteaStreamAdapter : StreamAdapter
     {
-        private readonly ReadOnlyMemory<byte> _bytea;
+        private readonly ReadOnlyMemory<byte> _byteArray;
 
-        public ByteaStreamAdapter(ReadOnlyMemory<byte> bytea)
-            => _bytea = bytea;
+        public ByteaStreamAdapter(ReadOnlyMemory<byte> byteArray)
+            => _byteArray = byteArray;
 
         public override Stream Stream
-            => new MemoryStream(_bytea.ToArray());
+            => new MemoryStream(_byteArray.Span.ToArray());
 
         public override async Task CopyToAsync(Stream target, CancellationToken cancellationToken = default)
-            => await target.WriteAsync(_bytea, cancellationToken).ConfigureAwait(false);
+            => await target.WriteAsync(_byteArray, cancellationToken).ConfigureAwait(false);
     }
 }

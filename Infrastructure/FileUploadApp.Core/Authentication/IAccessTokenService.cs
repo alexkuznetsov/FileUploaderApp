@@ -4,7 +4,6 @@ namespace FileUploadApp.Core.Authentication
 {
     internal interface IAccessTokenService : IAccessTokenService<string>
     {
-
     }
 
     internal interface IAccessTokenService<in TUserId>

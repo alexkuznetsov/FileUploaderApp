@@ -17,6 +17,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Net.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace FileUploadApp
 {
@@ -84,11 +85,6 @@ namespace FileUploadApp
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            //app.UseWhen(x => x.Request.Path.StartsWithSegments(ConfigConstants.UploadFile), c =>
-            //{
-            //    c.UseMiddleware<UploadedDataPreprocessMiddleware>();
-            //});
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -105,6 +101,12 @@ namespace FileUploadApp
             app.UseMvc();
 
             app.UseCors();
+
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor
+                                   | ForwardedHeaders.XForwardedProto
+            });
         }
     }
 }

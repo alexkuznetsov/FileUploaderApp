@@ -5,7 +5,7 @@ namespace FileUploadApp.Domain
 {
     public class AppConfiguration
     {
-        public string[] AllowedContentTypes { get; set; } = new[] { "image/jpeg", "image/png", "image/bmp", "image/x-windows-bmp", "image/gif", "image/tiff" };
+        public string[] AllowedContentTypes { get; set; } = { "image/jpeg", "image/png", "image/bmp", "image/x-windows-bmp", "image/gif", "image/tiff" };
 
         public Dictionary<string, string> Mappings { get; set; } = new Dictionary<string, string>
         {
