@@ -22,16 +22,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FileUploadApp.Core\FileUploadApp.Core.csproj" />
-    <ProjectReference Include="..\FileUploadApp.Domain\FileUploadApp.Domain.csproj" />
-    <ProjectReference Include="..\FileUploadApp.Events\FileUploadApp.Events.csproj" />
-    <ProjectReference Include="..\FileUploadApp.Handlers\FileUploadApp.Handlers.csproj" />
-    <ProjectReference Include="..\FileUploadApp.Imaging\FileUploadApp.Imaging.csproj" />
-    <ProjectReference Include="..\FileUploadApp.Interfaces\FileUploadApp.Interfaces.csproj" />
-    <ProjectReference Include="..\FileUploadApp.Services\FileUploadApp.Services.csproj" />
-    <ProjectReference Include="..\FileUploadApp.Storage.Filesystem\FileUploadApp.Storage.Filesystem.csproj" />
-    <ProjectReference Include="..\FileUploadApp.StreamWrappers\FileUploadApp.StreamAdapters.csproj" />
-    <ProjectReference Include="..\FileUploadApp\FileUploadApp.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\FileUploadApp.Core\FileUploadApp.Core.csproj" />
+    <ProjectReference Include="..\..\Domain\FileUploadApp.Domain\FileUploadApp.Domain.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\FileUploadApp.Events\FileUploadApp.Events.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\FileUploadApp.Handlers\FileUploadApp.Handlers.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\FileUploadApp.Imaging\FileUploadApp.Imaging.csproj" />
+    <ProjectReference Include="..\..\Domain\FileUploadApp.Interfaces\FileUploadApp.Interfaces.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\FileUploadApp.Services\FileUploadApp.Services.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\FileUploadApp.Storage.Filesystem\FileUploadApp.Storage.Filesystem.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\FileUploadApp.StreamWrappers\FileUploadApp.StreamAdapters.csproj" />
+    <ProjectReference Include="..\..\FileUploadApp\FileUploadApp.csproj" />
   </ItemGroup>
 
 </Project>

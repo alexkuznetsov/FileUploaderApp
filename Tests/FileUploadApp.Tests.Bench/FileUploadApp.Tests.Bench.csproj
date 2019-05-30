@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FileUploadApp.Core\FileUploadApp.Core.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\FileUploadApp.Core\FileUploadApp.Core.csproj" />
   </ItemGroup>
 
 </Project>

@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FileUploadApp.Domain.Auth\FileUploadApp.Domain.Authentication.csproj" />
-    <ProjectReference Include="..\FileUploadApp.Domain\FileUploadApp.Domain.csproj" />
+    <ProjectReference Include="..\..\Domain\FileUploadApp.Domain\FileUploadApp.Domain.csproj" />
     <ProjectReference Include="..\FileUploadApp.Interfaces.Auth\FileUploadApp.Interfaces.Authentication.csproj" />
   </ItemGroup>
 

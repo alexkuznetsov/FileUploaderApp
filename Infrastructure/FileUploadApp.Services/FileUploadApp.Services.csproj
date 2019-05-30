@@ -14,8 +14,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FileUploadApp.Core\FileUploadApp.Core.csproj" />
-    <ProjectReference Include="..\FileUploadApp.Domain\FileUploadApp.Domain.csproj" />
-    <ProjectReference Include="..\FileUploadApp.Interfaces\FileUploadApp.Interfaces.csproj" />
+    <ProjectReference Include="..\..\Domain\FileUploadApp.Domain\FileUploadApp.Domain.csproj" />
+    <ProjectReference Include="..\..\Domain\FileUploadApp.Interfaces\FileUploadApp.Interfaces.csproj" />
   </ItemGroup>
 
 </Project>

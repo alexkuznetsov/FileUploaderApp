@@ -5,21 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="FilesRequestEventHandler.cs" />
-    <Compile Remove="UploadRequestEventHandler.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="MediatR" Version="7.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FileUploadApp.Domain\FileUploadApp.Domain.csproj" />
+    <ProjectReference Include="..\..\Domain\FileUploadApp.Domain\FileUploadApp.Domain.csproj" />
     <ProjectReference Include="..\FileUploadApp.Events\FileUploadApp.Events.csproj" />
     <ProjectReference Include="..\FileUploadApp.Imaging\FileUploadApp.Imaging.csproj" />
-    <ProjectReference Include="..\FileUploadApp.Interfaces\FileUploadApp.Interfaces.csproj" />
+    <ProjectReference Include="..\..\Domain\FileUploadApp.Interfaces\FileUploadApp.Interfaces.csproj" />
     <ProjectReference Include="..\FileUploadApp.Requests\FileUploadApp.Requests.csproj" />
     <ProjectReference Include="..\FileUploadApp.Services\FileUploadApp.Services.csproj" />
     <ProjectReference Include="..\FileUploadApp.Storage\FileUploadApp.Storage.csproj" />
