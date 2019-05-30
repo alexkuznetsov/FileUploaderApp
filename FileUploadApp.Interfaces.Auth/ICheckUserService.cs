@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace FileUploadApp.Interfaces
+namespace FileUploadApp.Interfaces.Authentication
 {
     public interface ICheckUserService<TUser>
     {

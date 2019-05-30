@@ -7,7 +7,6 @@ using FileUploadApp.Handlers;
 using FileUploadApp.Interfaces;
 using FileUploadApp.Requests;
 using FileUploadApp.Services;
-using FileUploadApp.Services.Accounts;
 using FileUploadApp.Storage;
 using FileUploadApp.Storage.Filesystem;
 using MediatR;
@@ -23,6 +22,9 @@ namespace FileUploadApp
 {
     public class Startup
     {
+        const string ConfNode = "conf";
+        const string FileStoreNode = "fileStore";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -36,7 +38,7 @@ namespace FileUploadApp
             services.AddMvc(options => { options.EnableEndpointRouting = false; })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddSingleton(Configuration.BindTo<AppConfiguration>(ConfigConstants.ConfNode));
+            services.AddSingleton(Configuration.BindTo<AppConfiguration>(ConfNode));
             services.AddSingleton<IContentTypeTestUtility, ContentTypeTestUtility>();
             services.AddSingleton<ISerializer, Serializer>();
             services.AddSingleton<IDeserializer, Deserializer>();
@@ -48,7 +50,7 @@ namespace FileUploadApp
 
             services.AddSingleton<IContentDownloaderFactory<DownloadUriResponse>, ContentDownloaderFactory>();
 
-            services.AddSingleton(Configuration.BindTo<StorageConfiguration>(ConfigConstants.FileStoreNode));
+            services.AddSingleton(Configuration.BindTo<StorageConfiguration>(FileStoreNode));
 
             services.AddSingleton<IStoreBackend<Guid, Upload>, FilesystemStoreBackend>();
             services.AddSingleton<IStoreBackend<Guid, Metadata>, MetadataFsStoreBackend>();
@@ -75,10 +77,8 @@ namespace FileUploadApp
                 });
             });
 
-
             services.AddJwt();
-            services.AddSingleton<ICheckUserService<User>, FakeCheckUserService>();
-            //services.AddDbConnection();
+            services.AddJwtAuthenticationEndpointWithFakeService(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -99,7 +99,7 @@ namespace FileUploadApp
                 app.UseHsts();
             }
 
-            app.UseAccessTokenValidator( /*"/auth/login"*/);
+            app.UseAccessTokenValidator();
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseMvc();

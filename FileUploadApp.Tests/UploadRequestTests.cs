@@ -12,7 +12,7 @@ namespace FileUploadApp.Tests
     public class UploadRequestTests
     {
         // ReSharper disable once UnusedAutoPropertyAccessor.Local
-        private TestContext TestContext { get; set; }
+        public TestContext TestContext { get; set; }
 
         private IServiceProvider serviceProvider;
 

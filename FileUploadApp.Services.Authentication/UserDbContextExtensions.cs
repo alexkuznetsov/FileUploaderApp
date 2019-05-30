@@ -3,7 +3,7 @@ using FileUploadApp.Domain;
 using System.Data.Common;
 using System.Threading.Tasks;
 
-namespace FileUploadApp.Services.Extensions
+namespace FileUploadApp.Services.Authentication
 {
     public static class UserDbContextExtensions
     {

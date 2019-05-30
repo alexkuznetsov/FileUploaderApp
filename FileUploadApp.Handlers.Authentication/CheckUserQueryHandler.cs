@@ -1,5 +1,6 @@
 ﻿using FileUploadApp.Domain;
-using FileUploadApp.Interfaces;
+using FileUploadApp.Domain.Authentication;
+using FileUploadApp.Interfaces.Authentication;
 using FileUploadApp.Requests;
 using MediatR;
 using System.Threading;

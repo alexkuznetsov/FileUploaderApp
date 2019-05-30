@@ -1,10 +1,10 @@
-﻿using System;
+﻿using FileUploadApp.Interfaces.Authentication;
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
-using FileUploadApp.Interfaces;
 
-namespace FileUploadApp.Services.Accounts
+namespace FileUploadApp.Services.Authentication
 {
     public sealed class PasswordHasher : IPasswordHasher
     {

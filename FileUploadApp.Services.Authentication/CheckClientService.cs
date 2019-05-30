@@ -1,10 +1,9 @@
 ﻿using FileUploadApp.Domain;
-using FileUploadApp.Interfaces;
-using FileUploadApp.Services.Extensions;
+using FileUploadApp.Interfaces.Authentication;
 using System.Data.Common;
 using System.Threading.Tasks;
 
-namespace FileUploadApp.Services.Accounts
+namespace FileUploadApp.Services.Authentication
 {
     public sealed class CheckUserService : ICheckUserService<User>
     {

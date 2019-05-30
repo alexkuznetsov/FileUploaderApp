@@ -1,9 +1,9 @@
 ﻿using FileUploadApp.Domain;
-using FileUploadApp.Interfaces;
+using FileUploadApp.Interfaces.Authentication;
 using System;
 using System.Threading.Tasks;
 
-namespace FileUploadApp.Services.Accounts
+namespace FileUploadApp.Services.Authentication
 {
     public sealed class FakeCheckUserService : ICheckUserService<User>
     {

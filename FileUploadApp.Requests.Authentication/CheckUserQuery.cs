@@ -1,4 +1,4 @@
-﻿using FileUploadApp.Domain;
+﻿using FileUploadApp.Domain.Authentication;
 using MediatR;
 
 namespace FileUploadApp.Requests

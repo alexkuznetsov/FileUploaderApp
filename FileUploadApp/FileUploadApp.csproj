@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FileUploadApp.Core.Authentication\FileUploadApp.Core.Authentication.csproj" />
     <ProjectReference Include="..\FileUploadApp.Core\FileUploadApp.Core.csproj" />
     <ProjectReference Include="..\FileUploadApp.Domain\FileUploadApp.Domain.csproj" />
     <ProjectReference Include="..\FileUploadApp.Handlers\FileUploadApp.Handlers.csproj" />

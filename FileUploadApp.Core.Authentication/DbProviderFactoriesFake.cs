@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data.Common;
 
-namespace FileUploadApp.Core.DbProviderFactories
+namespace FileUploadApp.Core.Authentication
 {
     public static class DbProviderFactoriesFake
     {

@@ -6,6 +6,7 @@ using System;
 using System.Threading.Tasks;
 using FileUploadApp.Requests;
 using MediatR;
+using FileUploadApp.Interfaces.Authentication;
 
 namespace FileUploadApp.Tests
 {

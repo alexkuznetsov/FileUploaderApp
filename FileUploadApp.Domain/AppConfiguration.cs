@@ -5,19 +5,6 @@ namespace FileUploadApp.Domain
 {
     public class AppConfiguration
     {
-        public class CsSettings
-        {
-            public string ProviderName { get; set; }
-
-            public string ConnectionString { get; set; }
-        }
-
-        public CsSettings ConnectionString { get; set; } = new CsSettings
-        {
-            ConnectionString = "Data Source=localhost;Initial Catalog=authcatalog;Integrated Security=True;",
-            ProviderName = "System.Data.SqlClient"
-        };
-
         public string[] AllowedContentTypes { get; set; } = new[] { "image/jpeg", "image/png", "image/bmp", "image/x-windows-bmp", "image/gif", "image/tiff" };
 
         public Dictionary<string, string> Mappings { get; set; } = new Dictionary<string, string>

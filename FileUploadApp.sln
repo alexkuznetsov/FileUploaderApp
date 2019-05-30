@@ -39,7 +39,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Storage", "Storage", "{E1B9
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileUploadApp.Storage", "FileUploadApp.Storage\FileUploadApp.Storage.csproj", "{86F7BE34-2015-4545-902C-8A0E434B12CC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileUploadApp.Tests.Bench", "FileUploadApp.Tests.Bench\FileUploadApp.Tests.Bench.csproj", "{C12DA9DF-4D46-4A53-B854-6FB0E539D320}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileUploadApp.Tests.Bench", "FileUploadApp.Tests.Bench\FileUploadApp.Tests.Bench.csproj", "{C12DA9DF-4D46-4A53-B854-6FB0E539D320}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AuthServer", "AuthServer", "{10FED739-5DC1-4902-954C-340281836935}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileUploadApp.Domain.Authentication", "FileUploadApp.Domain.Auth\FileUploadApp.Domain.Authentication.csproj", "{32EA2AC0-D85A-424C-AF12-3B6978F443BA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileUploadApp.Interfaces.Authentication", "FileUploadApp.Interfaces.Auth\FileUploadApp.Interfaces.Authentication.csproj", "{36495EEA-20D1-4F85-95F4-46AE894C21A0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileUploadApp.Handlers.Authentication", "FileUploadApp.Handlers.Authentication\FileUploadApp.Handlers.Authentication.csproj", "{3DE35623-AC89-4AD1-975D-4F5E155DE3FE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileUploadApp.Requests.Authentication", "FileUploadApp.Requests.Authentication\FileUploadApp.Requests.Authentication.csproj", "{2198248A-2654-471E-AA1B-8E47AAC72BD9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileUploadApp.Core.Authentication", "FileUploadApp.Core.Authentication\FileUploadApp.Core.Authentication.csproj", "{CCDD2FF5-DFF1-4D29-923C-BF369087464D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileUploadApp.Services.Authentication", "FileUploadApp.Services.Authentication\FileUploadApp.Services.Authentication.csproj", "{4C28AE5F-0FC3-4B80-9D1F-80CF08F6C4E8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -103,6 +117,30 @@ Global
 		{C12DA9DF-4D46-4A53-B854-6FB0E539D320}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C12DA9DF-4D46-4A53-B854-6FB0E539D320}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C12DA9DF-4D46-4A53-B854-6FB0E539D320}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32EA2AC0-D85A-424C-AF12-3B6978F443BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32EA2AC0-D85A-424C-AF12-3B6978F443BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32EA2AC0-D85A-424C-AF12-3B6978F443BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32EA2AC0-D85A-424C-AF12-3B6978F443BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36495EEA-20D1-4F85-95F4-46AE894C21A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36495EEA-20D1-4F85-95F4-46AE894C21A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36495EEA-20D1-4F85-95F4-46AE894C21A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36495EEA-20D1-4F85-95F4-46AE894C21A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3DE35623-AC89-4AD1-975D-4F5E155DE3FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DE35623-AC89-4AD1-975D-4F5E155DE3FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DE35623-AC89-4AD1-975D-4F5E155DE3FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DE35623-AC89-4AD1-975D-4F5E155DE3FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2198248A-2654-471E-AA1B-8E47AAC72BD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2198248A-2654-471E-AA1B-8E47AAC72BD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2198248A-2654-471E-AA1B-8E47AAC72BD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2198248A-2654-471E-AA1B-8E47AAC72BD9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCDD2FF5-DFF1-4D29-923C-BF369087464D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCDD2FF5-DFF1-4D29-923C-BF369087464D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCDD2FF5-DFF1-4D29-923C-BF369087464D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCDD2FF5-DFF1-4D29-923C-BF369087464D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C28AE5F-0FC3-4B80-9D1F-80CF08F6C4E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C28AE5F-0FC3-4B80-9D1F-80CF08F6C4E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C28AE5F-0FC3-4B80-9D1F-80CF08F6C4E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C28AE5F-0FC3-4B80-9D1F-80CF08F6C4E8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -123,6 +161,12 @@ Global
 		{E1B96CCF-9C67-4A87-92E5-334D2731E04E} = {2CCF48F5-DAB2-41E1-982F-F023C1ED9215}
 		{86F7BE34-2015-4545-902C-8A0E434B12CC} = {E1B96CCF-9C67-4A87-92E5-334D2731E04E}
 		{C12DA9DF-4D46-4A53-B854-6FB0E539D320} = {3D3BAEED-1584-4B94-A3E3-361C4A5C3860}
+		{32EA2AC0-D85A-424C-AF12-3B6978F443BA} = {10FED739-5DC1-4902-954C-340281836935}
+		{36495EEA-20D1-4F85-95F4-46AE894C21A0} = {10FED739-5DC1-4902-954C-340281836935}
+		{3DE35623-AC89-4AD1-975D-4F5E155DE3FE} = {10FED739-5DC1-4902-954C-340281836935}
+		{2198248A-2654-471E-AA1B-8E47AAC72BD9} = {10FED739-5DC1-4902-954C-340281836935}
+		{CCDD2FF5-DFF1-4D29-923C-BF369087464D} = {10FED739-5DC1-4902-954C-340281836935}
+		{4C28AE5F-0FC3-4B80-9D1F-80CF08F6C4E8} = {10FED739-5DC1-4902-954C-340281836935}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AD87DD4E-6017-46E8-BAE2-390993FA2761}
