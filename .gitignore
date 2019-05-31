@@ -3,7 +3,10 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
-FileUploadApp/logs
+#FileUploadApp/logs
+**/[Ll]ogs/*
+#FileUploadApp/uploads
+**/[Uu]ploads/*
 
 # User-specific files
 *.rsuser

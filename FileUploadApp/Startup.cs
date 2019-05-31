@@ -17,14 +17,16 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Net.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.Extensions.HealthChecks;
 
 namespace FileUploadApp
 {
     public class Startup
     {
-        const string ConfNode = "conf";
-        const string FileStoreNode = "fileStore";
+        private const string ConfNode = "conf";
+        private const string FileStoreNode = "fileStore";
 
         public Startup(IConfiguration configuration)
         {
@@ -57,6 +59,7 @@ namespace FileUploadApp
             services.AddSingleton<IStoreBackend<Guid, Metadata>, MetadataFsStoreBackend>();
             services.AddSingleton<IFileStreamProvider<Guid, StreamAdapter>, FilesystemStoreBackend>();
             services.AddSingleton<IStore<Guid, Upload, UploadResultRow>, FileSystemStore>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddScoped<ServiceFactory>(p => p.GetService);
 
@@ -80,6 +83,7 @@ namespace FileUploadApp
 
             services.AddJwt();
             services.AddJwtAuthenticationEndpointWithFakeService(Configuration);
+            services.AddHealthChecks();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -96,7 +100,7 @@ namespace FileUploadApp
             }
 
             app.UseAccessTokenValidator();
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseMvc();
 
@@ -107,6 +111,8 @@ namespace FileUploadApp
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor
                                    | ForwardedHeaders.XForwardedProto
             });
+
+            app.UseHealthChecks("/health");
         }
     }
 }
