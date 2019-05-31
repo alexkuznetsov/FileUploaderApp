@@ -1,0 +1,21 @@
+version: '3.4'
+
+services:
+  fileuploaderapp:
+    image: alexkuznetsov/fileuploaderapp:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8888:5000"     
+    environment:
+      ASPNETCORE_URLS: http://*:5000
+      ASPNETCORE_ENVIRONMENT: Release
+    volumes:
+      - ./logs:/app/logs
+      - ./uploads:/app/uploads
+volumes:
+  logs:
+    driver: local
+  uploads:
+    driver: local
