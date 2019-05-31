@@ -19,7 +19,6 @@ using System;
 using System.Net.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.Extensions.HealthChecks;
 
 namespace FileUploadApp
 {
