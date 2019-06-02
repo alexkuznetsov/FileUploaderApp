@@ -40,7 +40,15 @@ Endpoints
 
 4. ```/health```
     
-    Healthcheck endpoint
+    Health check endpoint
+
+Configuration
+===============
+
+Maximum request body size (e.g. total upload size limit) can be changed by setting FILEUPLOADERAPP_LIMIT environment variable.
+It can accept two types of values - string and long. String - just `NO`, when turn off maximum request body size check, and 
+you can upload any size.
+If it is long, it is the body size in bytes, the maximum size that can be loaded.
 
 Have questions?
 ===============
