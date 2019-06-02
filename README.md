@@ -3,18 +3,36 @@
 REST upload file service.
 
 Service can:
-    - Upload files to the store (currently, only filesystem, but it pluggable and can be replaced with DB, S3 or something);
-    - Download files by it identifier.
 
-For launching:
+ - Upload files to the store (currently, only filesystem, but it pluggable and can be replaced with DB, S3 or something);
+ 
+ - Download files by it identifier.
+
+For launching (based on image on docker hub):
+
+Open console (e.g. linux shell) and `cd` to user's folder, ``` cd ~/username ```
+
+```
+mkdir fileuploaderapp && cd fileuploaderapp 
+mkdir logs
+mkdir uploads
+mkdir nginx
+wget -P nginx https://raw.githubusercontent.com/alexkuznetsov/FileUploaderApp/master/nginx/nginx.conf
+wget https://raw.githubusercontent.com/alexkuznetsov/FileUploaderApp/master/docker-compose.yml
+docker-compose up
+```
+
+After that, docker pulled up the last version of the container and starts it.
+
+Build image locally
+===================
 
 ```
 git clone https://github.com/alexkuznetsov/FileUploaderApp.git
 cd FileUploaderApp
 mkdir logs
 mkdir uploads
-docker-compose build
-docker-compose up
+docker-compose -f docker-compose-local.yml up
 ```
 
 Endpoints
@@ -24,7 +42,13 @@ Endpoints
 
     Authentication endpoint, checks username/password pair and return JWT for upload's endpoint.
 
-    Sample request: ``` { "username": "rex", "password": "passw" } ```.
+    Sample request: 
+```
+{
+    "username": "rex", 
+    "password": "passw" 
+} 
+```
 
 2. ```/api/upload```
     Upload endpoint. Can consume:
@@ -53,3 +77,4 @@ If it is long, it is the body size in bytes, the maximum size that can be loaded
 Have questions?
 ===============
 If you have a question - feel free to fill an issue, and i will answer you shortly as i can.
+
