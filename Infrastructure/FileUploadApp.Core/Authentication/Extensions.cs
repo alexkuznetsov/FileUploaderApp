@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using System.ComponentModel;
 using System.Text;
 
 namespace FileUploadApp.Core.Authentication
@@ -32,7 +31,7 @@ namespace FileUploadApp.Core.Authentication
 
             if (string.IsNullOrEmpty(options.SecretKey))
             {
-                throw new InvalidEnumArgumentException(
+                throw new ArgumentException(
                     "JWT Secret key must be configured in appsettings.json or as env variable");
             }
 
