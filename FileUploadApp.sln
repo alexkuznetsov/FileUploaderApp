@@ -61,6 +61,7 @@ ProjectSection(SolutionItems) = preProject
 	Dockerfile = Dockerfile
 	README.md = README.md
 	users.sql = users.sql
+	docker-compose-local.yml = docker-compose-local.yml
 EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{935E19D5-3BB9-4A0F-91FD-DC1C120E46E9}"
@@ -69,6 +70,11 @@ ProjectSection(SolutionItems) = preProject
 	scripts\docker-publish.sh = scripts\docker-publish.sh
 	scripts\dotnet-publish.sh = scripts\dotnet-publish.sh
 	scripts\test.sh = scripts\test.sh
+EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nginx", "nginx", "{4A2ABCF4-D26E-4F1C-97E5-BF787D536361}"
+ProjectSection(SolutionItems) = preProject
+	nginx\nginx.conf = nginx\nginx.conf
 EndProjectSection
 EndProject
 Global
@@ -184,6 +190,7 @@ Global
 		{CCDD2FF5-DFF1-4D29-923C-BF369087464D} = {10FED739-5DC1-4902-954C-340281836935}
 		{4C28AE5F-0FC3-4B80-9D1F-80CF08F6C4E8} = {10FED739-5DC1-4902-954C-340281836935}
 		{935E19D5-3BB9-4A0F-91FD-DC1C120E46E9} = {3D5A3714-0AA5-4AD0-988F-A94D7345B94B}
+		{4A2ABCF4-D26E-4F1C-97E5-BF787D536361} = {3D5A3714-0AA5-4AD0-988F-A94D7345B94B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AD87DD4E-6017-46E8-BAE2-390993FA2761}

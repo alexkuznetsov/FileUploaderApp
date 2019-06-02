@@ -2,7 +2,10 @@ version: '3.4'
 
 services:
   fileuploaderapp:
-    image: alexkuz/fileuploaderapp:latest
+    image: alexkuznetsov/fileuploaderapp:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "5000:5000"
     environment:
