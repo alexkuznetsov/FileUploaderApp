@@ -1,4 +1,4 @@
-# File uploads service
+# File uploads service ![build status ](https://travis-ci.org/alexkuznetsov/FileUploaderApp.svg?branch=master)
 
 REST upload file service.
 
