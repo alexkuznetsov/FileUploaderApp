@@ -10,7 +10,7 @@ Service can:
 
 For launching (based on image on docker hub):
 
-Open console (e.g. linux shell) and `cd` to user's folder, ``` cd ~/username ```
+Open console (e.g. linux shell) and `cd` to user's folder, ``` cd ~/ ```
 
 ```
 mkdir fileuploaderapp && cd fileuploaderapp 
