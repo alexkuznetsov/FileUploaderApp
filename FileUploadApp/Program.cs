@@ -17,18 +17,14 @@ namespace FileUploadApp
             CreateWebHostBuilder(args).Build().Run();
         }
 
-        // ReSharper disable once ConvertToConstant.Local
-        private static readonly string LimitNo = "NO";
-        private const string EnvUploadLim = "FILEUPLOADERAPP_LIMIT";
-
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .ConfigureAppConfiguration((s) => s.AddEnvironmentVariables())
+                .ConfigureAppConfiguration((s) => s.AddEnvironmentVariables(prefix: Strings.EnvPrefix))
                 .UseKestrel(o =>
                 {
-                    var limit = Environment.GetEnvironmentVariable(EnvUploadLim) ?? LimitNo;
+                    var limit = Environment.GetEnvironmentVariable(Strings.EnvUploadLim) ?? Strings.LimitNo;
 
-                    if (limit.Equals(LimitNo))
+                    if (limit.Equals(Strings.LimitNo))
                         o.Limits.MaxRequestBodySize = null;
                     else
                     {
@@ -43,7 +39,7 @@ namespace FileUploadApp
                         {
                             var logger = o.ApplicationServices.GetService<ILogger<Program>>();
                             var message =
-                                $"{EnvUploadLim} is not equals `{LimitNo}` or correct long value (current value is {limit}), rolling back to a default value";
+                                $"{Strings.EnvUploadLim} is not equals `{Strings.LimitNo}` or correct long value (current value is {limit}), rolling back to a default value";
 
                             if (logger != null)
                             {
@@ -68,7 +64,7 @@ namespace FileUploadApp
                 {
                     logConfig.ReadFrom.Configuration(builder.Configuration)
                         .Enrich
-                            .FromLogContext()
+                        .FromLogContext()
                         .MinimumLevel.Information();
                 })
                 .UseShutdownTimeout(TimeSpan.FromSeconds(60)) // set timeout value here

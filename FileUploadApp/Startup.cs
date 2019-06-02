@@ -26,9 +26,9 @@ namespace FileUploadApp
     {
         private const string ConfNode = "conf";
         private const string FileStoreNode = "fileStore";
-        
-        private const string EnvHealthCheckEp = "FILEUPLOADERAPP_EP_HEALTHCHECK";
-        
+
+        private const string EnvHealthCheckEp = Strings.EnvPrefix + "P_HEALTHCHECK";
+
         private const string DefaultHealthCheckEndpoint = "/health";
 
         public Startup(IConfiguration configuration)

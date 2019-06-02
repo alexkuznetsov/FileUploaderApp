@@ -13,9 +13,8 @@
       "commandName": "IISExpress",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "FILEUPLOADERAPP_JWTSECRET": "POSPsKADaldklkasdashdjashdjsdhjsadas4ti046904",
-        "FILEUPLOADERAPP_FILES_BASE": "../files",
-        "FILEUPLOADERAPP_LOGS_BASE": "../logs"
+        "FILEUPLOADERAPP_jwt__SecretKey": "POSPsKADaldklkasdashdjashdjsdhjsadas4ti046904",
+        "FILEUPLOADERAPP_fileStore__BasePath": "./files"
       }
     },
     "FileUploadApp": {
@@ -24,9 +23,8 @@
       "launchUrl": "api/values",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "FILEUPLOADERAPP_JWTSECRET": "POSPsKADaldklkasdashdjashdjsdhjsadas4ti046904",
-        "FILEUPLOADERAPP_FILES_BASE": "../files",
-        "FILEUPLOADERAPP_LOGS_BASE": "../logs"
+        "FILEUPLOADERAPP_jwt__SecretKey": "POSPsKADaldklkasdashdjashdjsdhjsadas4ti046904",
+        "FILEUPLOADERAPP_fileStore__BasePath": "./files"
       },
       "applicationUrl": "https://localhost:5001;http://localhost:5000"
     }

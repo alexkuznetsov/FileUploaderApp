@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace FileUploadApp.Storage.Filesystem
 {
@@ -11,7 +12,9 @@ namespace FileUploadApp.Storage.Filesystem
         , IStoreBackend<Guid, Upload>
         , IFileStreamProvider<Guid, StreamAdapter>
     {
-        public FilesystemStoreBackend(StorageConfiguration storageConfiguration) : base(storageConfiguration)
+        public FilesystemStoreBackend(StorageConfiguration storageConfiguration
+            , ILogger<FilesystemStoreBackend> logger)
+            : base(storageConfiguration, logger)
         {
         }
 
@@ -43,7 +46,7 @@ namespace FileUploadApp.Storage.Filesystem
             try
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                
+
                 var filePath = BuildPathAndCheckDir(key, false);
 
                 if (File.Exists(filePath))

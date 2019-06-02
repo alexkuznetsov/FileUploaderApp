@@ -1,13 +1,17 @@
 ﻿using System;
 using System.IO;
 using FileUploadApp.Core;
+using Microsoft.Extensions.Logging;
 
 namespace FileUploadApp.Storage.Filesystem
 {
     public abstract class FileStoreBackendBase
     {
-        protected FileStoreBackendBase(StorageConfiguration storageConfiguration)
+        private readonly ILogger<FileStoreBackendBase> logger;
+
+        protected FileStoreBackendBase(StorageConfiguration storageConfiguration, ILogger<FileStoreBackendBase> logger)
         {
+            this.logger = logger;
             StorageConfiguration = storageConfiguration;
         }
 
@@ -32,6 +36,10 @@ namespace FileUploadApp.Storage.Filesystem
             {
                 Directory.CreateDirectory(foldersPath);
             }
+
+            logger.LogInformation("Expanded path for {0} is {1}",
+                fileId.ToString()
+                , Path.GetFullPath(Path.Combine(foldersPath, fileIdStr)));
 
             return Path.Combine(foldersPath, fileIdStr);
         }

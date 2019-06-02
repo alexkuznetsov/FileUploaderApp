@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace FileUploadApp.Storage.Filesystem
 {
@@ -15,8 +16,9 @@ namespace FileUploadApp.Storage.Filesystem
 
         public MetadataFsStoreBackend(StorageConfiguration storageConfiguration
             , ISerializer serializer
-            , IDeserializer deserializer)
-            : base(storageConfiguration)
+            , IDeserializer deserializer
+            , ILogger<MetadataFsStoreBackend> logger)
+            : base(storageConfiguration, logger)
         {
             this.serializer = serializer;
             this.deserializer = deserializer;
@@ -42,20 +44,19 @@ namespace FileUploadApp.Storage.Filesystem
             var specFilePath = FormatSpecFilePath(path);
 
             if (!File.Exists(specFilePath)) return default;
-            
+
             var contents = await File.ReadAllTextAsync(specFilePath, cancellationToken)
                 .ConfigureAwait(false);
 
             return deserializer.Deserialize<Metadata>(contents);
-
         }
-        
+
         public Task DeleteAsync(Guid key, CancellationToken cancellationToken = default)
         {
             try
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                
+
                 var filePath = BuildPathAndCheckDir(key, false);
                 var specFilePath = FormatSpecFilePath(filePath);
 
