@@ -11,7 +11,7 @@ namespace FileUploadApp.Storage.Filesystem
         , IStoreBackend<Guid, Upload>
         , IFileStreamProvider<Guid, StreamAdapter>
     {
-        public FilesystemStoreBackend(StorageConfiguration storageConfiguration):base(storageConfiguration)
+        public FilesystemStoreBackend(StorageConfiguration storageConfiguration) : base(storageConfiguration)
         {
         }
 
@@ -35,6 +35,29 @@ namespace FileUploadApp.Storage.Filesystem
             {
                 await upload.Stream.CopyToAsync(wri, cancellationToken).ConfigureAwait(false);
                 await wri.FlushAsync(cancellationToken).ConfigureAwait(false);
+            }
+        }
+
+        public Task DeleteAsync(Guid key, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                
+                var filePath = BuildPathAndCheckDir(key, false);
+
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
+
+                RemoveDirIfEmpty(Path.GetDirectoryName(filePath));
+
+                return Task.CompletedTask;
+            }
+            catch (OperationCanceledException)
+            {
+                return Task.FromCanceled(cancellationToken);
             }
         }
     }

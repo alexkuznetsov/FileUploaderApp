@@ -10,5 +10,7 @@ namespace FileUploadApp.Storage
         Task SaveAsync(TIn file, CancellationToken cancellationToken = default);
 
         Task<TIn> FindAsync(TKey key, CancellationToken cancellationToken = default);
+
+        Task DeleteAsync(TKey key, CancellationToken cancellationToken = default);
     }
 }

@@ -53,5 +53,16 @@ namespace FileUploadApp.Storage
 
             return CreateSaveResult(metadata, file);
         }
+
+        public async Task<bool> DeleteAsync(TKey fileId, CancellationToken cancellationToken)
+        {
+            var metadata = await metaRepository.FindAsync(fileId, cancellationToken).ConfigureAwait(false);
+            if (metadata == null) return false;
+
+            await storeBackend.DeleteAsync(fileId, cancellationToken).ConfigureAwait(false);
+            await metaRepository.DeleteAsync(fileId, cancellationToken).ConfigureAwait(false);
+
+            return true;
+        }
     }
 }

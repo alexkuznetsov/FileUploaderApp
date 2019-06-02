@@ -18,6 +18,11 @@ namespace FileUploadApp.Tests.Fakes
             throw new NotImplementedException();
         }
 
+        public Task DeleteAsync(Guid key, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task SaveAsync(Metadata file, CancellationToken cancellationToken = default)
         {
             keyValuePairs.Add(file.Id, file);

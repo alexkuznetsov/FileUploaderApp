@@ -19,6 +19,11 @@ namespace FileUploadApp.Tests.Fakes
             throw new NotImplementedException();
         }
 
+        public Task DeleteAsync(Guid key, CancellationToken cancellationToken = default)
+        {
+            throw new NotImplementedException();
+        }
+
         public StreamAdapter GetStreamAdapter(Guid id)
         {
             return keyValuePairs[id].Stream;

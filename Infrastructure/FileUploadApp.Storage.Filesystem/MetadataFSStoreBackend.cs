@@ -49,7 +49,31 @@ namespace FileUploadApp.Storage.Filesystem
             return deserializer.Deserialize<Metadata>(contents);
 
         }
+        
+        public Task DeleteAsync(Guid key, CancellationToken cancellationToken = default)
+        {
+            try
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                
+                var filePath = BuildPathAndCheckDir(key, false);
+                var specFilePath = FormatSpecFilePath(filePath);
 
-        private static string FormatSpecFilePath(string file) => file + SpecFileExtension;
+                if (File.Exists(specFilePath))
+                {
+                    File.Delete(specFilePath);
+                }
+
+                RemoveDirIfEmpty(Path.GetDirectoryName(specFilePath));
+
+                return Task.CompletedTask;
+            }
+            catch (OperationCanceledException)
+            {
+                return Task.FromCanceled(cancellationToken);
+            }
+        }
+
+        private static string FormatSpecFilePath(string file) => $"{file}{SpecFileExtension}";
     }
 }

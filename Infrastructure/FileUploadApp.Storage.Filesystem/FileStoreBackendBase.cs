@@ -35,5 +35,20 @@ namespace FileUploadApp.Storage.Filesystem
 
             return Path.Combine(foldersPath, fileIdStr);
         }
+
+        private const int MaxDepth = 3;
+
+        protected static void RemoveDirIfEmpty(string directoryPath, int depth = 0)
+        {
+            while (true)
+            {
+                if (depth == MaxDepth) return;
+                if (!Dir.IsDirectoryEmpty(directoryPath)) return;
+
+                Dir.Delete(directoryPath);
+                directoryPath = Path.GetDirectoryName(directoryPath);
+                depth++;
+            }
+        }
     }
 }
