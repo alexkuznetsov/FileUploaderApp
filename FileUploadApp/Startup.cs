@@ -26,13 +26,17 @@ namespace FileUploadApp
     {
         private const string ConfNode = "conf";
         private const string FileStoreNode = "fileStore";
+        
+        private const string EnvHealthCheckEp = "FILEUPLOADERAPP_EP_HEALTHCHECK";
+        
+        private const string DefaultHealthCheckEndpoint = "/health";
 
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -51,7 +55,6 @@ namespace FileUploadApp
             });
 
             services.AddSingleton<IContentDownloaderFactory<DownloadUriResponse>, ContentDownloaderFactory>();
-
             services.AddSingleton(Configuration.BindTo<StorageConfiguration>(FileStoreNode));
 
             services.AddSingleton<IStoreBackend<Guid, Upload>, FilesystemStoreBackend>();
@@ -111,7 +114,7 @@ namespace FileUploadApp
                                    | ForwardedHeaders.XForwardedProto
             });
 
-            app.UseHealthChecks("/health");
+            app.UseHealthChecks(Environment.GetEnvironmentVariable(EnvHealthCheckEp) ?? DefaultHealthCheckEndpoint);
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Globalization;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,6 +23,7 @@ namespace FileUploadApp
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((s) => s.AddEnvironmentVariables())
                 .UseKestrel(o =>
                 {
                     var limit = Environment.GetEnvironmentVariable(EnvUploadLim) ?? LimitNo;
@@ -65,7 +67,8 @@ namespace FileUploadApp
                 .UseSerilog((builder, logConfig) =>
                 {
                     logConfig.ReadFrom.Configuration(builder.Configuration)
-                        .Enrich.FromLogContext()
+                        .Enrich
+                            .FromLogContext()
                         .MinimumLevel.Information();
                 })
                 .UseShutdownTimeout(TimeSpan.FromSeconds(60)) // set timeout value here

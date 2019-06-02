@@ -5,6 +5,6 @@ namespace FileUploadApp.Storage.Filesystem
     [DataContract]
     public class StorageConfiguration
     {
-        [DataMember] public string BasePath { get; set; }
+        [DataMember] public string BasePath { get; set; } = "./uploads";
     }
 }

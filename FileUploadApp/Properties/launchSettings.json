@@ -12,7 +12,10 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "FILEUPLOADERAPP_JWTSECRET": "POSPsKADaldklkasdashdjashdjsdhjsadas4ti046904",
+        "FILEUPLOADERAPP_FILES_BASE": "../files",
+        "FILEUPLOADERAPP_LOGS_BASE": "../logs"
       }
     },
     "FileUploadApp": {
@@ -20,7 +23,10 @@
       "launchBrowser": true,
       "launchUrl": "api/values",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "FILEUPLOADERAPP_JWTSECRET": "POSPsKADaldklkasdashdjashdjsdhjsadas4ti046904",
+        "FILEUPLOADERAPP_FILES_BASE": "../files",
+        "FILEUPLOADERAPP_LOGS_BASE": "../logs"
       },
       "applicationUrl": "https://localhost:5001;http://localhost:5000"
     }

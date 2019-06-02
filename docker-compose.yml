@@ -2,10 +2,7 @@ version: '3.4'
 
 services:
   fileuploaderapp:
-    image: alexkuznetsov/fileuploaderapp:latest
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: alexkuz/fileuploaderapp:latest 
     ports:
       - "8888:5000"
     environment:
@@ -13,6 +10,9 @@ services:
       ASPNETCORE_ENVIRONMENT: Release
       #FILEUPLOADERAPP_LIMIT: 30,000,000 # Default value
       #FILEUPLOADERAPP_LIMIT: NO # Turn off upload size check
+      FILEUPLOADERAPP_FILES_BASE: ./uploads
+      FILEUPLOADERAPP_LOGS_BASE: ./logs
+      FILEUPLOADERAPP_JWTSECRET: POSPsKADaldklkasdashdjashdjsdhjsadas4ti046904
     volumes:
       - ./logs:/app/logs
       - ./uploads:/app/uploads
