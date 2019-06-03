@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   fileuploaderapp:
-    image: alexkuznetsov/fileuploaderapp:latest
+    image: alexkuznetsov/fileuploaderapp:dev
     build:
       context: .
       dockerfile: Dockerfile
