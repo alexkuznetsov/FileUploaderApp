@@ -7,6 +7,7 @@
 **/[Ll]ogs/*
 #FileUploadApp/uploads
 **/[Uu]ploads/*
+.vscode/
 
 # User-specific files
 *.rsuser
