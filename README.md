@@ -22,7 +22,7 @@ wget https://raw.githubusercontent.com/alexkuznetsov/FileUploaderApp/master/dock
 docker-compose up
 ```
 
-After that, docker pulled up the last version of the container and starts it.
+After that, Docker retrives the last version of the container and launches it.
 
 Build image locally
 ===================
@@ -40,7 +40,7 @@ Endpoints
 
 1.  ```/api/token```
 
-    Authentication endpoint, checks username/password pair and return JWT for upload's endpoint.
+    Authentication endpoint, checks username/password pair and returns JWT for upload endpoint.
 
     Sample request: 
 ```
@@ -70,9 +70,8 @@ Configuration
 ===============
 
 Maximum request body size (e.g. total upload size limit) can be changed by setting FILEUPLOADERAPP_LIMIT environment variable.
-It can accept two types of values - string and long. String - just `NO`, when turn off maximum request body size check, and 
-you can upload any size.
-If it is long, it is the body size in bytes, the maximum size that can be loaded.
+It can accept two types of values - string and long. String - just `NO`, when turns off maximum request body size check, and you can upload any size.
+If it is a long, it is the body size in bytes, the maximum size that can be loaded.
 
 Have questions?
 ===============
