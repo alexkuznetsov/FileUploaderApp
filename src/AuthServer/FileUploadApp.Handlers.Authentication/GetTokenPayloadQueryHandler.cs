@@ -3,6 +3,7 @@ using FileUploadApp.Domain;
 using FileUploadApp.Requests;
 using MediatR;
 using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
@@ -47,7 +48,7 @@ namespace FileUploadApp.Handlers
 
             if (!(validatedSecurityToken is JwtSecurityToken jwt))
             {
-                return null;
+                throw new InvalidOperationException($"{nameof(validatedSecurityToken)} is not a JwtSecurityToken. Aborting.");
             }
 
             return Task.FromResult(new TokenPayload
