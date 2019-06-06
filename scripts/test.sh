@@ -1,1 +1,1 @@
-dotnet test -c Release --logger:trx
+dotnet test src -c Release --logger:trx
