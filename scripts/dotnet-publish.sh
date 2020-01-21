@@ -1,2 +1,2 @@
 #!/bin/bash
-dotnet publish FileUploadApp -c Release -o out
+dotnet publish src/FileUploadApp -c Release -o out
