@@ -1,2 +1,2 @@
 #!/bin/bash
-dotnet build -c Release --no-cache
+dotnet build src -c Release --no-cache

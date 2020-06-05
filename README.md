@@ -1,4 +1,4 @@
-# File uploads service ![build status ](https://travis-ci.org/alexkuznetsov/FileUploaderApp.svg?branch=master)
+# File uploads service ![build status ](https://travis-ci.org/alexkuznetsov/FileUploaderApp.svg?branch=dev)
 
 REST upload file service.
 
@@ -17,8 +17,8 @@ mkdir fileuploaderapp && cd fileuploaderapp
 mkdir logs
 mkdir uploads
 mkdir nginx
-wget -P nginx https://raw.githubusercontent.com/alexkuznetsov/FileUploaderApp/master/nginx/nginx.conf
-wget https://raw.githubusercontent.com/alexkuznetsov/FileUploaderApp/master/docker-compose.yml
+wget -P nginx https://raw.githubusercontent.com/alexkuznetsov/FileUploaderApp/dev/nginx/nginx.conf
+wget https://raw.githubusercontent.com/alexkuznetsov/FileUploaderApp/dev/docker-compose.yml
 docker-compose up
 ```
 
@@ -30,6 +30,7 @@ Build image locally
 ```
 git clone https://github.com/alexkuznetsov/FileUploaderApp.git
 cd FileUploaderApp
+git checkout dev
 mkdir logs
 mkdir uploads
 docker-compose -f docker-compose-local.yml up

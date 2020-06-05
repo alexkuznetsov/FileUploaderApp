@@ -19,7 +19,8 @@ namespace FileUploadApp.Handlers
 
         public async Task<CheckUserResult> Handle(CheckUserQuery request, CancellationToken cancellationToken)
         {
-            var user = await checkUserService.FindByNameAsync(request.Username);
+            var user = await checkUserService.FindByNameAsync(request.Username)
+                .ConfigureAwait(false);
 
             if (user == null)
                 return CheckUserResult.NotFound;

@@ -1,11 +1,12 @@
 language: csharp
 mono: none
 sudo: required
-dist: xenial
+dist: bionic
 dotnet: 2.2
 branches:
   only:
     - master
+    - dev
 before_script:
   - chmod -R a+x scripts
 script:
