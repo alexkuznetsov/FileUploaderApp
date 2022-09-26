@@ -55,9 +55,31 @@ Endpoints
     Upload endpoint. Can consume:
     
     - Multipart Form Data;
-    - JSON, with base64 encoded file ( ``` { "files": [  { "file": "some-file-name", "data": "base64 encoded data" }   ] }  ``` );
-    - JSON, with links for download files (  ```{ "links": [ "http://localhost/1.bmp", "http://localhost/2.bmp" ] }``` );
-    - Mix of base64 encoded files and links ( ```{ "files": [ ... ], "links": [ ... ] }``` ).
+    - JSON, with base64 encoded file ( 
+        ``` 
+        { 
+            "files": [{ 
+                "file": "some-file-name", 
+                "data": "base64 encoded data" 
+            }] 
+        }  
+        ``` 
+        );
+    - JSON, with links for download files (  
+        ```
+        { 
+            "links": [ "http://localhost/1.bmp", "http://localhost/2.bmp" ] 
+        }
+        ``` 
+        );
+    - Mix of base64 encoded files and links ( 
+        ```
+        { 
+            "files": [ ... ], 
+            "links": [ ... ] 
+        }
+        ``` 
+        ).
 
 3. ```/api/file/{fileId}```
 
