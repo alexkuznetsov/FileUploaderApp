@@ -3,60 +3,60 @@ using System.IO;
 using FileUploadApp.Core;
 using Microsoft.Extensions.Logging;
 
-namespace FileUploadApp.Storage.Filesystem
+namespace FileUploadApp.Storage.Filesystem;
+
+public abstract class FileStoreBackendBase
 {
-    public abstract class FileStoreBackendBase
+    private readonly ILogger<FileStoreBackendBase> logger;
+
+    protected FileStoreBackendBase(StorageConfiguration storageConfiguration
+        , ILogger<FileStoreBackendBase> logger)
     {
-        private readonly ILogger<FileStoreBackendBase> logger;
+        this.logger = logger;
+        StorageConfiguration = storageConfiguration;
+    }
 
-        protected FileStoreBackendBase(StorageConfiguration storageConfiguration, ILogger<FileStoreBackendBase> logger)
+    private StorageConfiguration StorageConfiguration { get; }
+
+    protected string BuildPathAndCheckDir(Guid? fileId, bool createIfNotExists)
+    {
+        if (fileId == null || fileId.Equals(Guid.Empty))
         {
-            this.logger = logger;
-            StorageConfiguration = storageConfiguration;
+            throw new ArgumentException("fileId can not be null or empty", nameof(fileId));
         }
 
-        private StorageConfiguration StorageConfiguration { get; }
+        var fileIdStr = fileId.ToString();
+        var span = fileIdStr.ToCharArray();
 
-        protected string BuildPathAndCheckDir(Guid fileId, bool createIfNotExists)
+        var foldersPath = Path.Combine(StorageConfiguration.BasePath,
+            new string(span.Slice(0, 2)),
+            new string(span.Slice(2, 2)),
+            new string(span.Slice(4, 2)));
+
+        if (createIfNotExists && !Directory.Exists(foldersPath))
         {
-            if (fileId == null || fileId.Equals(Guid.Empty))
-            {
-                throw new ArgumentException("fileId can not be null or empty", nameof(fileId));
-            }
-
-            var fileIdStr = fileId.ToString();
-            var span = fileIdStr.ToCharArray();
-
-            var foldersPath = Path.Combine(StorageConfiguration.BasePath,
-                new string(span.Slice(0, 2)),
-                new string(span.Slice(2, 2)),
-                new string(span.Slice(4, 2)));
-
-            if (createIfNotExists && !Directory.Exists(foldersPath))
-            {
-                Directory.CreateDirectory(foldersPath);
-            }
-
-            logger.LogInformation("Expanded path for {0} is {1}",
-                fileId.ToString()
-                , Path.GetFullPath(Path.Combine(foldersPath, fileIdStr)));
-
-            return Path.Combine(foldersPath, fileIdStr);
+            Directory.CreateDirectory(foldersPath);
         }
 
-        private const int MaxDepth = 3;
+        logger.LogInformation("Expanded path for {FileId} is {Path}",
+            fileId.ToString()
+            , Path.GetFullPath(Path.Combine(foldersPath, fileIdStr)));
 
-        protected static void RemoveDirIfEmpty(string directoryPath, int depth = 0)
+        return Path.Combine(foldersPath, fileIdStr);
+    }
+
+    private const int MaxDepth = 3;
+
+    protected static void RemoveDirIfEmpty(string directoryPath, int depth = 0)
+    {
+        while (true)
         {
-            while (true)
-            {
-                if (depth == MaxDepth) return;
-                if (!Dir.IsDirectoryEmpty(directoryPath)) return;
+            if (depth == MaxDepth) return;
+            if (!Dir.IsDirectoryEmpty(directoryPath)) return;
 
-                Dir.Delete(directoryPath);
-                directoryPath = Path.GetDirectoryName(directoryPath);
-                depth++;
-            }
+            Dir.Delete(directoryPath);
+            directoryPath = Path.GetDirectoryName(directoryPath);
+            depth++;
         }
     }
 }

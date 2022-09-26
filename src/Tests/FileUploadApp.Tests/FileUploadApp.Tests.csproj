@@ -1,34 +1,29 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
-
-    <IsPackable>false</IsPackable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<IsPackable>false</IsPackable>
+	</PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MediatR" Version="7.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="2.2.4" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.1.0" />
-    <PackageReference Include="Moq" Version="4.10.1" />
-    <PackageReference Include="MSTest.TestAdapter" Version="1.4.0" />
-    <PackageReference Include="MSTest.TestFramework" Version="1.4.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="MediatR" Version="10.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.1" />
+    <PackageReference Include="Moq" Version="4.18.2" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.2.10" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.2.10" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Infrastructure\FileUploadApp.Core\FileUploadApp.Core.csproj" />
     <ProjectReference Include="..\..\Domain\FileUploadApp.Domain\FileUploadApp.Domain.csproj" />
-    <ProjectReference Include="..\..\Infrastructure\FileUploadApp.Events\FileUploadApp.Events.csproj" />
-    <ProjectReference Include="..\..\Infrastructure\FileUploadApp.Handlers\FileUploadApp.Handlers.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\FileUploadApp.Handlers\FileUploadApp.Features.csproj" />
     <ProjectReference Include="..\..\Infrastructure\FileUploadApp.Imaging\FileUploadApp.Imaging.csproj" />
     <ProjectReference Include="..\..\Domain\FileUploadApp.Interfaces\FileUploadApp.Interfaces.csproj" />
-    <ProjectReference Include="..\..\Infrastructure\FileUploadApp.Services\FileUploadApp.Services.csproj" />
     <ProjectReference Include="..\..\Infrastructure\FileUploadApp.Storage.Filesystem\FileUploadApp.Storage.Filesystem.csproj" />
     <ProjectReference Include="..\..\Infrastructure\FileUploadApp.StreamWrappers\FileUploadApp.StreamAdapters.csproj" />
     <ProjectReference Include="..\..\FileUploadApp\FileUploadApp.csproj" />

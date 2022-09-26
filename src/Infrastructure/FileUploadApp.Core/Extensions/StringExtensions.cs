@@ -4,9 +4,11 @@ using System.Collections.Generic;
 // ReSharper disable once CheckNamespace
 namespace FileUploadApp
 {
-    internal static class StringExtensions
+    public static class StringExtensions
     {
-        public static IEnumerable<(uint, Uri)> AsOrderedUriEnumerable(this IEnumerable<string> source, Action<string> onError = null)
+        public static IEnumerable<(uint, Uri)> AsOrderedUriEnumerable(
+              this IEnumerable<string> source
+            , Action<string> onError = null)
         {
             var i = 0U;
 

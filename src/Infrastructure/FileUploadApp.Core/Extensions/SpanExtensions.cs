@@ -90,8 +90,8 @@ namespace System
                     return !(ShouldRemoveEmptyEntries && Current.IsEmpty);
                 }
 
-                Current = _sequence.Slice(0, index);
-                _sequence = _sequence.Slice(index + 1);
+                Current = _sequence[..index];
+                _sequence = _sequence[(index + 1)..];
             } while (Current.IsEmpty && ShouldRemoveEmptyEntries);
 
             return true;

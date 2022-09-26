@@ -1,7 +1,7 @@
 ﻿using FileUploadApp.Domain;
-using FileUploadApp.Domain.Dirty;
+using FileUploadApp.Domain.Raw;
+using FileUploadApp.Features.Commands;
 using FileUploadApp.Interfaces;
-using FileUploadApp.Requests;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -31,7 +31,7 @@ namespace FileUploadApp.Tests
 
                 var fakeHandler = CreateFakeRequestHandlerForDownloadUriQuery();
                 sd = new ServiceDescriptor(
-                      typeof(IRequestHandler<DownloadUriQuery, Upload>)
+                      typeof(IRequestHandler<DownloadUri.Command, Upload>)
                     , (_) => fakeHandler
                     , ServiceLifetime.Scoped);
 
@@ -51,20 +51,19 @@ namespace FileUploadApp.Tests
         [TestMethod]
         public async Task Test_QueryShouldReturnValidEntity()
         {
-            var req = new DownloadUriQuery(0U, RequestUri);
+            var req = new DownloadUri.Command(0U, RequestUri);
 
-            using (var scope = serviceProvider.CreateScope())
-            {
-                var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-                var response = await mediator.Send(req);
+            using var scope = serviceProvider.CreateScope();
 
-                Assert.IsNotNull(response);
-                Assert.AreEqual(response.ContentType, FakeUpload.ContentType);
-                Assert.AreEqual(response.Id, FakeUpload.Id);
-                Assert.AreEqual(response.Name, FakeUpload.Name);
-                Assert.AreEqual(response.Number, FakeUpload.Number);
-                Assert.AreEqual(response.PreviewId, FakeUpload.PreviewId);
-            }
+            var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+            var response = await mediator.Send(req);
+
+            Assert.IsNotNull(response);
+            Assert.AreEqual(response.ContentType, FakeUpload.ContentType);
+            Assert.AreEqual(response.Id, FakeUpload.Id);
+            Assert.AreEqual(response.Name, FakeUpload.Name);
+            Assert.AreEqual(response.Number, FakeUpload.Number);
+            Assert.AreEqual(response.PreviewId, FakeUpload.PreviewId);
         }
     }
 }

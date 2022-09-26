@@ -1,5 +1,5 @@
 ﻿using BenchmarkDotNet.Attributes;
-using FileUploadApp.Core;
+using FileUploadApp.Core.Encoding;
 using System;
 
 namespace FileUploadApp.Tests.Bench
@@ -9,7 +9,7 @@ namespace FileUploadApp.Tests.Bench
     {
         private string StringData { get; set; }
 
-        private string DefaultFileName => "file.bmp";
+        private static string DefaultFileName => "file.bmp";
 
         [GlobalSetup]
         public void Setup()
@@ -18,6 +18,7 @@ namespace FileUploadApp.Tests.Bench
         }
 
         [Benchmark]
+        [Obsolete("Only for comparing results")]
         public void ParseAsString() => Base64Parser.Parse(StringData, DefaultFileName);
 
         [Benchmark]

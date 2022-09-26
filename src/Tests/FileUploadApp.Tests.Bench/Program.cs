@@ -10,6 +10,6 @@ namespace FileUploadApp.Tests.Bench
     {
         static void Main(string[] args) => BenchmarkRunner.Run<Base64ParserBench>(
             DefaultConfig.Instance
-                .With(Job.Default.With(CsProjCoreToolchain.NetCoreApp22)));
+                .AddJob(Job.Default.WithToolchain(CsProjCoreToolchain.NetCoreApp60)));
     }
 }

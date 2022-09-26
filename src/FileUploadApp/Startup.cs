@@ -1,24 +1,25 @@
-﻿using FileUploadApp.Core.Authentication;
+﻿using FileUploadApp.Authentication;
+using FileUploadApp.Authentication.Queries;
+using FileUploadApp.Core.Authentication;
 using FileUploadApp.Core.Serialization;
 using FileUploadApp.Domain;
-using FileUploadApp.Domain.Dirty;
-using FileUploadApp.Events;
-using FileUploadApp.Handlers;
+using FileUploadApp.Domain.Raw;
+using FileUploadApp.Features.Commands;
+using FileUploadApp.Features.Services;
 using FileUploadApp.Interfaces;
-using FileUploadApp.Requests;
-using FileUploadApp.Services;
 using FileUploadApp.Storage;
 using FileUploadApp.Storage.Filesystem;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Net.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using System;
+using System.Linq;
+using System.Net.Http;
 
 namespace FileUploadApp
 {
@@ -30,10 +31,12 @@ namespace FileUploadApp
         private const string EnvHealthCheckEp = Strings.EnvPrefix + "P_HEALTHCHECK";
 
         private const string DefaultHealthCheckEndpoint = "/health";
+        private readonly IWebHostEnvironment env;
 
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            this.env = env;
         }
 
         private IConfiguration Configuration { get; set; }
@@ -41,8 +44,11 @@ namespace FileUploadApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc(options => { options.EnableEndpointRouting = false; })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc().AddJsonOptions(o =>
+            {
+                o.JsonSerializerOptions.PropertyNameCaseInsensitive = false;
+                o.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+            });
 
             services.AddSingleton(Configuration.BindTo<AppConfiguration>(ConfNode));
             services.AddSingleton<IContentTypeTestUtility, ContentTypeTestUtility>();
@@ -63,15 +69,11 @@ namespace FileUploadApp
             services.AddSingleton<IStore<Guid, Upload, UploadResultRow>, FileSystemStore>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            services.AddScoped<ServiceFactory>(p => p.GetService);
-
-            services.Scan(scan => scan
-                .FromAssembliesOf(typeof(IMediator)
-                    , typeof(GenericEvent)
-                    , typeof(DownloadUriQuery)
-                    , typeof(UploadFilesCommandHandler))
-                .AddClasses()
-                .AsImplementedInterfaces());
+            services.AddMediatR(new[]
+            {
+                  typeof(UploadFiles.Handler).Assembly
+                , typeof(CheckUser.Handler).Assembly
+            });
 
             services.AddCors((s) =>
             {
@@ -86,14 +88,25 @@ namespace FileUploadApp
             services.AddJwt();
             services.AddJwtAuthenticationEndpointWithFakeService(Configuration);
             services.AddHealthChecks();
+            services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen(c =>
+            {
+                c.ResolveConflictingActions(apiDescriptions =>
+                {
+
+                    return apiDescriptions.First();
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
             else
             {
@@ -103,8 +116,6 @@ namespace FileUploadApp
 
             app.UseAccessTokenValidator();
             //app.UseHttpsRedirection();
-            app.UseAuthentication();
-            app.UseMvc();
 
             app.UseCors();
 
@@ -115,6 +126,16 @@ namespace FileUploadApp
             });
 
             app.UseHealthChecks(Environment.GetEnvironmentVariable(EnvHealthCheckEp) ?? DefaultHealthCheckEndpoint);
+
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute("Default", "{controller}/{action=index}/{id:int?}");
+            });
         }
     }
 }

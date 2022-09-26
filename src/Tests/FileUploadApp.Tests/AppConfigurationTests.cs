@@ -2,7 +2,7 @@ using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.Extensions.DependencyInjection;
 using FileUploadApp.Domain;
-using FileUploadApp.Services;
+using FileUploadApp.Features.Services;
 
 namespace FileUploadApp.Tests
 {
@@ -51,7 +51,7 @@ namespace FileUploadApp.Tests
         {
             var appConf = serviceProvider.GetRequiredService<AppConfiguration>();
 
-            Assert.IsTrue(appConf.PreviewSize != null);
+            Assert.IsTrue(appConf.PreviewSize != default);
             Assert.IsTrue(appConf.PreviewSize.Width == 100);
             Assert.IsTrue(appConf.PreviewSize.Height == 100);
         }

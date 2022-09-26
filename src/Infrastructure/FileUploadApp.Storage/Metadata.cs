@@ -1,31 +1,24 @@
 ﻿using System;
-using System.Runtime.Serialization;
 
-namespace FileUploadApp.Storage
+namespace FileUploadApp.Storage;
+
+public class Metadata
 {
-    [DataContract]
-    public class Metadata
+    public Guid Id { get; set; }
+
+    public string Name { get; set; }
+
+    public string ContentType { get; set; }
+
+    public DateTime CreatedDate { get; set; }
+
+    public Metadata() { }
+
+    public Metadata(Guid id, string name, string contentType, DateTime? dateTime = null)
     {
-        [DataMember(Name = "id", IsRequired = true, EmitDefaultValue = false, Order = 3)]
-        public Guid Id { get; set; }
-
-        [DataMember(Name = "nm", IsRequired = true, EmitDefaultValue = false, Order = 0)]
-        public string Name { get; set; }
-
-        [DataMember(Name = "ct", IsRequired = true, EmitDefaultValue = false, Order = 1)]
-        public string ContentType { get; set; }
-
-        [DataMember(Name = "crat", IsRequired = true, EmitDefaultValue = false, Order = 2)]
-        public DateTime CreatedDate { get; set; }
-
-        public Metadata() { }
-
-        public Metadata(Guid id, string name, string contentType, DateTime? dateTime = null)
-        {
-            Id = id;
-            Name = name;
-            ContentType = contentType;
-            CreatedDate = dateTime ?? DateTime.UtcNow;
-        }
+        Id = id;
+        Name = name;
+        ContentType = contentType;
+        CreatedDate = dateTime ?? DateTime.UtcNow;
     }
 }

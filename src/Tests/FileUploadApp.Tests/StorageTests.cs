@@ -1,5 +1,5 @@
 ﻿using FileUploadApp.Domain;
-using FileUploadApp.Events;
+using FileUploadApp.Features.Commands;
 using FileUploadApp.Interfaces;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -47,7 +47,7 @@ namespace FileUploadApp.Tests
         [TestMethod]
         public async Task Test_HandlerAndStore_ShouldUploadImageAndMakePreview()
         {
-            var uploadEvent = new UploadFilesEvent(new[] { FakeUpload });
+            var uploadEvent = new UploadFiles.Event(new[] { FakeUpload });
             var mediator = serviceProvider.GetRequiredService<IMediator>();
 
             await mediator.Publish(uploadEvent);

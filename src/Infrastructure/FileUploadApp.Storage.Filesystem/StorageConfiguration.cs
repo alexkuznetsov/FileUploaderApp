@@ -1,10 +1,6 @@
-﻿using System.Runtime.Serialization;
+﻿namespace FileUploadApp.Storage.Filesystem;
 
-namespace FileUploadApp.Storage.Filesystem
+public class StorageConfiguration
 {
-    [DataContract]
-    public class StorageConfiguration
-    {
-        [DataMember] public string BasePath { get; set; } = "./uploads";
-    }
+    public string BasePath { get; set; } = "./uploads";
 }

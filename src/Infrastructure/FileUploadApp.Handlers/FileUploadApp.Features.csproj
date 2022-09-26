@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+	</PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="10.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.9" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Domain\FileUploadApp.Domain\FileUploadApp.Domain.csproj" />
+    <ProjectReference Include="..\FileUploadApp.Core\FileUploadApp.Core.csproj" />
+    <ProjectReference Include="..\FileUploadApp.Imaging\FileUploadApp.Imaging.csproj" />
+    <ProjectReference Include="..\..\Domain\FileUploadApp.Interfaces\FileUploadApp.Interfaces.csproj" />
+    <ProjectReference Include="..\FileUploadApp.Storage\FileUploadApp.Storage.csproj" />
+    <ProjectReference Include="..\FileUploadApp.StreamWrappers\FileUploadApp.StreamAdapters.csproj" />
+  </ItemGroup>
+
+</Project>

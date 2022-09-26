@@ -2,27 +2,26 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-namespace FileUploadApp.Core.Authentication
+namespace FileUploadApp.Core.Authentication;
+
+internal class AccessTokenValidatorMiddleware : IMiddleware
 {
-    internal class AccessTokenValidatorMiddleware : IMiddleware
+    private readonly IAccessTokenService _accessTokenService;
+
+    public AccessTokenValidatorMiddleware(IAccessTokenService accessTokenService)
     {
-        private readonly IAccessTokenService _accessTokenService;
+        _accessTokenService = accessTokenService;
+    }
 
-        public AccessTokenValidatorMiddleware(IAccessTokenService accessTokenService)
+    public async Task InvokeAsync(HttpContext context, RequestDelegate next)
+    {
+        if (await _accessTokenService.IsTokenAlive())
         {
-            _accessTokenService = accessTokenService;
+            await next(context);
+
+            return;
         }
 
-        public async Task InvokeAsync(HttpContext context, RequestDelegate next)
-        {
-            if (await _accessTokenService.IsTokenAlive())
-            {
-                await next(context);
-
-                return;
-            }
-
-            context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-        }
+        context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
     }
 }

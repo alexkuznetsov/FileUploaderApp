@@ -1,7 +1,6 @@
-﻿namespace FileUploadApp.Domain
+﻿namespace FileUploadApp.Domain;
+
+public interface IHaveId<out TId>
 {
-    public interface IHaveId<out TId>
-    {
-        TId Id { get; }
-    }
+    TId Id { get; }
 }

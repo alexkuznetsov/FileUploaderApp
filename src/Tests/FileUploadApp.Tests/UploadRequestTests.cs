@@ -1,5 +1,5 @@
-﻿using FileUploadApp.Core;
-using FileUploadApp.Domain.Dirty;
+﻿using FileUploadApp.Domain.Raw;
+using FileUploadApp.Features;
 using FileUploadApp.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

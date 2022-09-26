@@ -1,24 +1,21 @@
-﻿using FileUploadApp.Core.Authentication;
-using FileUploadApp.Requests;
+﻿using FileUploadApp.Authentication;
+using FileUploadApp.Authentication.Queries;
 using FileUploadApp.Core.Serialization;
 using FileUploadApp.Domain;
-using FileUploadApp.Events;
-using FileUploadApp.Handlers;
+using FileUploadApp.Domain.Raw;
+using FileUploadApp.Features;
+using FileUploadApp.Features.Services;
 using FileUploadApp.Interfaces;
-using FileUploadApp.Services;
 using FileUploadApp.Storage;
 using FileUploadApp.Storage.Filesystem;
+using FileUploadApp.Tests.Fakes;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using FileUploadApp.Tests.Fakes;
-using FileUploadApp.Domain.Dirty;
-using Serilog;
-using FileUploadApp.Interfaces.Authentication;
-using FileUploadApp.Services.Authentication;
 
 namespace FileUploadApp.Tests
 {
@@ -88,13 +85,11 @@ namespace FileUploadApp.Tests
 
             services.AddScoped<ServiceFactory>(p => p.GetService);
 
-            services.Scan(scan => scan
-                .FromAssembliesOf(typeof(IMediator)
-                    , typeof(GenericEvent)
-                    , typeof(DownloadUriQuery)
-                    , typeof(UploadFilesCommandHandler))
-                .AddClasses()
-                .AsImplementedInterfaces());
+            services.AddMediatR(new[]
+            {
+                  typeof(GenericEvent).Assembly
+                , typeof(CheckUser.Handler).Assembly
+            });
 
             Log.Logger = new LoggerConfiguration()
                .ReadFrom.Configuration(configuration)

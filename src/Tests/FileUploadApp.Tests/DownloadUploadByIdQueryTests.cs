@@ -1,5 +1,5 @@
 ﻿using FileUploadApp.Domain;
-using FileUploadApp.Requests;
+using FileUploadApp.Features.Queries;
 using FileUploadApp.Storage;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -66,18 +66,17 @@ namespace FileUploadApp.Tests
         [TestMethod]
         public async Task Test_QueryShouldReturnValidEntity()
         {
-            var req = new DownloadUploadByIdQuery(RequestId);
+            var req = new DownloadUploadById.Query(RequestId);
 
-            using (var scope = serviceProvider.CreateScope())
-            {
-                var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-                var response = await mediator.Send(req);
+            using var scope = serviceProvider.CreateScope();
 
-                Assert.IsNotNull(response);
-                Assert.AreEqual(response.Id, RequestId);
-                Assert.AreEqual(response.Name, FakeUpload.Name);
-                Assert.AreEqual(response.ContentType, FakeUpload.ContentType);
-            }
+            var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+            var response = await mediator.Send(req);
+
+            Assert.IsNotNull(response);
+            Assert.AreEqual(response.Id, RequestId);
+            Assert.AreEqual(response.Name, FakeUpload.Name);
+            Assert.AreEqual(response.ContentType, FakeUpload.ContentType);
         }
     }
 }

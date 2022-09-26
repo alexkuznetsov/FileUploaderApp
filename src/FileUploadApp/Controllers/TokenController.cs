@@ -1,6 +1,7 @@
-﻿using FileUploadApp.Core;
-using FileUploadApp.Domain.Authentication;
-using FileUploadApp.Requests;
+﻿using FileUploadApp.Authentication;
+using FileUploadApp.Authentication.Commands;
+using FileUploadApp.Authentication.Queries;
+using FileUploadApp.Core.Mvc;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,7 @@ namespace FileUploadApp.Controllers
     /// Реализация службы аутентификации, для тестирования
     /// </summary>
     [Route("api/[controller]")]
+    [ApiController]
     public class TokenController : BaseApiController
     {
         public TokenController(IMediator mediator) : base(mediator)
@@ -22,9 +24,11 @@ namespace FileUploadApp.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<IActionResult> Post([FromBody]AuthenticationRequest authReq, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> Post([FromBody]AuthenticationRequest authReq
+            , CancellationToken cancellationToken = default)
         {
-            var checkUserResponse = await SendAsync(new CheckUserQuery(authReq.Username, authReq.Password), cancellationToken);
+            var checkUserResponse = await SendAsync(new CheckUser.Query(authReq.Username, authReq.Password)
+                , cancellationToken);
 
             if (checkUserResponse.UserNotFound())
                 return NotFound();
@@ -32,7 +36,8 @@ namespace FileUploadApp.Controllers
             if (checkUserResponse.UserPasswordMismatch())
                 return BadRequest(new { error = "Password is invalid" });
 
-            var userToken = await SendAsync(new CreateTokenQuery(checkUserResponse.User.Username), cancellationToken);
+            var userToken = await SendAsync(new CreateToken.Command(checkUserResponse.User.Username)
+                , cancellationToken);
 
             return Ok(userToken);
         }

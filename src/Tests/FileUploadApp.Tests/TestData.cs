@@ -1,8 +1,8 @@
 ﻿using FileUploadApp.Domain;
-using FileUploadApp.Domain.Dirty;
+using FileUploadApp.Domain.Raw;
+using FileUploadApp.Features.Commands;
+using FileUploadApp.Features.Services;
 using FileUploadApp.Interfaces;
-using FileUploadApp.Requests;
-using FileUploadApp.Services;
 using FileUploadApp.Storage;
 using FileUploadApp.StreamAdapters;
 using MediatR;
@@ -80,10 +80,10 @@ namespace FileUploadApp.Tests
 
         #region Mock download
 
-        protected static IRequestHandler<DownloadUriQuery, Upload> CreateFakeRequestHandlerForDownloadUriQuery()
+        protected static IRequestHandler<DownloadUri.Command, Upload> CreateFakeRequestHandlerForDownloadUriQuery()
         {
-            var mock = new Mock<IRequestHandler<DownloadUriQuery, Upload>>();
-            mock.Setup(x => x.Handle(It.IsAny<DownloadUriQuery>(), It.IsAny<CancellationToken>()))
+            var mock = new Mock<IRequestHandler<DownloadUri.Command, Upload>>();
+            mock.Setup(x => x.Handle(It.IsAny<DownloadUri.Command>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.FromResult(FakeUpload));
 
             return mock.Object;

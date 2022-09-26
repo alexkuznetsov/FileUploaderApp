@@ -1,12 +1,11 @@
-﻿using FileUploadApp.Domain;
-using FileUploadApp.Interfaces;
+﻿using FileUploadApp.Authentication;
+using FileUploadApp.Authentication.Queries;
+using FileUploadApp.Domain;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Threading.Tasks;
-using FileUploadApp.Requests;
-using MediatR;
-using FileUploadApp.Interfaces.Authentication;
 
 namespace FileUploadApp.Tests
 {
@@ -38,7 +37,7 @@ namespace FileUploadApp.Tests
 
             Assert.IsNotNull(user);
             Assert.AreEqual(user.Username, "rex");
-            Assert.IsTrue(user.Id >0);
+            Assert.IsTrue(user.Id > 0);
             Assert.IsTrue(user.CreatedAt > DateTime.MinValue);
             Assert.IsTrue(user.UpdatedAt == null);
             Assert.IsFalse(string.IsNullOrEmpty(user.Passwhash));
@@ -64,12 +63,12 @@ namespace FileUploadApp.Tests
             Assert.AreEqual(user.Username, "rex");
             Assert.IsTrue(status);
         }
-        
+
         [TestMethod]
         public async Task Test_CheckHandlerShouldAuthenticateCorrectUser()
         {
             var mediator = serviceProvider.GetRequiredService<IMediator>();
-            var result = await mediator.Send(new CheckUserQuery("rex", "1qaz!QAZ"));
+            var result = await mediator.Send(new CheckUser.Query("rex", "1qaz!QAZ"));
 
             Assert.IsNotNull(result);
             Assert.AreEqual(result.User.Username, "rex");
