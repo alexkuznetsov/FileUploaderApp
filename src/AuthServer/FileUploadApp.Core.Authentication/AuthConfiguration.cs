@@ -2,6 +2,7 @@
 
 public class AuthConfiguration
 {
+    public const string SectionKey  = "AuthServer";
     public class CsSettings
     {
         public string ProviderName { get; set; }

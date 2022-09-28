@@ -98,7 +98,11 @@ namespace FileUploadApp.Tests
 
             services.AddLogging((c) => c.AddSerilog(Log.Logger));
 
-            services.AddJwtAuthenticationEndpointWithFakeService(configuration);
+            services.AddJwtAuthenticationEndpointWithInMemoryService(configuration, (o) =>
+            {
+                o.WithUser("rex", "1qaz!QAZ")
+                ;
+            });
 
             configureServices?.Invoke(services);
 

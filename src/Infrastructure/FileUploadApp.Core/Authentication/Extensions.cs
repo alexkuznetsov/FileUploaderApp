@@ -9,8 +9,6 @@ namespace FileUploadApp.Core.Authentication;
 
 public static class AuthenticationExtensions
 {
-    private const string SectionName = "jwt";
-
     public static void AddJwt(this IServiceCollection services)
     {
         if (services == null)
@@ -25,8 +23,8 @@ public static class AuthenticationExtensions
             configuration = serviceProvider.GetService<IConfiguration>();
         }
 
-        var section = configuration.GetSection(SectionName);
-        var options = configuration.BindTo<JwtOptions>(SectionName);
+        var section = configuration.GetSection(JwtOptions.SectionName);
+        var options = configuration.BindTo<JwtOptions>(JwtOptions.SectionName);
 
         if (string.IsNullOrEmpty(options.SecretKey))
         {

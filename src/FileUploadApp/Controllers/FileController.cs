@@ -26,7 +26,7 @@ namespace FileUploadApp.Controllers
             if (response == null)
                 return NotFound();
 
-            return File(response.Stream.Stream, response.ContentType);
+            return File(response.Stream.Stream, response.ContentType, response.Name);
         }
     }
 }

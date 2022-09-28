@@ -18,7 +18,8 @@ namespace FileUploadApp
     {
         public static void Main(string[] args)
         {
-            var appBuilder = CreateHostBuilder(args);
+            var appBuilder = CreateHostBuilder(args)
+                 ;
 
             var startup = new Startup(appBuilder.Configuration, appBuilder.Environment);
 
@@ -53,6 +54,8 @@ namespace FileUploadApp
             builder.WebHost
                 .ConfigureKestrel(ConfigureKestrelSettings)
                 .UseShutdownTimeout(TimeSpan.FromSeconds(60)) // set timeout value here
+                .UseIISIntegration()
+                .UseIIS()
             ;
             return builder;
 
@@ -78,8 +81,7 @@ namespace FileUploadApp
         //        .UseShutdownTimeout(TimeSpan.FromSeconds(60)) // set timeout value here
         //      .UseContentRoot(Directory.GetCurrentDirectory())
         //      .UseStartup<Startup>()
-        //      //.UseIISIntegration()
-        //      //.UseIIS()
+        //     
         //  ;
 
         private static void ConfigureKestrelSettings(KestrelServerOptions options)

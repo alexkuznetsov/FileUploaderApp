@@ -2,6 +2,7 @@
 using FileUploadApp.Domain;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Data.Common;
 using System.Diagnostics;
 
@@ -9,8 +10,6 @@ namespace FileUploadApp.Authentication;
 
 public static class Extensions
 {
-    private const string ConfNode = "AuthServer";
-
     /// <summary>
     /// Register DB Connection factory and connection factory
     /// </summary>
@@ -21,7 +20,7 @@ public static class Extensions
         , IConfiguration configuration)
     {
         var conf = new AuthConfiguration();
-        configuration.GetSection(ConfNode).Bind(conf);
+        configuration.GetSection(AuthConfiguration.SectionKey).Bind(conf);
 
         services.AddSingleton(conf);
 
@@ -49,14 +48,19 @@ public static class Extensions
         return services;
     }
 
-    public static IServiceCollection AddJwtAuthenticationEndpointWithFakeService(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddJwtAuthenticationEndpointWithInMemoryService(
+        this IServiceCollection services
+        , IConfiguration configuration
+        , Action<InMemoryCheckUserServiceOptions> configure)
     {
         var conf = new AuthConfiguration();
-        configuration.GetSection(ConfNode).Bind(conf);
+        configuration.GetSection(AuthConfiguration.SectionKey).Bind(conf);
 
         services.AddSingleton(conf);
+        services.AddOptions<InMemoryCheckUserServiceOptions>();
 
-        services.AddSingleton<ICheckUserService<User>, FakeCheckUserService>();
+        services.AddSingleton<ICheckUserService<User>, InMemoryCheckUserService>();
+        services.Configure<InMemoryCheckUserServiceOptions>(configure);
 
         return services;
     }

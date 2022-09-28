@@ -8,7 +8,7 @@ namespace FileUploadApp.Core
     public static class AppConfigurationExtensions
     {
         private static readonly ConcurrentDictionary<string, byte[]>
-            MimeCache = new ConcurrentDictionary<string, byte[]>();
+            MimeCache = new();
 
         public static IEnumerable<(byte[], string)> GetFingerprints(this AppConfiguration appConfiguration)
         {

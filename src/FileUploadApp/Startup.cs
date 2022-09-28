@@ -1,5 +1,6 @@
 ﻿using FileUploadApp.Authentication;
 using FileUploadApp.Authentication.Queries;
+using FileUploadApp.Authentication.Services;
 using FileUploadApp.Core.Authentication;
 using FileUploadApp.Core.Serialization;
 using FileUploadApp.Domain;
@@ -14,6 +15,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -44,12 +46,13 @@ namespace FileUploadApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().AddJsonOptions(o =>
-            {
-                o.JsonSerializerOptions.PropertyNameCaseInsensitive = false;
-                o.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
-            });
+            ConfigureMvc(services);
+            ConfigureOptions(services);
+            ConfigureDependencies(services);
+        }
 
+        private void ConfigureDependencies(IServiceCollection services)
+        {
             services.AddSingleton(Configuration.BindTo<AppConfiguration>(ConfNode));
             services.AddSingleton<IContentTypeTestUtility, ContentTypeTestUtility>();
             services.AddSingleton<ISerializer, Serializer>();
@@ -74,6 +77,24 @@ namespace FileUploadApp
                   typeof(UploadFiles.Handler).Assembly
                 , typeof(CheckUser.Handler).Assembly
             });
+        }
+
+        private void ConfigureOptions(IServiceCollection services)
+        {
+            services.Configure<RouteOptions>(o =>
+            {
+                o.LowercaseUrls = true;
+            });
+        }
+
+        private void ConfigureMvc(IServiceCollection services)
+        {
+            services.AddMvc()
+                .AddJsonOptions(o =>
+                {
+                    o.JsonSerializerOptions.PropertyNameCaseInsensitive = false;
+                    o.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+                });
 
             services.AddCors((s) =>
             {
@@ -86,7 +107,14 @@ namespace FileUploadApp
             });
 
             services.AddJwt();
-            services.AddJwtAuthenticationEndpointWithFakeService(Configuration);
+            services.AddJwtAuthenticationEndpointWithInMemoryService(Configuration, (o) =>
+            {
+                //o
+                //    .WithUser("rex", "1qaz!QAZ")
+                //    .WithUser("admin", "admin")
+                //;
+                Configuration.GetSection(InMemoryCheckUserServiceOptions.SectionKey).Bind(o);
+            });
             services.AddHealthChecks();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(c =>
@@ -102,6 +130,11 @@ namespace FileUploadApp
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app)
         {
+            RegisterMiddleware(app);
+        }
+
+        private void RegisterMiddleware(IApplicationBuilder app)
+        {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -115,7 +148,9 @@ namespace FileUploadApp
             }
 
             app.UseAccessTokenValidator();
-            //app.UseHttpsRedirection();
+#if ONLY_HTTPS
+            app.UseHttpsRedirection();
+#endif
 
             app.UseCors();
 
