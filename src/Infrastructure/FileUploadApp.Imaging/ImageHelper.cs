@@ -1,13 +1,15 @@
 ﻿using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
+using System;
 using System.IO;
 
 namespace FileUploadApp.Imaging
 {
     public static class ImageHelper
     {
-        public static byte[] Resize(System.Drawing.Size size
-            , Stream fileStream)
+        public static MemoryStream Resize(System.Drawing.Size size
+            , Stream fileStream
+            , string previewContentType)
         {
             using var image = Image.Load(fileStream);
             image.Mutate(x => x
@@ -17,11 +19,25 @@ namespace FileUploadApp.Imaging
                     Mode = ResizeMode.Pad
                 }));
 
-            using var s = new MemoryStream();
+            var s = new MemoryStream();
 
-            image.SaveAsJpeg(s);
+            var saveMethod = ResolveSaveMethod(previewContentType, image);
 
-            return s.GetBuffer();
+            saveMethod(s);
+
+            return s;
+        }
+
+
+        private static Action<MemoryStream> ResolveSaveMethod(string contentType, Image image)
+        {
+            return contentType switch
+            {
+                "image/png" => image.SaveAsPng,
+                "image/jpg" => image.SaveAsJpeg,
+                "image/webp" => image.SaveAsWebp,
+                _ => image.SaveAsJpeg
+            };
         }
     }
 }

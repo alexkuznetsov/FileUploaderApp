@@ -78,8 +78,8 @@ namespace FileUploadApp.Tests
 
             var fakeStoreBackend = new FakeStoreBackend();
 
-            services.AddSingleton<IStoreBackend<Guid, Metadata>, FakeMetadataStoreBackend>();
-            services.AddSingleton<IStoreBackend<Guid, Upload>, FakeStoreBackend>((_) => fakeStoreBackend);
+            services.AddSingleton<IStoreBackend<Guid, Metadata, Metadata>, FakeMetadataStoreBackend>();
+            services.AddSingleton<IStoreBackend<Guid, Metadata, Upload>, FakeStoreBackend>((_) => fakeStoreBackend);
             services.AddSingleton<IFileStreamProvider<Guid, StreamAdapter>, FakeStoreBackend>((_) => fakeStoreBackend);
             services.AddSingleton<IStore<Guid, Upload, UploadResultRow>, FileSystemStore>();
 

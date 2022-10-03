@@ -6,8 +6,8 @@ namespace FileUploadApp.Storage.Filesystem;
 public class FileSystemStore : Store<Upload, UploadResultRow>
 {
     public FileSystemStore(
-          IStoreBackend<Guid, Metadata> metadataRepository
-        , IStoreBackend<Guid, Upload> storeBackend
+          IStoreBackend<Guid, Metadata, Metadata> metadataRepository
+        , IStoreBackend<Guid, Metadata, Upload> storeBackend
         , IFileStreamProvider<Guid, StreamAdapter> fileStreamProvider) :
             base(metadataRepository, storeBackend, fileStreamProvider)
     {

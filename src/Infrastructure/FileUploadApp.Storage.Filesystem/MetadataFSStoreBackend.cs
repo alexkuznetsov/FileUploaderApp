@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace FileUploadApp.Storage.Filesystem;
 
-public class MetadataFsStoreBackend : FileStoreBackendBase, IStoreBackend<Guid, Metadata>
+public class MetadataFsStoreBackend : FileStoreBackendBase, IStoreBackend<Guid, Metadata, Metadata>
 {
     private const string SpecFileExtension = ".spec";
 
@@ -29,13 +29,11 @@ public class MetadataFsStoreBackend : FileStoreBackendBase, IStoreBackend<Guid, 
         var path = BuildPathAndCheckDir(file.Id, true);
         var specFilePath = FormatSpecFilePath(path);
 
-        using (var writer = File.CreateText(specFilePath))
-        {
-            var contents = serializer.Serialize(file);
+        using var writer = File.CreateText(specFilePath);
+        var contents = serializer.Serialize(file);
 
-            await writer.WriteAsync(contents.AsMemory(), cancellationToken)
-                .ConfigureAwait(false);
-        }
+        await writer.WriteAsync(contents.AsMemory(), cancellationToken)
+            .ConfigureAwait(false);
     }
 
     public async Task<Metadata> FindAsync(Guid key, CancellationToken cancellationToken = default)
@@ -51,13 +49,13 @@ public class MetadataFsStoreBackend : FileStoreBackendBase, IStoreBackend<Guid, 
         return deserializer.Deserialize<Metadata>(contents);
     }
 
-    public Task DeleteAsync(Guid key, CancellationToken cancellationToken = default)
+    public Task DeleteAsync(Metadata metadata, CancellationToken cancellationToken = default)
     {
         try
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var filePath = BuildPathAndCheckDir(key, false);
+            var filePath = BuildPathAndCheckDir(metadata.Id, false);
             var specFilePath = FormatSpecFilePath(filePath);
 
             if (File.Exists(specFilePath))

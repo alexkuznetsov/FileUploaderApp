@@ -10,12 +10,12 @@ public abstract class Store<TKey, TMeta, TIn, TOut> : IStore<TKey, TIn, TOut>
     where TMeta : class
     where TIn : class
 {
-    private readonly IStoreBackend<TKey, TMeta> metaRepository;
-    private readonly IStoreBackend<TKey, TIn> storeBackend;
+    private readonly IStoreBackend<TKey, TMeta, TMeta> metaRepository;
+    private readonly IStoreBackend<TKey, TMeta, TIn> storeBackend;
     private readonly IFileStreamProvider<TKey, StreamAdapter> fileStreamProvider;
 
-    protected Store(IStoreBackend<TKey, TMeta> metadataRepository
-        , IStoreBackend<TKey, TIn> storeBackend
+    protected Store(IStoreBackend<TKey, TMeta, TMeta> metadataRepository
+        , IStoreBackend<TKey, TMeta, TIn> storeBackend
         , IFileStreamProvider<TKey, StreamAdapter> fileStreamProvider)
     {
         metaRepository = metadataRepository;
@@ -54,13 +54,13 @@ public abstract class Store<TKey, TMeta, TIn, TOut> : IStore<TKey, TIn, TOut>
         return CreateSaveResult(metadata, file);
     }
 
-    public async Task<bool> DeleteAsync(TKey fileId, CancellationToken cancellationToken)
+    public async Task<bool> DeleteAsync(TKey fileId, CancellationToken cancellationToken = default)
     {
         var metadata = await metaRepository.FindAsync(fileId, cancellationToken).ConfigureAwait(false);
         if (metadata == null) return false;
 
-        await storeBackend.DeleteAsync(fileId, cancellationToken).ConfigureAwait(false);
-        await metaRepository.DeleteAsync(fileId, cancellationToken).ConfigureAwait(false);
+        await storeBackend.DeleteAsync(metadata, cancellationToken).ConfigureAwait(false);
+        await metaRepository.DeleteAsync(metadata, cancellationToken).ConfigureAwait(false);
 
         return true;
     }

@@ -28,9 +28,9 @@ public class ContentDownloader : IContentDownloader<DownloadUriResponse>
         using var client = GetClient();
         using var message = await client.GetAsync(_address, cancellationToken).ConfigureAwait(false);
         var contentType = message.Content.Headers.ContentType;
-        var data = await message.Content.ReadAsByteArrayAsync(cancellationToken).ConfigureAwait(false);
+        var data = await message.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
 
-        return new DownloadUriResponse(_address, contentType.MediaType, data);
+        return new DownloadUriResponse(_address, contentType.MediaType, new StreamAdapters.CommonStreamStreamAdapter(data));
     }
 
     private HttpClient GetClient()

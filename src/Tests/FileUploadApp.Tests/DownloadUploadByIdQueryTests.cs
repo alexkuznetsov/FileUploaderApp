@@ -26,7 +26,7 @@ namespace FileUploadApp.Tests
 
                 var fakeMetaStore = CreateFakeMetadataStore();
                 var sd = new ServiceDescriptor(
-                    typeof(IStoreBackend<Guid, Metadata>)
+                    typeof(IStoreBackend<Guid, Metadata, Metadata>)
                     , (_) => fakeMetaStore
                     , ServiceLifetime.Scoped);
 
@@ -35,7 +35,7 @@ namespace FileUploadApp.Tests
                 var fakeUploadsStore = CreateFakeUploadStore();
 
                 sd = new ServiceDescriptor(
-                    typeof(IStoreBackend<Guid, Upload>)
+                    typeof(IStoreBackend<Guid, Metadata, Upload>)
                     , (_) => fakeUploadsStore
                     , ServiceLifetime.Scoped);
 

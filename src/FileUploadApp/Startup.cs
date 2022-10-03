@@ -66,8 +66,8 @@ namespace FileUploadApp
             services.AddSingleton<IContentDownloaderFactory<DownloadUriResponse>, ContentDownloaderFactory>();
             services.AddSingleton(Configuration.BindTo<StorageConfiguration>(FileStoreNode));
 
-            services.AddSingleton<IStoreBackend<Guid, Upload>, FilesystemStoreBackend>();
-            services.AddSingleton<IStoreBackend<Guid, Metadata>, MetadataFsStoreBackend>();
+            services.AddSingleton<IStoreBackend<Guid, Metadata, Upload>, FilesystemStoreBackend>();
+            services.AddSingleton<IStoreBackend<Guid, Metadata, Metadata>, MetadataFsStoreBackend>();
             services.AddSingleton<IFileStreamProvider<Guid, StreamAdapter>, FilesystemStoreBackend>();
             services.AddSingleton<IStore<Guid, Upload, UploadResultRow>, FileSystemStore>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

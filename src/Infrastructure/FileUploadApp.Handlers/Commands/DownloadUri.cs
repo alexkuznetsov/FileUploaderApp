@@ -47,7 +47,7 @@ public class DownloadUri
                 num: request.Number,
                 name: Path.GetFileName(request.Uri.LocalPath),
                 contentType: downloaded.ContentType,
-                streamAdapter: new ByteaStreamAdapter(downloaded.Bytes)
+                streamAdapter: downloaded.StreamAdapter
             );
         }
     }

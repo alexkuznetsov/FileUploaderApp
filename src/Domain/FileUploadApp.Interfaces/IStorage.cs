@@ -10,5 +10,7 @@ namespace FileUploadApp.Interfaces
         Task<TOut> StoreAsync(TIn file, CancellationToken cancellationToken = default);
 
         Task<TIn> ReceiveAsync(TKey fileId, CancellationToken cancellationToken = default);
+
+        Task<bool> DeleteAsync(TKey fileId, CancellationToken cancellationToken = default);
     }
 }

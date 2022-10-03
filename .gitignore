@@ -7,6 +7,7 @@
 **/[Ll]ogs/*
 #FileUploadApp/uploads
 **/[Uu]ploads/*
+src/FileUploadApp/.config
 .vscode/
 
 # User-specific files

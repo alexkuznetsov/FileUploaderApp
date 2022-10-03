@@ -1,4 +1,5 @@
 ﻿using FileUploadApp.Core.Mvc;
+using FileUploadApp.Features.Commands;
 using FileUploadApp.Features.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +28,15 @@ namespace FileUploadApp.Controllers
                 return NotFound();
 
             return File(response.Stream.Stream, response.ContentType, response.Name);
+        }
+
+        [HttpPost("{id}"), HttpDelete("{id}")]
+        [ResponseCache(Duration = 5, Location = ResponseCacheLocation.Any)]
+        public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
+        {
+            var response = await SendAsync(new DeleteUploadById.Command(id), cancellationToken);
+
+            return response.IsNotFound() ? NotFound() : Ok();
         }
     }
 }

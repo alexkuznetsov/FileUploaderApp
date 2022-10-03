@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace FileUploadApp.Tests.Fakes
 {
-    internal class FakeMetadataStoreBackend : IStoreBackend<Guid, Metadata>
+    internal class FakeMetadataStoreBackend : IStoreBackend<Guid, Metadata, Metadata>
     {
-        private readonly Dictionary<Guid, Metadata> keyValuePairs = new Dictionary<Guid, Metadata>();
+        private readonly Dictionary<Guid, Metadata> keyValuePairs = new();
 
         public Task<Metadata> FindAsync(Guid key, CancellationToken cancellationToken = default)
         {
@@ -18,7 +18,7 @@ namespace FileUploadApp.Tests.Fakes
             throw new NotImplementedException();
         }
 
-        public Task DeleteAsync(Guid key, CancellationToken cancellationToken = default)
+        public Task DeleteAsync(Metadata key, CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }

@@ -48,34 +48,43 @@ namespace FileUploadApp.Features.Commands
                 await Task.WhenAll(tasks).ConfigureAwait(false);
             }
 
-            private async Task<UploadResultRow> SaveFileAsync(Upload file)
+            private async Task<UploadResultRow> SaveFileAsync(Upload uploadModel)
             {
                 logger.LogInformation("Saving file {fileName}. Content type: {fileContentType}"
-                    , file.Name, file.ContentType);
+                    , uploadModel.Name, uploadModel.ContentType);
 
-                var result = await store.StoreAsync(file).ConfigureAwait(false);
+                var result = await store.StoreAsync(uploadModel).ConfigureAwait(false);
 
-                if (!file.IsImage()) return result;
+                if (!uploadModel.IsImage())
+                {
+                    if (uploadModel.Stream is CommonStreamStreamAdapter ci)
+                    {
+                        ci.Stream.Dispose();
+                    }
+                    else if (uploadModel.Stream is FormFileStreamAdapter fi)
+                    {
+                        fi.Stream.Dispose();
+                    }
+
+                    return result;
+                }
 
                 logger.LogInformation("Saving preview for file {fileName}. Content type: {fileContentType}",
-                    file.Name, file.ContentType);
+                    uploadModel.Name, uploadModel.ContentType);
 
-                using (var stream = new MemoryStream())
-                {
-                    await file.Stream.CopyToAsync(stream);
-                    stream.Seek(0, SeekOrigin.Begin);
+                using var previewBytes = ImageHelper.Resize(appConfiguration.PreviewSize
+                        , uploadModel.Stream.Stream
+                        , appConfiguration.PreviewContentType);
 
-                    var previewBytes = ImageHelper.Resize(appConfiguration.PreviewSize, stream);
-                    var preview = new Upload(
-                        id: file.PreviewId
-                        , previewId: Guid.Empty
-                        , num: file.Number
-                        , name: $"{Upload.PreviewPrefix}{file.Name}"
-                        , contentType: file.ContentType
-                        , streamAdapter: new ByteaStreamAdapter(previewBytes));
+                var preview = new Upload(
+                    id: uploadModel.PreviewId
+                    , previewId: Guid.Empty
+                    , num: uploadModel.Number
+                    , name: $"{Upload.PreviewPrefix}{uploadModel.Name}"
+                    , contentType: appConfiguration.PreviewContentType
+                    , streamAdapter: new CommonStreamStreamAdapter(previewBytes));
 
-                    result.Preview = await store.StoreAsync(preview).ConfigureAwait(false);
-                }
+                result.Preview = await store.StoreAsync(preview).ConfigureAwait(false);
 
                 return result;
             }

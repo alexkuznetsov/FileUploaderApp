@@ -15,14 +15,12 @@ namespace FileUploadApp.StreamAdapters
             this.pathToFile = pathToFile;
         }
 
-        public override Stream Stream => File.OpenRead(pathToFile);
+        public override Stream Stream => File.Open(pathToFile
+            , FileMode.Open
+            , FileAccess.Read
+            , FileShare.Read);
 
-        public override async Task CopyToAsync(Stream target, CancellationToken cancellationToken = default)
-        {
-            using (Stream)
-            {
-                await Stream.CopyToAsync(target, cancellationToken).ConfigureAwait(false);
-            }
-        }
+        public override Task CopyToAsync(Stream target, CancellationToken cancellationToken = default)
+            => throw new System.NotSupportedException();
     }
 }

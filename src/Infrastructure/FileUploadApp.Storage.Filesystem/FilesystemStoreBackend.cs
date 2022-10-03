@@ -1,15 +1,15 @@
 ﻿using FileUploadApp.Domain;
 using FileUploadApp.StreamAdapters;
+using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 
 namespace FileUploadApp.Storage.Filesystem;
 
 public class FilesystemStoreBackend : FileStoreBackendBase
-    , IStoreBackend<Guid, Upload>
+    , IStoreBackend<Guid, Metadata, Upload>
     , IFileStreamProvider<Guid, StreamAdapter>
 {
     public FilesystemStoreBackend(StorageConfiguration storageConfiguration
@@ -18,10 +18,8 @@ public class FilesystemStoreBackend : FileStoreBackendBase
     {
     }
 
-    public Task<Upload> FindAsync(Guid key, CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
+    public Task<Upload> FindAsync(Guid key, CancellationToken cancellationToken = default) 
+        => throw new NotImplementedException();
 
     public StreamAdapter GetStreamAdapter(Guid id)
     {
@@ -39,13 +37,13 @@ public class FilesystemStoreBackend : FileStoreBackendBase
         await wri.FlushAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    public Task DeleteAsync(Guid key, CancellationToken cancellationToken = default)
+    public Task DeleteAsync(Metadata metadata, CancellationToken cancellationToken = default)
     {
         try
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var filePath = BuildPathAndCheckDir(key, false);
+            var filePath = BuildPathAndCheckDir(metadata.Id, false);
 
             if (File.Exists(filePath))
             {

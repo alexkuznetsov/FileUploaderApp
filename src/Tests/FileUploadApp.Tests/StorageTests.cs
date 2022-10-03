@@ -49,6 +49,7 @@ namespace FileUploadApp.Tests
         {
             var uploadEvent = new UploadFiles.Event(new[] { FakeUpload });
             var mediator = serviceProvider.GetRequiredService<IMediator>();
+            var appConfig = serviceProvider.GetRequiredService<AppConfiguration>();
 
             await mediator.Publish(uploadEvent);
 
@@ -64,7 +65,7 @@ namespace FileUploadApp.Tests
             Assert.IsTrue(storedOrigin.IsImage());
 
             Assert.IsTrue(storedPReview != null);
-            Assert.AreEqual(storedPReview.ContentType, FakeUpload.ContentType);
+            Assert.AreEqual(storedPReview.ContentType, appConfig.PreviewContentType);
             Assert.AreEqual(storedPReview.Id, FakeUpload.PreviewId);
             Assert.AreEqual(storedPReview.Name, Upload.PreviewPrefix + FakeUpload.Name);
             Assert.IsTrue(storedPReview.IsImage());
