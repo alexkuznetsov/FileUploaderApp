@@ -60,7 +60,8 @@ namespace FileUploadApp
             services.AddSingleton((r) => new HttpClientHandler
             {
                 AllowAutoRedirect = true,
-                AutomaticDecompression = System.Net.DecompressionMethods.Deflate | System.Net.DecompressionMethods.GZip
+                AutomaticDecompression = System.Net.DecompressionMethods.Deflate 
+                    | System.Net.DecompressionMethods.GZip
             });
 
             services.AddSingleton<IContentDownloaderFactory<DownloadUriResponse>, ContentDownloaderFactory>();
@@ -102,26 +103,22 @@ namespace FileUploadApp
                 {
                     c.AllowAnyOrigin();
                     c.AllowAnyHeader();
-                    c.WithMethods("OPTIONS", "GET", "POST");
+                    c.WithMethods("OPTIONS", "GET", "POST", "DELETE");
                 });
             });
 
             services.AddJwt();
             services.AddJwtAuthenticationEndpointWithInMemoryService(Configuration, (o) =>
             {
-                //o
-                //    .WithUser("rex", "1qaz!QAZ")
-                //    .WithUser("admin", "admin")
-                //;
                 Configuration.GetSection(InMemoryCheckUserServiceOptions.SectionKey).Bind(o);
             });
             services.AddHealthChecks();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(c =>
             {
+                //FIXME 
                 c.ResolveConflictingActions(apiDescriptions =>
                 {
-
                     return apiDescriptions.First();
                 });
             });

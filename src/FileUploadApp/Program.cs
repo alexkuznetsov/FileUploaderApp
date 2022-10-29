@@ -1,16 +1,15 @@
-﻿using System;
-using System.Diagnostics;
-using System.Globalization;
-using Microsoft.AspNetCore;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
-using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Diagnostics;
+using System.Globalization;
 using System.IO;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Hosting;
 
 namespace FileUploadApp
 {
@@ -60,29 +59,6 @@ namespace FileUploadApp
             return builder;
 
         }
-
-        //public static IWebHostBuilder CreateHostBuilder(string[] args) =>
-        //   new WebHostBuilder()
-
-        //        .ConfigureLogging((hostingContext, logging) =>
-        //        {
-        //            logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
-        //            logging.AddConsole();
-        //            logging.AddDebug();
-        //            logging.AddSerilog();
-        //        })
-        //         .UseSerilog((builder, logConfig) =>
-        //         {
-        //             logConfig.ReadFrom.Configuration(builder.Configuration)
-        //                 .Enrich
-        //                 .FromLogContext()
-        //                 .MinimumLevel.Information();
-        //         })
-        //        .UseShutdownTimeout(TimeSpan.FromSeconds(60)) // set timeout value here
-        //      .UseContentRoot(Directory.GetCurrentDirectory())
-        //      .UseStartup<Startup>()
-        //     
-        //  ;
 
         private static void ConfigureKestrelSettings(KestrelServerOptions options)
         {

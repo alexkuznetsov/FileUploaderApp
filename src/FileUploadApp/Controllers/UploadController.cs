@@ -48,7 +48,10 @@ namespace FileUploadApp.Controllers
                 e => logger.LogError("Fail to parse URI: {Error}", e)).ToArray();
             var files = uploadRequest.AsUploads(contentTypeTestUtility);
 
-            if (!commands.Any()) return await UploadCoreAsync(files.ToArray(), ct);
+            if (!commands.Any())
+            {
+                return await UploadCoreAsync(files.ToArray(), ct);
+            }
             
             var newFileTasks = commands.Select(x => SendAsync(x, ct)).ToArray();
             var newFiles = await Task.WhenAll(newFileTasks);

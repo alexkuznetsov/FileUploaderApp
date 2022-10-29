@@ -2,6 +2,7 @@
 using FileUploadApp.Features.Commands;
 using FileUploadApp.Features.Queries;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading;
@@ -32,6 +33,7 @@ namespace FileUploadApp.Controllers
 
         [HttpPost("{id}"), HttpDelete("{id}")]
         [ResponseCache(Duration = 5, Location = ResponseCacheLocation.Any)]
+        [Authorize]
         public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
         {
             var response = await SendAsync(new DeleteUploadById.Command(id), cancellationToken);
