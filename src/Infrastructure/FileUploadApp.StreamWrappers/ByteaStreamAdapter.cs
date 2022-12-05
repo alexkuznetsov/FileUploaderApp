@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace FileUploadApp.StreamAdapters;
 
+[Obsolete("Избавиться от данного класса")]
 public class ByteaStreamAdapter : StreamAdapter
 {
     private readonly ReadOnlyMemory<byte> _byteArray;

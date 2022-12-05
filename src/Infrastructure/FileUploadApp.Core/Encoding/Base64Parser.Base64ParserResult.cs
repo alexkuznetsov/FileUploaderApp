@@ -15,7 +15,7 @@ public static partial class Base64Parser
             this.bytes = bytes;
         }
 
-        public void Deconstruct(out string outContentType, out ReadOnlyMemory<byte> outByteArr)
+        public void Deconstruct(out string outContentType, out byte[] outByteArr)
         {
             outContentType = new string(contentType);
             outByteArr = bytes;

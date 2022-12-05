@@ -57,14 +57,11 @@ namespace FileUploadApp.Features.Commands
 
                 if (!uploadModel.IsImage())
                 {
-                    if (uploadModel.Stream is CommonStreamStreamAdapter ci)
-                    {
-                        ci.Stream.Dispose();
-                    }
-                    else if (uploadModel.Stream is FormFileStreamAdapter fi)
-                    {
-                        fi.Stream.Dispose();
-                    }
+                    //if (uploadModel.Stream.ShouldBeDisposed)
+                    //{
+                    //    uploadModel.Stream.Stream.Dispose();
+                    //}
+                    uploadModel.Stream.Stream.Dispose();
 
                     return result;
                 }

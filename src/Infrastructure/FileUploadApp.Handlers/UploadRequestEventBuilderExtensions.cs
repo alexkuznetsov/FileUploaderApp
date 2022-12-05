@@ -5,6 +5,7 @@ using FileUploadApp.Interfaces;
 using FileUploadApp.StreamAdapters;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace FileUploadApp.Features;
 
@@ -26,7 +27,7 @@ public static class UploadRequestEventBuilderExtensions
                 continue;
             }
 
-            ReadOnlyMemory<byte> byteArr;
+            byte[] byteArr;
             if (data.StartsWith(Base64FilePayload.DataToken.AsSpan(), StringComparison.InvariantCultureIgnoreCase))
             {
                 (contentType, byteArr) = Base64Parser.Parse(data, rawFile.Name);
@@ -39,7 +40,7 @@ public static class UploadRequestEventBuilderExtensions
 
             if (string.IsNullOrEmpty(contentType))
             {
-                contentType = contentTypeTestUtility.DetectContentType(byteArr[..4].Span);
+                contentType = contentTypeTestUtility.DetectContentType(byteArr[..4].AsSpan());
             }
 
             if (contentTypeTestUtility.IsAllowed(contentType))
@@ -50,7 +51,9 @@ public static class UploadRequestEventBuilderExtensions
                     num: number++,
                     name: rawFile.Name,
                     contentType: contentType,
-                    streamAdapter: new ByteaStreamAdapter(byteArr));
+                    //streamAdapter: new ByteaStreamAdapter(byteArr)
+                    streamAdapter: new CommonStreamStreamAdapter(new MemoryStream(byteArr))
+                    );
             }
         }
     }

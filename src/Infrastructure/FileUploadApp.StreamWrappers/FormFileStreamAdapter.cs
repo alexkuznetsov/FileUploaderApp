@@ -10,6 +10,8 @@ namespace FileUploadApp.StreamAdapters
     {
         private readonly IFormFileDecorator formFile;
 
+        public override bool ShouldBeDisposed => true;
+
         public FormFileStreamAdapter(IFormFileDecorator formFile) => this.formFile = formFile;
 
         public override Stream Stream => formFile.GetStream();

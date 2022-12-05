@@ -10,6 +10,8 @@ namespace FileUploadApp.StreamAdapters
     {
         private readonly Stream stream;
 
+        public override bool ShouldBeDisposed => true;
+
         public CommonStreamStreamAdapter(Stream stream)
         {
             this.stream = stream;

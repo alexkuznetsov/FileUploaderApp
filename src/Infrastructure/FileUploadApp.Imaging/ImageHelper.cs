@@ -8,10 +8,10 @@ namespace FileUploadApp.Imaging
     public static class ImageHelper
     {
         public static MemoryStream Resize(System.Drawing.Size size
-            , Stream fileStream
+            , Stream stream
             , string previewContentType)
         {
-            using var image = Image.Load(fileStream);
+            using var image = Image.Load(stream);
             image.Mutate(x => x
                 .Resize(new ResizeOptions
                 {
