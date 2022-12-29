@@ -1,5 +1,4 @@
-﻿using FileUploadApp.Domain;
-using FileUploadApp.Domain.Raw;
+﻿using FileUploadApp.Domain.Raw;
 using FileUploadApp.Interfaces;
 using System;
 using System.Net.Http;
@@ -10,35 +9,20 @@ namespace FileUploadApp.Features.Services;
 
 public class ContentDownloader : IContentDownloader<DownloadUriResponse>
 {
-    private const string UserAgentField = "User-Agent";
+    public const string UserAgentField = "User-Agent";
+    private readonly IHttpClientFactory _httpClientFactory;
 
-    private readonly AppConfiguration _configuration;
-    private readonly HttpClientHandler _sharedHandler;
-    private readonly Uri _address;
+    public ContentDownloader(IHttpClientFactory httpClientFactory) =>
+        _httpClientFactory = httpClientFactory;
 
-    public ContentDownloader(AppConfiguration configuration, HttpClientHandler sharedHandler, Uri address)
+    public async Task<DownloadUriResponse> DownloadAsync(Uri uri, CancellationToken cancellationToken = default)
     {
-        _configuration = configuration;
-        _sharedHandler = sharedHandler;
-        _address = address;
-    }
-
-    public async Task<DownloadUriResponse> DownloadAsync(CancellationToken cancellationToken = default)
-    {
-        using var client = GetClient();
-        using var message = await client.GetAsync(_address, cancellationToken).ConfigureAwait(false);
+        var client = _httpClientFactory.CreateClient();
+        using var message = await client.GetAsync(uri, cancellationToken).ConfigureAwait(false);
         var contentType = message.Content.Headers.ContentType;
         var data = await message.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
 
-        return new DownloadUriResponse(_address, contentType.MediaType, new StreamAdapters.CommonStreamStreamAdapter(data));
-    }
-
-    private HttpClient GetClient()
-    {
-        var client = new HttpClient(_sharedHandler, disposeHandler: false);
-
-        client.DefaultRequestHeaders.Add(UserAgentField, _configuration.DefaultUserAgent);
-
-        return client;
+        return new DownloadUriResponse(uri, contentType.MediaType
+            , new StreamAdapters.CommonStreamStreamAdapter(data));
     }
 }

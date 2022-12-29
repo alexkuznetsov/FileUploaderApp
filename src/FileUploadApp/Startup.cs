@@ -57,21 +57,24 @@ namespace FileUploadApp
             services.AddSingleton<IContentTypeTestUtility, ContentTypeTestUtility>();
             services.AddSingleton<ISerializer, Serializer>();
             services.AddSingleton<IDeserializer, Deserializer>();
-            services.AddSingleton((r) => new HttpClientHandler
+            
+            services.AddScoped<IContentDownloader<DownloadUriResponse>, ContentDownloader>();
+
+            services.AddHttpClient<ContentDownloader>((s,client) =>
             {
-                AllowAutoRedirect = true,
-                AutomaticDecompression = System.Net.DecompressionMethods.Deflate 
-                    | System.Net.DecompressionMethods.GZip
+                var c = s.GetRequiredService<AppConfiguration>();
+                client.DefaultRequestHeaders.Add(ContentDownloader.UserAgentField
+                    , c.DefaultUserAgent);
             });
 
-            services.AddSingleton<IContentDownloaderFactory<DownloadUriResponse>, ContentDownloaderFactory>();
             services.AddSingleton(Configuration.BindTo<StorageConfiguration>(FileStoreNode));
 
             services.AddSingleton<IStoreBackend<Guid, Metadata, Upload>, FilesystemStoreBackend>();
             services.AddSingleton<IStoreBackend<Guid, Metadata, Metadata>, MetadataFsStoreBackend>();
             services.AddSingleton<IFileStreamProvider<Guid, StreamAdapter>, FilesystemStoreBackend>();
             services.AddSingleton<IStore<Guid, Upload, UploadResultRow>, FileSystemStore>();
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            services.AddHttpContextAccessor();
 
             services.AddMediatR(new[]
             {
@@ -125,12 +128,12 @@ namespace FileUploadApp
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app)
+        public void Configure(WebApplication app)
         {
             RegisterMiddleware(app);
         }
 
-        private void RegisterMiddleware(IApplicationBuilder app)
+        private void RegisterMiddleware(WebApplication app)
         {
             if (env.IsDevelopment())
             {
@@ -163,11 +166,7 @@ namespace FileUploadApp
             app.UseAuthentication();
             app.UseAuthorization();
 
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute("Default", "{controller}/{action=index}/{id:int?}");
-            });
+            app.MapControllerRoute("Default", "{controller}/{action=index}/{id:int?}");
         }
     }
 }

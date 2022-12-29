@@ -21,6 +21,11 @@ public sealed class PasswordHasher : IPasswordHasher
      * Format: { 0x00, salt, subKey }
      */
 
+
+    private static Rfc2898DeriveBytes CreateBytesProvider(string password)
+        => new(password, SaltSize, Pbkdf2IterCount, hashAlgorithm: HashAlgorithmName.SHA256);
+
+
     public string HashPassword(string password)
     {
         if (password == null)
@@ -32,7 +37,7 @@ public sealed class PasswordHasher : IPasswordHasher
         byte[] salt;
         byte[] subKey;
 
-        using (var deriveBytes = new Rfc2898DeriveBytes(password, SaltSize, Pbkdf2IterCount))
+        using (Rfc2898DeriveBytes deriveBytes = CreateBytesProvider(password))
         {
             salt = deriveBytes.Salt;
             subKey = deriveBytes.GetBytes(Pbkdf2SubKeyLength);
@@ -76,7 +81,7 @@ public sealed class PasswordHasher : IPasswordHasher
 
         byte[] generatedSubKey;
 
-        using (var deriveBytes = new Rfc2898DeriveBytes(password, salt, Pbkdf2IterCount))
+        using (Rfc2898DeriveBytes deriveBytes = CreateBytesProvider(password))
         {
             generatedSubKey = deriveBytes.GetBytes(Pbkdf2SubKeyLength);
         }

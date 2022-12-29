@@ -21,10 +21,10 @@ namespace FileUploadApp.Tests
         {
             serviceProvider = ContainerBuilder.Create((s) =>
             {
-                var fakeContentDownloaderFactory = CreateFakeContentDownloaderFactory();
+                var fakeContentDownloader = CreateFakeContentDownloader();
                 var sd = new ServiceDescriptor(
-                      typeof(IContentDownloaderFactory<DownloadUriResponse>)
-                    , (_) => fakeContentDownloaderFactory
+                      typeof(IContentDownloader<DownloadUriResponse>)
+                    , (_) => fakeContentDownloader
                     , ServiceLifetime.Scoped);
 
                 s.Replace(sd);

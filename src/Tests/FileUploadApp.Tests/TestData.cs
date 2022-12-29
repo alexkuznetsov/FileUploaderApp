@@ -91,22 +91,12 @@ namespace FileUploadApp.Tests
             return mock.Object;
         }
 
-        protected static IContentDownloaderFactory<DownloadUriResponse> CreateFakeContentDownloaderFactory()
-        {
-            var fakeDownloader = CreateFakeContentDownloader();
-            var mock = new Mock<IContentDownloaderFactory<DownloadUriResponse>>();
-
-            mock.Setup(x => x.Create(It.IsAny<Uri>()))
-                .Returns(fakeDownloader);
-
-            return mock.Object;
-        }
-
-        private static IContentDownloader<DownloadUriResponse> CreateFakeContentDownloader()
+       
+        protected static IContentDownloader<DownloadUriResponse> CreateFakeContentDownloader()
         {
             var mock = new Mock<IContentDownloader<DownloadUriResponse>>();
 
-            mock.Setup(x => x.DownloadAsync(It.IsAny<CancellationToken>()))
+            mock.Setup(x => x.DownloadAsync(It.IsAny<Uri>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.FromResult(FakeDownloadUriResponse));
 
             return mock.Object;

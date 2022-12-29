@@ -1,7 +1,6 @@
 ﻿using FileUploadApp.Domain;
 using FileUploadApp.Domain.Raw;
 using FileUploadApp.Interfaces;
-using FileUploadApp.StreamAdapters;
 using MediatR;
 using System;
 using System.IO;
@@ -27,18 +26,17 @@ public class DownloadUri
 
     public class Handler : IRequestHandler<Command, Upload>
     {
-        private readonly IContentDownloaderFactory<DownloadUriResponse> contentDownloaderFactory;
+        private readonly IContentDownloader<DownloadUriResponse> _contentDownloader;
 
-        public Handler(IContentDownloaderFactory<DownloadUriResponse> contentDownloaderFactory)
+        public Handler(IContentDownloader<DownloadUriResponse> contentDownloader)
         {
-            this.contentDownloaderFactory = contentDownloaderFactory;
+            this._contentDownloader = contentDownloader;
         }
 
         public async Task<Upload> Handle(Command request, CancellationToken cancellationToken)
         {
-            var download = contentDownloaderFactory.Create(request.Uri);
-            var downloaded = await download.DownloadAsync(cancellationToken)
-                .ConfigureAwait(false);
+            var downloaded = await _contentDownloader.DownloadAsync(request.Uri,
+                    cancellationToken).ConfigureAwait(false);
 
             return new Upload
             (
@@ -47,7 +45,7 @@ public class DownloadUri
                 num: request.Number,
                 name: Path.GetFileName(request.Uri.LocalPath),
                 contentType: downloaded.ContentType,
-                streamAdapter: downloaded.StreamAdapter
+                streamAdapter: downloaded.Stream
             );
         }
     }
