@@ -8,20 +8,20 @@ namespace FileUploadApp.Features.Services;
 
 public class ContentTypeTestUtility : IContentTypeTestUtility
 {
-    private readonly ICollection<string> contentTypes;
-    private readonly AppConfiguration appConfiguration;
+    private readonly ICollection<string> _contentTypes;
+    private readonly AppConfiguration _appConfiguration;
 
     public ContentTypeTestUtility(AppConfiguration appConfiguration)
     {
-        this.appConfiguration = appConfiguration;
-        contentTypes = new HashSet<string>(appConfiguration.AllowedContentTypes);
+        this._appConfiguration = appConfiguration;
+        _contentTypes = new HashSet<string>(appConfiguration.AllowedContentTypes);
     }
 
-    public bool IsAllowed(string contentType) => contentTypes.Contains(contentType);
+    public bool IsAllowed(string contentType) => _contentTypes.Contains(contentType);
 
     public string DetectContentType(ReadOnlySpan<byte> bytes)
     {
-        foreach (var (ctBytes, contentType) in appConfiguration.GetFingerprints())
+        foreach (var (ctBytes, contentType) in _appConfiguration.GetFingerprints())
         {
             if (bytes.SequenceEqual(ctBytes))
                 return contentType;

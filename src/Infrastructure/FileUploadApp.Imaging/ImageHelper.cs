@@ -11,6 +11,7 @@ namespace FileUploadApp.Imaging
             , Stream stream
             , string previewContentType)
         {
+            stream.Seek(0, SeekOrigin.Begin);
             using var image = Image.Load(stream);
             image.Mutate(x => x
                 .Resize(new ResizeOptions
@@ -25,6 +26,8 @@ namespace FileUploadApp.Imaging
 
             saveMethod(s);
 
+            s.Seek(0, SeekOrigin.Begin);
+
             return s;
         }
 
@@ -35,6 +38,7 @@ namespace FileUploadApp.Imaging
             {
                 "image/png" => image.SaveAsPng,
                 "image/jpg" => image.SaveAsJpeg,
+                "image/jpeg" => image.SaveAsJpeg,
                 "image/webp" => image.SaveAsWebp,
                 _ => image.SaveAsJpeg
             };

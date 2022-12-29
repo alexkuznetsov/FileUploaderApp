@@ -8,7 +8,6 @@
     <ProjectReference Include="..\FileUploadApp.Core\FileUploadApp.Core.csproj" />
     <ProjectReference Include="..\..\Domain\FileUploadApp.Interfaces\FileUploadApp.Interfaces.csproj" />
     <ProjectReference Include="..\FileUploadApp.Storage\FileUploadApp.Storage.csproj" />
-    <ProjectReference Include="..\FileUploadApp.StreamWrappers\FileUploadApp.StreamAdapters.csproj" />
   </ItemGroup>
 
   <ItemGroup>

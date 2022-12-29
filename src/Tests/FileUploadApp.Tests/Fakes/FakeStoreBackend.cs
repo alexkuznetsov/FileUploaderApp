@@ -2,12 +2,13 @@
 using FileUploadApp.Storage;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace FileUploadApp.Tests.Fakes
 {
-    internal class FakeStoreBackend : IStoreBackend<Guid, Metadata, Upload>, IFileStreamProvider<Guid, StreamAdapter>
+    internal class FakeStoreBackend : IStoreBackend<Guid, Metadata, Upload>, IFileStreamProvider<Guid, Stream>
     {
         private readonly Dictionary<Guid, Upload> keyValuePairs = new();
 
@@ -24,7 +25,7 @@ namespace FileUploadApp.Tests.Fakes
             throw new NotImplementedException();
         }
 
-        public StreamAdapter GetStreamAdapter(Guid id)
+        public Stream GetStream(Guid id)
         {
             return keyValuePairs[id].Stream;
         }

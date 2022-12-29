@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace FileUploadApp.Tests
@@ -44,7 +45,7 @@ namespace FileUploadApp.Tests
                 var fakeFileStmAdapter = CreateFakeStreamAdapter();
 
                 sd = new ServiceDescriptor(
-                    typeof(IFileStreamProvider<Guid, StreamAdapter>)
+                    typeof(IFileStreamProvider<Guid, Stream>)
                     , (_) => fakeFileStmAdapter
                     , ServiceLifetime.Scoped);
 

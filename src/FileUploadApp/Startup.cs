@@ -20,6 +20,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 
@@ -58,9 +59,7 @@ namespace FileUploadApp
             services.AddSingleton<ISerializer, Serializer>();
             services.AddSingleton<IDeserializer, Deserializer>();
             
-            services.AddScoped<IContentDownloader<DownloadUriResponse>, ContentDownloader>();
-
-            services.AddHttpClient<ContentDownloader>((s,client) =>
+            services.AddHttpClient<IContentDownloader<DownloadUriResponse>, ContentDownloader>((s,client) =>
             {
                 var c = s.GetRequiredService<AppConfiguration>();
                 client.DefaultRequestHeaders.Add(ContentDownloader.UserAgentField
@@ -71,7 +70,7 @@ namespace FileUploadApp
 
             services.AddSingleton<IStoreBackend<Guid, Metadata, Upload>, FilesystemStoreBackend>();
             services.AddSingleton<IStoreBackend<Guid, Metadata, Metadata>, MetadataFsStoreBackend>();
-            services.AddSingleton<IFileStreamProvider<Guid, StreamAdapter>, FilesystemStoreBackend>();
+            services.AddSingleton<IFileStreamProvider<Guid, Stream>, FilesystemStoreBackend>();
             services.AddSingleton<IStore<Guid, Upload, UploadResultRow>, FileSystemStore>();
 
             services.AddHttpContextAccessor();

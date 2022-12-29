@@ -4,7 +4,6 @@ using FileUploadApp.Features.Commands;
 using FileUploadApp.Features.Services;
 using FileUploadApp.Interfaces;
 using FileUploadApp.Storage;
-using FileUploadApp.StreamAdapters;
 using MediatR;
 using Moq;
 using System;
@@ -29,10 +28,7 @@ namespace FileUploadApp.Tests
 
         private static DownloadUriResponse FakeDownloadUriResponse { get; } =
             new DownloadUriResponse(RequestUri, MimeConstants.BitmapMime
-                , DefaultStreamAdapter);
-
-        private static StreamAdapter DefaultStreamAdapter { get; } 
-            = new CommonStreamStreamAdapter(ImageArray);
+                , ImageArray);
 
         protected static Upload FakeUpload { get; } = new Upload(
               RequestId
@@ -40,7 +36,7 @@ namespace FileUploadApp.Tests
             , 0U
             , Path.GetFileName(FakeDownloadUriResponse.Uri.LocalPath)
             , FakeDownloadUriResponse.ContentType
-            , DefaultStreamAdapter);
+            , ImageArray);
 
         private static Metadata DefaultMetadata { get; } = new Metadata(RequestId
             , Path.GetFileName(FakeDownloadUriResponse.Uri.LocalPath)
@@ -50,11 +46,11 @@ namespace FileUploadApp.Tests
 
         #region Mock Storage
 
-        protected static IFileStreamProvider<Guid, StreamAdapter> CreateFakeStreamAdapter()
+        protected static IFileStreamProvider<Guid, Stream> CreateFakeStreamAdapter()
         {
-            var mock = new Mock<IFileStreamProvider<Guid, StreamAdapter>>();
-            mock.Setup(x => x.GetStreamAdapter(It.Is<Guid>(g => g.Equals(RequestId))))
-                .Returns(DefaultStreamAdapter);
+            var mock = new Mock<IFileStreamProvider<Guid, Stream>>();
+            mock.Setup(x => x.GetStream(It.Is<Guid>(g => g.Equals(RequestId))))
+                .Returns(ImageArray);
 
             return mock.Object;
         }

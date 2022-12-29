@@ -1,12 +1,10 @@
 ﻿using FileUploadApp.Domain;
 using FileUploadApp.Imaging;
 using FileUploadApp.Interfaces;
-using FileUploadApp.StreamAdapters;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -57,11 +55,7 @@ namespace FileUploadApp.Features.Commands
 
                 if (!uploadModel.IsImage())
                 {
-                    //if (uploadModel.Stream.ShouldBeDisposed)
-                    //{
-                    //    uploadModel.Stream.Stream.Dispose();
-                    //}
-                    uploadModel.Stream.Stream.Dispose();
+                    uploadModel.Stream.Dispose();
 
                     return result;
                 }
@@ -70,7 +64,7 @@ namespace FileUploadApp.Features.Commands
                     uploadModel.Name, uploadModel.ContentType);
 
                 using var previewBytes = ImageHelper.Resize(appConfiguration.PreviewSize
-                        , uploadModel.Stream.Stream
+                        , uploadModel.Stream
                         , appConfiguration.PreviewContentType);
 
                 var preview = new Upload(
@@ -79,7 +73,7 @@ namespace FileUploadApp.Features.Commands
                     , num: uploadModel.Number
                     , name: $"{Upload.PreviewPrefix}{uploadModel.Name}"
                     , contentType: appConfiguration.PreviewContentType
-                    , streamAdapter: new CommonStreamStreamAdapter(previewBytes));
+                    , streamAdapter: previewBytes);
 
                 result.Preview = await store.StoreAsync(preview).ConfigureAwait(false);
 

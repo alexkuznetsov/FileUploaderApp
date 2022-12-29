@@ -2,7 +2,6 @@
 using FileUploadApp.Domain;
 using FileUploadApp.Domain.Raw;
 using FileUploadApp.Interfaces;
-using FileUploadApp.StreamAdapters;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -51,8 +50,7 @@ public static class UploadRequestEventBuilderExtensions
                     num: number++,
                     name: rawFile.Name,
                     contentType: contentType,
-                    //streamAdapter: new ByteaStreamAdapter(byteArr)
-                    streamAdapter: new CommonStreamStreamAdapter(new MemoryStream(byteArr))
+                    streamAdapter: new MemoryStream(byteArr)
                     );
             }
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace FileUploadApp.Domain;
 
@@ -14,7 +15,7 @@ public class Upload : FileDescriptor
        uint num,
        string name,
        string contentType,
-       StreamAdapter streamAdapter) : base(id, num, name, contentType, streamAdapter)
+       Stream streamAdapter) : base(id, num, name, contentType, streamAdapter)
     {
         PreviewId = previewId;
     }

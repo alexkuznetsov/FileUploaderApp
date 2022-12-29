@@ -15,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 
 namespace FileUploadApp.Tests
@@ -82,7 +83,7 @@ namespace FileUploadApp.Tests
 
             services.AddSingleton<IStoreBackend<Guid, Metadata, Metadata>, FakeMetadataStoreBackend>();
             services.AddSingleton<IStoreBackend<Guid, Metadata, Upload>, FakeStoreBackend>((_) => fakeStoreBackend);
-            services.AddSingleton<IFileStreamProvider<Guid, StreamAdapter>, FakeStoreBackend>((_) => fakeStoreBackend);
+            services.AddSingleton<IFileStreamProvider<Guid, Stream>, FakeStoreBackend>((_) => fakeStoreBackend);
             services.AddSingleton<IStore<Guid, Upload, UploadResultRow>, FileSystemStore>();
 
             services.AddScoped<ServiceFactory>(p => p.GetService);

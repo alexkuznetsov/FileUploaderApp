@@ -1,6 +1,5 @@
 ﻿using FileUploadApp.Domain;
 using FileUploadApp.Interfaces;
-using FileUploadApp.StreamAdapters;
 
 using Microsoft.AspNetCore.Http;
 
@@ -30,7 +29,7 @@ public static class HttpContextConvertExtensions
                 num: number++,
                 name: f.FileName,
                 contentType: f.ContentType,
-                streamAdapter: new FormFileStreamAdapter(new FormFileDecorator(f))
+                streamAdapter: f.OpenReadStream()
             )).ToArray();
     }
 }

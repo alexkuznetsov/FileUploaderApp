@@ -1,5 +1,5 @@
-﻿using FileUploadApp.Domain;
-using FileUploadApp.Interfaces;
+﻿using FileUploadApp.Interfaces;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,11 +12,11 @@ public abstract class Store<TKey, TMeta, TIn, TOut> : IStore<TKey, TIn, TOut>
 {
     private readonly IStoreBackend<TKey, TMeta, TMeta> metaRepository;
     private readonly IStoreBackend<TKey, TMeta, TIn> storeBackend;
-    private readonly IFileStreamProvider<TKey, StreamAdapter> fileStreamProvider;
+    private readonly IFileStreamProvider<TKey, Stream> fileStreamProvider;
 
     protected Store(IStoreBackend<TKey, TMeta, TMeta> metadataRepository
         , IStoreBackend<TKey, TMeta, TIn> storeBackend
-        , IFileStreamProvider<TKey, StreamAdapter> fileStreamProvider)
+        , IFileStreamProvider<TKey, Stream> fileStreamProvider)
     {
         metaRepository = metadataRepository;
         this.storeBackend = storeBackend;
@@ -32,12 +32,12 @@ public abstract class Store<TKey, TMeta, TIn, TOut> : IStore<TKey, TIn, TOut>
             return default;
         }
 
-        var streamAdapter = fileStreamProvider.GetStreamAdapter(fileId);
+        var stream = fileStreamProvider.GetStream(fileId);
 
-        return CreateFromSpec(spec, streamAdapter);
+        return CreateFromSpec(spec, stream);
     }
 
-    protected abstract TIn CreateFromSpec(TMeta metadata, StreamAdapter streamAdapter);
+    protected abstract TIn CreateFromSpec(TMeta metadata, Stream streamAdapter);
 
     protected abstract TMeta CreateMetadata(TIn @in);
 

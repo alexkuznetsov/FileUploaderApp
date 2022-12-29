@@ -25,7 +25,6 @@
     <ProjectReference Include="..\..\Infrastructure\FileUploadApp.Imaging\FileUploadApp.Imaging.csproj" />
     <ProjectReference Include="..\..\Domain\FileUploadApp.Interfaces\FileUploadApp.Interfaces.csproj" />
     <ProjectReference Include="..\..\Infrastructure\FileUploadApp.Storage.Filesystem\FileUploadApp.Storage.Filesystem.csproj" />
-    <ProjectReference Include="..\..\Infrastructure\FileUploadApp.StreamWrappers\FileUploadApp.StreamAdapters.csproj" />
     <ProjectReference Include="..\..\FileUploadApp\FileUploadApp.csproj" />
   </ItemGroup>
 

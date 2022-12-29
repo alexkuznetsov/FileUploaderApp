@@ -1,10 +1,11 @@
 ﻿using System;
+using System.IO;
 
 namespace FileUploadApp.Domain.Raw;
 
 public class DownloadUriResponse
 {
-    public DownloadUriResponse(Uri uri, string contentType, StreamAdapter stream)
+    public DownloadUriResponse(Uri uri, string contentType, Stream stream)
     {
         Uri = uri;
         ContentType = contentType;
@@ -12,6 +13,6 @@ public class DownloadUriResponse
     }
 
     public string ContentType { get; }
-    public StreamAdapter Stream { get; }
+    public Stream Stream { get; }
     public Uri Uri { get; }
 }

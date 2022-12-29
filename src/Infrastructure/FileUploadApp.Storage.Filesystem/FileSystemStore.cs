@@ -1,5 +1,6 @@
 ﻿using FileUploadApp.Domain;
 using System;
+using System.IO;
 
 namespace FileUploadApp.Storage.Filesystem;
 
@@ -8,12 +9,12 @@ public class FileSystemStore : Store<Upload, UploadResultRow>
     public FileSystemStore(
           IStoreBackend<Guid, Metadata, Metadata> metadataRepository
         , IStoreBackend<Guid, Metadata, Upload> storeBackend
-        , IFileStreamProvider<Guid, StreamAdapter> fileStreamProvider) :
+        , IFileStreamProvider<Guid, Stream> fileStreamProvider) :
             base(metadataRepository, storeBackend, fileStreamProvider)
     {
     }
 
-    protected override Upload CreateFromSpec(Metadata metadata, StreamAdapter streamAdapter)
+    protected override Upload CreateFromSpec(Metadata metadata, Stream streamAdapter)
     {
         return new Upload(metadata.Id, Guid.Empty, 0U, metadata.Name, metadata.ContentType, streamAdapter);
     }

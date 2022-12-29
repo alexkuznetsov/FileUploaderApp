@@ -28,7 +28,7 @@ namespace FileUploadApp.Controllers
             if (response == null)
                 return NotFound();
 
-            return File(response.Stream.Stream, response.ContentType, response.Name);
+            return File(response.Stream, response.ContentType, response.Name);
         }
 
         [HttpPost("{id}"), HttpDelete("{id}")]

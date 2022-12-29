@@ -1,5 +1,4 @@
 ﻿using FileUploadApp.Domain;
-using FileUploadApp.StreamAdapters;
 using Microsoft.Extensions.Logging;
 using System;
 using System.IO;
@@ -10,7 +9,7 @@ namespace FileUploadApp.Storage.Filesystem;
 
 public class FilesystemStoreBackend : FileStoreBackendBase
     , IStoreBackend<Guid, Metadata, Upload>
-    , IFileStreamProvider<Guid, StreamAdapter>
+    , IFileStreamProvider<Guid, Stream>
 {
     public FilesystemStoreBackend(StorageConfiguration storageConfiguration
         , ILogger<FilesystemStoreBackend> logger)
@@ -21,11 +20,11 @@ public class FilesystemStoreBackend : FileStoreBackendBase
     public Task<Upload> FindAsync(Guid key, CancellationToken cancellationToken = default) 
         => throw new NotImplementedException();
 
-    public StreamAdapter GetStreamAdapter(Guid id)
+    public Stream GetStream(Guid id)
     {
         var path = BuildPathAndCheckDir(id, false);
 
-        return new DownloadableStreamAdapter(path);
+        return File.OpenRead(path);
     }
 
     public async Task SaveAsync(Upload upload, CancellationToken cancellationToken = default)
