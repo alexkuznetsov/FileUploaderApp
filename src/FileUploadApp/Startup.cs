@@ -13,7 +13,6 @@ using FileUploadApp.Storage.Filesystem;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
@@ -22,7 +21,6 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 
 namespace FileUploadApp
 {
@@ -82,7 +80,7 @@ namespace FileUploadApp
             });
         }
 
-        private void ConfigureOptions(IServiceCollection services)
+        private static void ConfigureOptions(IServiceCollection services)
         {
             services.Configure<RouteOptions>(o =>
             {
