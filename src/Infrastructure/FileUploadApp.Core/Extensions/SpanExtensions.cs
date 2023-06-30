@@ -50,8 +50,8 @@ namespace System
         private readonly T _separator;
         private SpanSplitInfo _spanSplitInfo;
 
-        private bool ShouldRemoveEmptyEntries => _spanSplitInfo.HasFlag(SpanSplitInfo.RemoveEmptyEntries);
-        private bool IsFinished => _spanSplitInfo.HasFlag(SpanSplitInfo.FinishedEnumeration);
+        private readonly bool ShouldRemoveEmptyEntries => _spanSplitInfo.HasFlag(SpanSplitInfo.RemoveEmptyEntries);
+        private readonly bool IsFinished => _spanSplitInfo.HasFlag(SpanSplitInfo.FinishedEnumeration);
 
         /// <summary>
         /// Gets the element at the current position of the enumerator.
@@ -62,7 +62,7 @@ namespace System
         /// Returns the current enumerator.
         /// </summary>
         /// <returns>Returns the current enumerator.</returns>
-        public SpanSplitEnumerator<T> GetEnumerator() => this;
+        public readonly SpanSplitEnumerator<T> GetEnumerator() => this;
 
         internal SpanSplitEnumerator(ReadOnlySpan<T> span, T separator, bool removeEmptyEntries)
         {

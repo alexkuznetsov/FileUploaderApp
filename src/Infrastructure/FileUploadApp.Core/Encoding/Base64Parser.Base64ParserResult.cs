@@ -4,7 +4,7 @@ namespace FileUploadApp.Core.Encoding;
 
 public static partial class Base64Parser
 {
-    public ref struct Base64ParserResult
+    public readonly ref struct Base64ParserResult
     {
         private readonly ReadOnlySpan<char> contentType;
         private readonly byte[] bytes;
