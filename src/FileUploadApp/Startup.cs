@@ -10,7 +10,6 @@ using FileUploadApp.Features.Services;
 using FileUploadApp.Interfaces;
 using FileUploadApp.Storage;
 using FileUploadApp.Storage.Filesystem;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -56,8 +55,8 @@ namespace FileUploadApp
             services.AddSingleton<IContentTypeTestUtility, ContentTypeTestUtility>();
             services.AddSingleton<ISerializer, Serializer>();
             services.AddSingleton<IDeserializer, Deserializer>();
-            
-            services.AddHttpClient<IContentDownloader<DownloadUriResponse>, ContentDownloader>((s,client) =>
+
+            services.AddHttpClient<IContentDownloader<DownloadUriResponse>, ContentDownloader>((s, client) =>
             {
                 var c = s.GetRequiredService<AppConfiguration>();
                 client.DefaultRequestHeaders.Add(ContentDownloader.UserAgentField
@@ -73,10 +72,13 @@ namespace FileUploadApp
 
             services.AddHttpContextAccessor();
 
-            services.AddMediatR(new[]
+            services.AddMediatR(config =>
             {
-                  typeof(UploadFiles.Handler).Assembly
-                , typeof(CheckUser.Handler).Assembly
+                config.RegisterServicesFromAssemblies(new[]
+                {
+                      typeof(UploadFiles.Handler).Assembly
+                    , typeof(CheckUser.Handler).Assembly
+                });
             });
         }
 
