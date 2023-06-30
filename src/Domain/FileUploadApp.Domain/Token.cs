@@ -2,7 +2,7 @@
 
 namespace FileUploadApp.Domain;
 
-public class Token
+public class Token : IHaveId<string>
 {
     public string AccessToken { get; set; }
     public string RefreshToken { get; set; }
