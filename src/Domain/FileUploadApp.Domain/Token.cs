@@ -4,10 +4,10 @@ namespace FileUploadApp.Domain;
 
 public class Token : IHaveId<string>
 {
-    public string AccessToken { get; set; }
-    public string RefreshToken { get; set; }
+    public required string AccessToken { get; set; }
+    public required string RefreshToken { get; set; }
     public long Expires { get; set; }
-    public string Id { get; set; }
-    public string Role { get; set; }
-    public IDictionary<string, string> Claims { get; set; }
+    public required string Id { get; set; }
+    public string? Role { get; set; }
+    public required IDictionary<string, string> Claims { get; set; }
 }

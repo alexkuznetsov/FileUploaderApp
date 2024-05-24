@@ -1,7 +1,9 @@
-﻿using Dapper;
-using FileUploadApp.Domain;
-using System.Data.Common;
+﻿using System.Data.Common;
 using System.Threading.Tasks;
+
+using Dapper;
+
+using FileUploadApp.Domain;
 
 namespace FileUploadApp.Authentication.Services;
 
@@ -13,6 +15,6 @@ public static class UserDbContextExtensions
   , username Username
   , passwhash Passwhash from users where username=@username";
 
-    public static Task<User> FindClientByUserNameAsync(this DbConnection dBContext, string username)
+    public static Task<User?> FindClientByUserNameAsync(this DbConnection dBContext, string username)
         => dBContext.QueryFirstOrDefaultAsync<User>(FindClientByNameSql, new { username });
 }

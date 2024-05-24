@@ -1,18 +1,20 @@
 ﻿using System;
 using System.IO;
+
 using FileUploadApp.Core;
+
 using Microsoft.Extensions.Logging;
 
 namespace FileUploadApp.Storage.Filesystem;
 
 public abstract class FileStoreBackendBase
 {
-    private readonly ILogger<FileStoreBackendBase> logger;
+    private readonly ILogger<FileStoreBackendBase> _logger;
 
     protected FileStoreBackendBase(StorageConfiguration storageConfiguration
         , ILogger<FileStoreBackendBase> logger)
     {
-        this.logger = logger;
+        this._logger = logger;
         StorageConfiguration = storageConfiguration;
     }
 
@@ -25,8 +27,8 @@ public abstract class FileStoreBackendBase
             throw new ArgumentException("fileId can not be null or empty", nameof(fileId));
         }
 
-        var fileIdStr = fileId.ToString();
-        var span = fileIdStr.ToCharArray();
+        var fileIdStr = fileId!.ToString();
+        var span = fileIdStr!.ToCharArray();
 
         var foldersPath = Path.Combine(StorageConfiguration.BasePath,
             new string(span.Slice(0, 2)),
@@ -38,7 +40,7 @@ public abstract class FileStoreBackendBase
             Directory.CreateDirectory(foldersPath);
         }
 
-        logger.LogInformation("Expanded path for {FileId} is {Path}",
+        _logger.LogInformation("Expanded path for {FileId} is {Path}",
             fileId.ToString()
             , Path.GetFullPath(Path.Combine(foldersPath, fileIdStr)));
 
@@ -47,11 +49,12 @@ public abstract class FileStoreBackendBase
 
     private const int MaxDepth = 3;
 
-    protected static void RemoveDirIfEmpty(string directoryPath, int depth = 0)
+    protected static void RemoveDirIfEmpty(string? directoryPath, int depth = 0)
     {
         while (true)
         {
             if (depth == MaxDepth) return;
+            if (string.IsNullOrEmpty(directoryPath)) return;
             if (!Dir.IsDirectoryEmpty(directoryPath)) return;
 
             Dir.Delete(directoryPath);

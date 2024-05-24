@@ -5,8 +5,12 @@ namespace FileUploadApp.Domain;
 
 public class AppConfiguration
 {
-    public string[] AllowedContentTypes { get; set; } = { "image/jpeg", "image/png", "image/bmp", "image/x-windows-bmp", "image/gif", "image/tiff" };
+    public string[] AllowedContentTypes { get; set; } = [
+        "image/jpeg", "image/png", "image/bmp", "image/x-windows-bmp", "image/gif", "image/tiff"];
 
+    /// <summary>
+    /// Used for detect content type on the fly
+    /// </summary>
     public Dictionary<string, string> Mappings { get; set; } = new Dictionary<string, string>
     {
         ["iVBORw=="] = "image/png",
@@ -16,7 +20,8 @@ public class AppConfiguration
         ["R0lGOA=="] = "image/gif",
     };
 
-    public string DefaultUserAgent { get; set; } = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36 OPR/54.0.2952.46";
+    public string DefaultUserAgent { get; set; } = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) " +
+        "Chrome/67.0.3396.87 Safari/537.36 OPR/54.0.2952.46";
 
     public Size PreviewSize { get; set; } = new Size(100, 100);
     public string PreviewContentType { get; set; } = "image/jpeg";

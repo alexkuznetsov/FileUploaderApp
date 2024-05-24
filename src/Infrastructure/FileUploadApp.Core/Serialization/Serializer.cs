@@ -1,18 +1,18 @@
-﻿using FileUploadApp.Interfaces;
-using System.Text.Json;
+﻿using System.Text.Json;
 
-namespace FileUploadApp.Core.Serialization
+using FileUploadApp.Interfaces;
+
+namespace FileUploadApp.Core.Serialization;
+
+public class Serializer : ISerializer
 {
-    public class Serializer : ISerializer
+    private readonly JsonSerializerOptions _jsonSerializerOptions;
+
+    public Serializer()
     {
-        private readonly JsonSerializerOptions jsonSerializerOptions;
-
-        public Serializer()
-        {
-            jsonSerializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web);
-        }
-
-        public string Serialize(object @object) =>
-            JsonSerializer.Serialize(@object, jsonSerializerOptions);
+        _jsonSerializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web);
     }
+
+    public string Serialize(object @object) =>
+        JsonSerializer.Serialize(@object, _jsonSerializerOptions);
 }

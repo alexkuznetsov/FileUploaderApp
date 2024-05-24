@@ -2,23 +2,9 @@
 
 namespace FileUploadApp.Storage;
 
-public class Metadata
+public record Metadata(Guid Id, string Name, string ContentType, DateTime CreatedDate)
 {
-    public Guid Id { get; set; }
-
-    public string Name { get; set; }
-
-    public string ContentType { get; set; }
-
-    public DateTime CreatedDate { get; set; }
-
-    public Metadata() { }
-
-    public Metadata(Guid id, string name, string contentType, DateTime? dateTime = null)
+    public Metadata(Guid id, string name, string contentType, DateTime? dateTime = null) : this(id, name, contentType, dateTime ?? DateTime.UtcNow)
     {
-        Id = id;
-        Name = name;
-        ContentType = contentType;
-        CreatedDate = dateTime ?? DateTime.UtcNow;
     }
 }

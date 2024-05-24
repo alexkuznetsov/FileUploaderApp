@@ -9,5 +9,5 @@ public class UploadResultRow : FileEntity
     {
     }
 
-    public FileEntity Preview { get; set; }
+    public FileEntity? Preview { get; set; }
 }

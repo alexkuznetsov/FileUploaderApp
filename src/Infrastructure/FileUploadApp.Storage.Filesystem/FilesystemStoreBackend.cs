@@ -1,9 +1,11 @@
-﻿using FileUploadApp.Domain;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+
+using FileUploadApp.Domain;
+
+using Microsoft.Extensions.Logging;
 
 namespace FileUploadApp.Storage.Filesystem;
 
@@ -17,7 +19,7 @@ public class FilesystemStoreBackend : FileStoreBackendBase
     {
     }
 
-    public Task<Upload> FindAsync(Guid key, CancellationToken cancellationToken = default) 
+    public Task<Upload?> FindAsync(Guid key, CancellationToken cancellationToken = default)
         => throw new NotImplementedException();
 
     public Stream GetStream(Guid id)

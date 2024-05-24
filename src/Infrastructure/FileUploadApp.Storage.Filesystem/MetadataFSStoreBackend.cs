@@ -1,8 +1,10 @@
-﻿using FileUploadApp.Interfaces;
-using System;
+﻿using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+
+using FileUploadApp.Interfaces;
+
 using Microsoft.Extensions.Logging;
 
 namespace FileUploadApp.Storage.Filesystem;
@@ -11,8 +13,8 @@ public class MetadataFsStoreBackend : FileStoreBackendBase, IStoreBackend<Guid, 
 {
     private const string SpecFileExtension = ".spec";
 
-    private readonly ISerializer serializer;
-    private readonly IDeserializer deserializer;
+    private readonly ISerializer _serializer;
+    private readonly IDeserializer _deserializer;
 
     public MetadataFsStoreBackend(StorageConfiguration storageConfiguration
         , ISerializer serializer
@@ -20,8 +22,8 @@ public class MetadataFsStoreBackend : FileStoreBackendBase, IStoreBackend<Guid, 
         , ILogger<MetadataFsStoreBackend> logger)
         : base(storageConfiguration, logger)
     {
-        this.serializer = serializer;
-        this.deserializer = deserializer;
+        this._serializer = serializer;
+        this._deserializer = deserializer;
     }
 
     public async Task SaveAsync(Metadata file, CancellationToken cancellationToken = default)
@@ -30,13 +32,13 @@ public class MetadataFsStoreBackend : FileStoreBackendBase, IStoreBackend<Guid, 
         var specFilePath = FormatSpecFilePath(path);
 
         using var writer = File.CreateText(specFilePath);
-        var contents = serializer.Serialize(file);
+        var contents = _serializer.Serialize(file);
 
         await writer.WriteAsync(contents.AsMemory(), cancellationToken)
             .ConfigureAwait(false);
     }
 
-    public async Task<Metadata> FindAsync(Guid key, CancellationToken cancellationToken = default)
+    public async Task<Metadata?> FindAsync(Guid key, CancellationToken cancellationToken = default)
     {
         var path = BuildPathAndCheckDir(key, false);
         var specFilePath = FormatSpecFilePath(path);
@@ -46,7 +48,7 @@ public class MetadataFsStoreBackend : FileStoreBackendBase, IStoreBackend<Guid, 
         var contents = await File.ReadAllTextAsync(specFilePath, cancellationToken)
             .ConfigureAwait(false);
 
-        return deserializer.Deserialize<Metadata>(contents);
+        return _deserializer.Deserialize<Metadata>(contents);
     }
 
     public Task DeleteAsync(Metadata metadata, CancellationToken cancellationToken = default)

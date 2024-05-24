@@ -50,7 +50,7 @@ public static class UploadRequestEventBuilderExtensions
                     num: number++,
                     name: rawFile.Name,
                     contentType: contentType,
-                    streamAdapter: new MemoryStream(byteArr)
+                    data: new MemoryStream(byteArr)
                     );
             }
         }

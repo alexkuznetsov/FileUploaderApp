@@ -1,5 +1,5 @@
-﻿using ProtoBuf;
-using System;
+﻿using System;
+using System.Buffers;
 using System.Buffers.Text;
 
 namespace FileUploadApp.Core.Encoding;
@@ -9,7 +9,7 @@ public static class Base64ConvertHelper
     public static byte[] ConvertToBytes(ReadOnlySpan<char> sliced)
     {
         byte[] byteArr;
-        var bytes = BufferPool.GetBuffer(Base64.GetMaxDecodedFromUtf8Length(sliced.Length));
+        var bytes = ArrayPool<byte>.Shared.Rent(Base64.GetMaxDecodedFromUtf8Length(sliced.Length));
 
         try
         {
@@ -26,7 +26,7 @@ public static class Base64ConvertHelper
         }
         finally
         {
-            BufferPool.ReleaseBufferToPool(ref bytes);
+            ArrayPool<byte>.Shared.Return(bytes);
         }
 
         return byteArr;

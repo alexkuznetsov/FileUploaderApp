@@ -1,26 +1,28 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
+
+using MediatR;
+
+using Microsoft.AspNetCore.Mvc;
 
 namespace FileUploadApp.Core.Mvc;
 
 public abstract class BaseApiController : ControllerBase
 {
-    private readonly IMediator mediator;
+    private readonly IMediator _mediator;
 
     protected BaseApiController(IMediator mediator)
     {
-        this.mediator = mediator;
+        this._mediator = mediator;
     }
 
     protected async Task PublishAsync(INotification notification, CancellationToken cancellationToken = default)
     {
-        await mediator.Publish(notification, cancellationToken);
+        await _mediator.Publish(notification, cancellationToken);
     }
 
     protected async Task<TResponse> SendAsync<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default)
     {
-        return await mediator.Send(request, cancellationToken);
+        return await _mediator.Send(request, cancellationToken);
     }
 }

@@ -1,7 +1,8 @@
-﻿using FileUploadApp.Interfaces;
-using System.IO;
+﻿using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+
+using FileUploadApp.Interfaces;
 
 namespace FileUploadApp.Storage;
 
@@ -23,7 +24,7 @@ public abstract class Store<TKey, TMeta, TIn, TOut> : IStore<TKey, TIn, TOut>
         this._fileStreamProvider = fileStreamProvider;
     }
 
-    public async Task<TIn> ReceiveAsync(TKey fileId, CancellationToken cancellationToken = default)
+    public async Task<TIn?> ReceiveAsync(TKey fileId, CancellationToken cancellationToken = default)
     {
         var spec = await _metaRepository.FindAsync(fileId, cancellationToken).ConfigureAwait(false);
 

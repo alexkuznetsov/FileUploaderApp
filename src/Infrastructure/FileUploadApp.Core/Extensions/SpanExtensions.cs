@@ -3,105 +3,102 @@
 /// <seealso cref="https://github.com/bbartels/coreclr/blob/master/src/System.Private.CoreLib/shared/System/MemoryExtensions.Split.cs"/>
 /// </summary>
 
-namespace System
+namespace System;
+
+public static partial class MemoryExtensions
 {
-    public static partial class MemoryExtensions
+    /// <summary>
+    /// Returns an enumerator that iterates through a <see cref="ReadOnlySpan{T}"/>,
+    /// which is split by separator <paramref name="separator"/>.
+    /// </summary>
+    /// <param name="span">The source span which should be iterated over.</param>
+    /// <param name="separator">The separator used to separate the <paramref name="span"/>.</param>
+    /// <param name="options">The <see cref="StringSplitOptions"/> which should be applied with this operation.</param>
+    /// <returns>Returns an enumerator for the specified sequence.</returns>
+    public static SpanSplitEnumerator<T> Split<T>(this ReadOnlySpan<T> span,
+        T separator, StringSplitOptions options = StringSplitOptions.None) where T : IEquatable<T>
     {
-        /// <summary>
-        /// Returns an enumerator that iterates through a <see cref="ReadOnlySpan{T}"/>,
-        /// which is split by separator <paramref name="separator"/>.
-        /// </summary>
-        /// <param name="span">The source span which should be iterated over.</param>
-        /// <param name="separator">The separator used to separate the <paramref name="span"/>.</param>
-        /// <param name="options">The <see cref="StringSplitOptions"/> which should be applied with this operation.</param>
-        /// <returns>Returns an enumerator for the specified sequence.</returns>
-        public static SpanSplitEnumerator<T> Split<T>(this ReadOnlySpan<T> span,
-            T separator, StringSplitOptions options = StringSplitOptions.None) where T : IEquatable<T>
+        return !Enum.IsDefined(typeof(StringSplitOptions), options)
+            ? throw new ArgumentException($"Invalid value for {nameof(options)}: {options}")
+            : new SpanSplitEnumerator<T>(span, separator, options == StringSplitOptions.RemoveEmptyEntries);
+    }
+}
+
+public static class SpanSplitEnumeratorExtensions
+{
+    public static int Last<T>(this SpanSplitEnumerator<T> enumerator, out ReadOnlySpan<T> last)
+        where T : IEquatable<T>
+    {
+        int cnt = 0;
+        last = null;
+
+        while (enumerator.MoveNext())
         {
-            if (!Enum.IsDefined(typeof(StringSplitOptions), options))
-            {
-                throw new ArgumentException($"Invalid value for {nameof(options)}: {options}");
-            }
-            return new SpanSplitEnumerator<T>(span, separator, options == StringSplitOptions.RemoveEmptyEntries);
+            last = enumerator.Current;
+            cnt++;
         }
+
+        return cnt;
+    }
+}
+
+public ref struct SpanSplitEnumerator<T> where T : IEquatable<T>
+{
+    private ReadOnlySpan<T> _sequence;
+    private readonly T _separator;
+    private SpanSplitInfo _spanSplitInfo;
+
+    private readonly bool ShouldRemoveEmptyEntries => _spanSplitInfo.HasFlag(SpanSplitInfo.RemoveEmptyEntries);
+    private readonly bool IsFinished => _spanSplitInfo.HasFlag(SpanSplitInfo.FinishedEnumeration);
+
+    /// <summary>
+    /// Gets the element at the current position of the enumerator.
+    /// </summary>
+    public ReadOnlySpan<T> Current { get; private set; }
+
+    /// <summary>
+    /// Returns the current enumerator.
+    /// </summary>
+    /// <returns>Returns the current enumerator.</returns>
+    public readonly SpanSplitEnumerator<T> GetEnumerator() => this;
+
+    internal SpanSplitEnumerator(ReadOnlySpan<T> span, T separator, bool removeEmptyEntries)
+    {
+        Current = default;
+        _sequence = span;
+        _separator = separator;
+        _spanSplitInfo = default(SpanSplitInfo) | (removeEmptyEntries ? SpanSplitInfo.RemoveEmptyEntries : 0);
     }
 
-    public static class SpanSplitEnumeratorExtensions
+    /// <summary>
+    /// Advances the enumerator to the next element in the <see cref="ReadOnlySpan{T}"/>.
+    /// </summary>
+    /// <returns>Returns whether there is another item in the enumerator.</returns>
+    public bool MoveNext()
     {
-        public static int Last<T>(this SpanSplitEnumerator<T> enumerator, out ReadOnlySpan<T> last)
-            where T : IEquatable<T>
-        {
-            int cnt = 0;
-            last = null;
+        if (IsFinished) { return false; }
 
-            while (enumerator.MoveNext())
+        do
+        {
+            int index = _sequence.IndexOf(_separator);
+            if (index < 0)
             {
-                last = enumerator.Current;
-                cnt++;
+                Current = _sequence;
+                _spanSplitInfo |= SpanSplitInfo.FinishedEnumeration;
+                return !(ShouldRemoveEmptyEntries && Current.IsEmpty);
             }
 
-            return cnt;
-        }
+            Current = _sequence[..index];
+            _sequence = _sequence[(index + 1)..];
+        } while (Current.IsEmpty && ShouldRemoveEmptyEntries);
+
+        return true;
     }
 
-    public ref struct SpanSplitEnumerator<T> where T : IEquatable<T>
+    [Flags]
+    private enum SpanSplitInfo : byte
     {
-        private ReadOnlySpan<T> _sequence;
-        private readonly T _separator;
-        private SpanSplitInfo _spanSplitInfo;
-
-        private readonly bool ShouldRemoveEmptyEntries => _spanSplitInfo.HasFlag(SpanSplitInfo.RemoveEmptyEntries);
-        private readonly bool IsFinished => _spanSplitInfo.HasFlag(SpanSplitInfo.FinishedEnumeration);
-
-        /// <summary>
-        /// Gets the element at the current position of the enumerator.
-        /// </summary>
-        public ReadOnlySpan<T> Current { get; private set; }
-
-        /// <summary>
-        /// Returns the current enumerator.
-        /// </summary>
-        /// <returns>Returns the current enumerator.</returns>
-        public readonly SpanSplitEnumerator<T> GetEnumerator() => this;
-
-        internal SpanSplitEnumerator(ReadOnlySpan<T> span, T separator, bool removeEmptyEntries)
-        {
-            Current = default;
-            _sequence = span;
-            _separator = separator;
-            _spanSplitInfo = default(SpanSplitInfo) | (removeEmptyEntries ? SpanSplitInfo.RemoveEmptyEntries : 0);
-        }
-
-        /// <summary>
-        /// Advances the enumerator to the next element in the <see cref="ReadOnlySpan{T}"/>.
-        /// </summary>
-        /// <returns>Returns whether there is another item in the enumerator.</returns>
-        public bool MoveNext()
-        {
-            if (IsFinished) { return false; }
-
-            do
-            {
-                int index = _sequence.IndexOf(_separator);
-                if (index < 0)
-                {
-                    Current = _sequence;
-                    _spanSplitInfo |= SpanSplitInfo.FinishedEnumeration;
-                    return !(ShouldRemoveEmptyEntries && Current.IsEmpty);
-                }
-
-                Current = _sequence[..index];
-                _sequence = _sequence[(index + 1)..];
-            } while (Current.IsEmpty && ShouldRemoveEmptyEntries);
-
-            return true;
-        }
-
-        [Flags]
-        private enum SpanSplitInfo : byte
-        {
-            RemoveEmptyEntries = 0x1,
-            FinishedEnumeration = 0x2
-        }
+        RemoveEmptyEntries = 0x1,
+        FinishedEnumeration = 0x2
     }
 }

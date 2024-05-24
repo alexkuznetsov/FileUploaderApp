@@ -10,7 +10,7 @@ public interface IStoreBackend<in TKey, TMeta, TIn>
 {
     Task SaveAsync(TIn file, CancellationToken cancellationToken = default);
 
-    Task<TIn> FindAsync(TKey key, CancellationToken cancellationToken = default);
+    Task<TIn?> FindAsync(TKey key, CancellationToken cancellationToken = default);
 
     Task DeleteAsync(TMeta key, CancellationToken cancellationToken = default);
 }

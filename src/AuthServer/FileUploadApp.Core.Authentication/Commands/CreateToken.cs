@@ -1,8 +1,4 @@
-﻿using FileUploadApp.Core.Authentication;
-using FileUploadApp.Domain;
-using MediatR;
-using Microsoft.IdentityModel.Tokens;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
@@ -11,13 +7,20 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FileUploadApp.Core.Authentication;
+using FileUploadApp.Domain;
+
+using MediatR;
+
+using Microsoft.IdentityModel.Tokens;
+
 namespace FileUploadApp.Authentication.Commands;
 
 public class CreateToken
 {
     public class Command : IRequest<Token>
     {
-        public Command(string userId, string role = null, IReadOnlyDictionary<string, string> claims = null)
+        public Command(string userId, string? role = null, IReadOnlyDictionary<string, string>? claims = null)
         {
             UserId = userId;
             Role = role;
@@ -25,19 +28,19 @@ public class CreateToken
         }
 
         public string UserId { get; }
-        public string Role { get; }
-        public IReadOnlyDictionary<string, string> Claims { get; }
+        public string? Role { get; }
+        public IReadOnlyDictionary<string, string>? Claims { get; }
     }
 
     public class Handler : IRequestHandler<Command, Token>
     {
-        private readonly JwtOptions options;
-        private readonly SigningCredentials signingCredentials;
+        private readonly JwtOptions _options;
+        private readonly SigningCredentials _signingCredentials;
 
         public Handler(JwtOptions options)
         {
-            this.options = options;
-            signingCredentials = new SigningCredentials(
+            this._options = options;
+            _signingCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(Encoding.UTF8.GetBytes(options.SecretKey))
                 , SecurityAlgorithms.HmacSha256);
         }
@@ -46,16 +49,16 @@ public class CreateToken
         {
             if (string.IsNullOrWhiteSpace(request.UserId))
             {
-                throw new ArgumentException("User id claim can not be empty.", nameof(request.UserId));
+                throw new ArgumentException($"User id claim can not be empty.");
             }
 
             var now = DateTime.UtcNow;
             var jwtClaims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Sub, request.UserId),
-                new Claim(JwtRegisteredClaimNames.UniqueName, request.UserId),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Iat, now.ToTimestamp().ToString()),
+                new(JwtRegisteredClaimNames.Sub, request.UserId),
+                new(JwtRegisteredClaimNames.UniqueName, request.UserId),
+                new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new(JwtRegisteredClaimNames.Iat, now.ToTimestamp().ToString()),
             };
 
             if (!string.IsNullOrWhiteSpace(request.Role))
@@ -63,18 +66,18 @@ public class CreateToken
                 jwtClaims.Add(new Claim(ClaimTypes.Role, request.Role));
             }
 
-            var customClaims = request.Claims?.Select(claim => new Claim(claim.Key, claim.Value)).ToArray()
-                               ?? Array.Empty<Claim>();
+            var customClaims = request.Claims?.Select(claim => new Claim(claim.Key, claim.Value))
+                .ToArray() ?? [];
 
             jwtClaims.AddRange(customClaims);
 
-            var expires = now.AddMinutes(options.ExpiryMinutes);
+            var expires = now.AddMinutes(_options.ExpiryMinutes);
             var jwt = new JwtSecurityToken(
-                issuer: options.Issuer,
+                issuer: _options.Issuer,
                 claims: jwtClaims,
                 notBefore: now,
                 expires: expires,
-                signingCredentials: signingCredentials
+                signingCredentials: _signingCredentials
             );
 
             var token = new JwtSecurityTokenHandler().WriteToken(jwt);

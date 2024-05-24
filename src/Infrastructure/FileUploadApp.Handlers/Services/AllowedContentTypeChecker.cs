@@ -1,14 +1,15 @@
-﻿using FileUploadApp.Core;
+﻿using System;
+using System.Collections.Generic;
+
+using FileUploadApp.Core;
 using FileUploadApp.Domain;
 using FileUploadApp.Interfaces;
-using System;
-using System.Collections.Generic;
 
 namespace FileUploadApp.Features.Services;
 
 public class ContentTypeTestUtility : IContentTypeTestUtility
 {
-    private readonly ICollection<string> _contentTypes;
+    private readonly HashSet<string> _contentTypes;
     private readonly AppConfiguration _appConfiguration;
 
     public ContentTypeTestUtility(AppConfiguration appConfiguration)
@@ -21,7 +22,7 @@ public class ContentTypeTestUtility : IContentTypeTestUtility
 
     public string DetectContentType(ReadOnlySpan<byte> bytes)
     {
-        foreach (var (ctBytes, contentType) in _appConfiguration.GetFingerprints())
+        foreach (var (ctBytes, contentType) in _appConfiguration.GetMimeFingerprints())
         {
             if (bytes.SequenceEqual(ctBytes))
                 return contentType;

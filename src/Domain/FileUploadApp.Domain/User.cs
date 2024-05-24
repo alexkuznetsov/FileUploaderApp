@@ -10,7 +10,7 @@ public class User : IHaveId<int>
 
     public DateTime? UpdatedAt { get; set; }
 
-    public string Username { get; set; }
+    public required string Username { get; set; }
 
-    public string Passwhash { get; set; }
+    public required string Passwhash { get; set; }
 }

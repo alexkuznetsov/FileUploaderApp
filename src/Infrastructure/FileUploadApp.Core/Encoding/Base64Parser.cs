@@ -31,12 +31,15 @@ public static partial class Base64Parser
             {
                 var charsetPart = headerEnumerator.Current.Split('=');
                 var charsetPartLen = charsetPart.Last(out _); //TODO Work with charset
-                if (charsetPartLen == 2)
+
+                if (charsetPartLen != 2)
                 {
-                    //TODO Charset now not using
-                }
-                else
                     throw new ArgumentException($"Invalid charset description for {fileName}");
+                }
+                //else
+                //{
+                //    //TODO Charset now not using
+                //}
             }
             else if (headerEnumerator.Current.SequenceEqual(base64Token))
             {
@@ -49,11 +52,9 @@ public static partial class Base64Parser
             }
         }
 
-        if (!isBase64)
-            throw new ArgumentException($"Invalid encoding type for {fileName}");
-
-        return new Base64ParserResult(contentType
-            , bytes: Base64ConvertHelper.ConvertToBytes(data[(commaPos + 1)..]));
+        return !isBase64
+            ? throw new ArgumentException($"Invalid encoding type for {fileName}")
+            : new Base64ParserResult(contentType, bytes: Base64ConvertHelper.ConvertToBytes(data[(commaPos + 1)..]));
     }
 
     [Obsolete("Previous logic")]
@@ -89,12 +90,9 @@ public static partial class Base64Parser
             }
         }
 
-        byte[] byteArr;
-
-        if (isBase64)
-            byteArr = Convert.FromBase64String(data[(colonPos + 1)..]);
-        else
-            throw new ArgumentException($"Invalid encoding type for {fileName}");
+        byte[] byteArr = isBase64
+            ? Convert.FromBase64String(data[(colonPos + 1)..])
+            : throw new ArgumentException($"Invalid encoding type for {fileName}");
 
         return new Base64ParserResult(contentType, byteArr);
     }

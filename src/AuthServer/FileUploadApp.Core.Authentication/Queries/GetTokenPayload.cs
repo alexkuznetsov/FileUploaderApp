@@ -1,8 +1,4 @@
-﻿using FileUploadApp.Core.Authentication;
-using FileUploadApp.Domain;
-using MediatR;
-using Microsoft.IdentityModel.Tokens;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
@@ -10,6 +6,13 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+
+using FileUploadApp.Core.Authentication;
+using FileUploadApp.Domain;
+
+using MediatR;
+
+using Microsoft.IdentityModel.Tokens;
 
 namespace FileUploadApp.Authentication.Queries;
 
@@ -27,14 +30,14 @@ public class GetTokenPayload
 
     public class Handler : IRequestHandler<Query, TokenPayload>
     {
-        private static readonly ISet<string> DefaultClaims = new HashSet<string>
-        {
+        private static readonly HashSet<string> DefaultClaims =
+        [
             JwtRegisteredClaimNames.Sub,
             JwtRegisteredClaimNames.UniqueName,
             JwtRegisteredClaimNames.Jti,
             JwtRegisteredClaimNames.Iat,
             ClaimTypes.Role,
-        };
+        ];
 
         private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler = new();
         private readonly TokenValidationParameters _tokenValidationParameters;
@@ -57,19 +60,19 @@ public class GetTokenPayload
             _jwtSecurityTokenHandler.ValidateToken(request.Token, _tokenValidationParameters,
                 out var validatedSecurityToken);
 
-            if (validatedSecurityToken is not JwtSecurityToken jwt)
-            {
-                throw new InvalidOperationException($"{nameof(validatedSecurityToken)} is not a JwtSecurityToken. Aborting.");
-            }
+            return validatedSecurityToken is not JwtSecurityToken jwt
+                ? throw new InvalidOperationException($"{nameof(validatedSecurityToken)} is not a JwtSecurityToken. Aborting.")
+                : Task.FromResult(P(jwt));
 
-            return Task.FromResult(new TokenPayload
-            {
-                Subject = jwt.Subject,
-                Role = jwt.Claims.SingleOrDefault(x => x.Type == ClaimTypes.Role)?.Value,
-                Expires = jwt.ValidTo.ToTimestamp(),
-                Claims = jwt.Claims.Where(x => !DefaultClaims.Contains(x.Type))
-                    .ToDictionary(k => k.Type, v => v.Value)
-            });
+            static TokenPayload P(JwtSecurityToken jwt)
+                => new()
+                {
+                    Subject = jwt.Subject,
+                    Role = jwt.Claims.SingleOrDefault(x => x.Type == ClaimTypes.Role)?.Value,
+                    Expires = jwt.ValidTo.ToTimestamp(),
+                    Claims = jwt.Claims.Where(x => !DefaultClaims.Contains(x.Type))
+                        .ToDictionary(k => k.Type, v => v.Value)
+                };
         }
     }
 

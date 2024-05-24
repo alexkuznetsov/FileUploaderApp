@@ -29,7 +29,7 @@ public static class HttpContextConvertExtensions
                 num: number++,
                 name: f.FileName,
                 contentType: f.ContentType,
-                streamAdapter: f.OpenReadStream()
+                data: f.OpenReadStream()
             )).ToArray();
     }
 }

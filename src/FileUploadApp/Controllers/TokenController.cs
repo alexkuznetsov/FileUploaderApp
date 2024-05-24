@@ -5,41 +5,47 @@ using FileUploadApp.Core.Mvc;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace FileUploadApp.Controllers
+namespace FileUploadApp.Controllers;
+
+/// <summary>
+/// Реализация службы аутентификации, для тестирования
+/// </summary>
+[Route("api/[controller]")]
+[ApiController]
+public class TokenController : BaseApiController
 {
-    /// <summary>
-    /// Реализация службы аутентификации, для тестирования
-    /// </summary>
-    [Route("api/[controller]")]
-    [ApiController]
-    public class TokenController : BaseApiController
+    public TokenController(IMediator mediator) : base(mediator)
     {
-        public TokenController(IMediator mediator) : base(mediator)
-        {
 
-        }
+    }
 
-        [HttpPost]
-        [AllowAnonymous]
-        public async Task<IActionResult> Post([FromBody]AuthenticationRequest authReq
-            , CancellationToken cancellationToken = default)
-        {
-            var checkUserResponse = await SendAsync(new CheckUser.Query(authReq.Username, authReq.Password)
-                , cancellationToken);
+    [SwaggerOperation(
+       Summary = "Authenticate and recive JWT token for operaions (upload / remove uploaded file)",
+       Description = "Authenticate user and issue a jwt token",
+       OperationId = "Token_Issue",
+       Tags = ["Token"])
+    ]
+    [HttpPost]
+    [AllowAnonymous]
+    public async Task<IActionResult> Post([FromBody] AuthenticationRequest authReq
+        , CancellationToken cancellationToken = default)
+    {
+        var checkUserResponse = await SendAsync(new CheckUser.Query(authReq.Username, authReq.Password)
+            , cancellationToken);
 
-            if (checkUserResponse.UserNotFound())
-                return NotFound();
+        if (checkUserResponse.UserNotFound())
+            return NotFound();
 
-            if (checkUserResponse.UserPasswordMismatch())
-                return BadRequest(new { error = "Password is invalid" });
+        if (checkUserResponse.UserPasswordMismatch())
+            return BadRequest(new { error = "Password is invalid" });
 
-            var userToken = await SendAsync(new CreateToken.Command(checkUserResponse.User.Username)
-                , cancellationToken);
+        var userToken = await SendAsync(new CreateToken.Command(checkUserResponse.User.Username)
+            , cancellationToken);
 
-            return Ok(userToken);
-        }
+        return Ok(userToken);
     }
 }

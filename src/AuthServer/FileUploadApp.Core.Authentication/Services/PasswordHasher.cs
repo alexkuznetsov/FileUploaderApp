@@ -28,10 +28,7 @@ public sealed class PasswordHasher : IPasswordHasher
 
     public string HashPassword(string password)
     {
-        if (password == null)
-        {
-            throw new ArgumentNullException(nameof(password));
-        }
+        ArgumentNullException.ThrowIfNull(password);
 
         // Produce a version 0 (see comment above) password hash.
         byte[] salt;
@@ -54,15 +51,9 @@ public sealed class PasswordHasher : IPasswordHasher
     // hashedPassword must be of the format of HashWithPassword (salt + Hash(salt+input)
     public bool VerifyHashedPassword(string hashedPassword, string password)
     {
-        if (hashedPassword == null)
-        {
-            throw new ArgumentNullException(nameof(hashedPassword));
-        }
+        ArgumentNullException.ThrowIfNull(hashedPassword);
 
-        if (password == null)
-        {
-            throw new ArgumentNullException(nameof(password));
-        }
+        ArgumentNullException.ThrowIfNull(password);
 
         var hashedPasswordBytes = Convert.FromBase64String(hashedPassword);
 

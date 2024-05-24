@@ -6,7 +6,7 @@ namespace FileUploadApp.Domain;
 public class Upload : FileDescriptor
 {
     public const string PreviewPrefix = "preview_";
-    
+
     public Guid PreviewId { get; }
 
     public Upload(
@@ -15,7 +15,7 @@ public class Upload : FileDescriptor
        uint num,
        string name,
        string contentType,
-       Stream streamAdapter) : base(id, num, name, contentType, streamAdapter)
+       Stream data) : base(id, num, name, contentType, data)
     {
         PreviewId = previewId;
     }

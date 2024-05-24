@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Primitives;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace FileUploadApp.Core.Authentication;
 
@@ -47,12 +48,17 @@ internal class AccessTokenService : IAccessTokenService
 
     private string GetCurrent()
     {
-        var authorizationHeader = _httpContextAccessor
-            .HttpContext.Request.Headers[AuthorizationField];
+        var ctx = _httpContextAccessor.HttpContext;
+        if (ctx == null)
+        {
+            return string.Empty;
+        }
+
+        var authorizationHeader = ctx.Request.Headers[AuthorizationField];
 
         return authorizationHeader == StringValues.Empty
             ? string.Empty
-            : authorizationHeader[0].Split(' ').Last();
+            : (authorizationHeader.First() ?? "").Split(' ').LastOrDefault() ?? "";
     }
 
     private static string GetKey(string token)

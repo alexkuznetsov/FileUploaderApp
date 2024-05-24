@@ -46,8 +46,8 @@ Endpoints
     Sample request: 
 ```
 {
-    "username": "rex", 
-    "password": "passw" 
+    "username": "admin", 
+    "password": "1qaz!QAZ" 
 } 
 ```
 
@@ -59,8 +59,8 @@ Endpoints
         ``` 
         { 
             "files": [{ 
-                "file": "some-file-name", 
-                "data": "base64 encoded data" 
+                "file": "1.jpg", 
+                "data": "base64;iVBORw0KGgoAAAANSUhEUgAAAT4AAAE+CAYAAAAUOHwwAAAgAElEQVR4nOy9WaxtW3qQ9412dmutvXZz9t..." 
             }] 
         }  
         ``` 
@@ -75,8 +75,11 @@ Endpoints
     - Mix of base64 encoded files and links ( 
         ```
         { 
-            "files": [ ... ], 
-            "links": [ ... ] 
+            "files": [ { 
+                "file": "1.jpg", 
+                "data": "base64;iVBORw0KGgoAAAANSUhEUgAAAT4AAAE+CAYAAAAUOHwwAAAgAElEQVR4nOy9WaxtW3qQ9412dmutvXZz9t..." 
+            } ], 
+            "links": [ "http://localhost/1.bmp", "http://localhost/2.bmp" ] 
         }
         ``` 
         ).

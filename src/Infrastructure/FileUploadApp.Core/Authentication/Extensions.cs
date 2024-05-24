@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using System;
+
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using System;
 
 namespace FileUploadApp.Core.Authentication;
 
@@ -20,7 +21,7 @@ public static class AuthenticationExtensions
 
         using (var serviceProvider = services.BuildServiceProvider())
         {
-            configuration = serviceProvider.GetService<IConfiguration>();
+            configuration = serviceProvider.GetRequiredService<IConfiguration>();
         }
 
         var section = configuration.GetSection(JwtOptions.SectionName);
@@ -38,16 +39,13 @@ public static class AuthenticationExtensions
         services.AddTransient<AccessTokenValidatorMiddleware>();
 
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(cfg =>
+            .AddJwtBearer(cfg => cfg.TokenValidationParameters = new TokenValidationParameters
             {
-                cfg.TokenValidationParameters = new TokenValidationParameters
-                {
-                    IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(options.SecretKey)),
-                    ValidIssuer = options.Issuer,
-                    ValidAudience = options.ValidAudience,
-                    ValidateAudience = options.ValidateAudience,
-                    ValidateLifetime = options.ValidateLifetime
-                };
+                IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(options.SecretKey)),
+                ValidIssuer = options.Issuer,
+                ValidAudience = options.ValidAudience,
+                ValidateAudience = options.ValidateAudience,
+                ValidateLifetime = options.ValidateLifetime
             });
     }
 
