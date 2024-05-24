@@ -1,120 +1,161 @@
-﻿using FileUploadApp.Core.Authentication;
+﻿using System;
+using System.IO;
+using System.Linq;
+
+using FileUploadApp.Authentication;
+using FileUploadApp.Authentication.Queries;
+using FileUploadApp.Authentication.Services;
+using FileUploadApp.Core.Authentication;
 using FileUploadApp.Core.Serialization;
 using FileUploadApp.Domain;
-using FileUploadApp.Domain.Dirty;
-using FileUploadApp.Events;
-using FileUploadApp.Handlers;
+using FileUploadApp.Domain.Raw;
+using FileUploadApp.Features.Commands;
+using FileUploadApp.Features.Services;
 using FileUploadApp.Interfaces;
-using FileUploadApp.Requests;
-using FileUploadApp.Services;
 using FileUploadApp.Storage;
 using FileUploadApp.Storage.Filesystem;
-using MediatR;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Net.Http;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 
-namespace FileUploadApp
+namespace FileUploadApp;
+
+public class Startup
 {
-    public class Startup
+    private const string ConfNode = "conf";
+    private const string FileStoreNode = "fileStore";
+
+    private const string EnvHealthCheckEp = Strings.EnvPrefix + "P_HEALTHCHECK";
+
+    private const string DefaultHealthCheckEndpoint = "/health";
+    private readonly IWebHostEnvironment _env;
+
+    public Startup(IConfiguration configuration, IWebHostEnvironment env)
     {
-        private const string ConfNode = "conf";
-        private const string FileStoreNode = "fileStore";
+        Configuration = configuration;
+        this._env = env;
+    }
 
-        private const string EnvHealthCheckEp = Strings.EnvPrefix + "P_HEALTHCHECK";
+    private IConfiguration Configuration { get; set; }
 
-        private const string DefaultHealthCheckEndpoint = "/health";
+    // This method gets called by the runtime. Use this method to add services to the container.
+    public void ConfigureServices(IServiceCollection services)
+    {
+        ConfigureMvc(services);
+        ConfigureOptions(services);
+        ConfigureDependencies(services);
+    }
 
-        public Startup(IConfiguration configuration)
+    private void ConfigureDependencies(IServiceCollection services)
+    {
+        services.AddSingleton(Configuration.BindTo<AppConfiguration>(ConfNode));
+        services.AddSingleton<IContentTypeTestUtility, ContentTypeTestUtility>();
+        services.AddSingleton<ISerializer, Serializer>();
+        services.AddSingleton<IDeserializer, Deserializer>();
+
+        services.AddHttpClient<IContentDownloader<DownloadUriResponse>, ContentDownloader>((s, client) =>
         {
-            Configuration = configuration;
-        }
+            var c = s.GetRequiredService<AppConfiguration>();
+            client.DefaultRequestHeaders.Add(ContentDownloader.UserAgentField
+                , c.DefaultUserAgent);
+        });
 
-        private IConfiguration Configuration { get; set; }
+        services.AddSingleton(Configuration.BindTo<StorageConfiguration>(FileStoreNode));
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddMvc(options => { options.EnableEndpointRouting = false; })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+        services.AddSingleton<IStoreBackend<Guid, Metadata, Upload>, FilesystemStoreBackend>();
+        services.AddSingleton<IStoreBackend<Guid, Metadata, Metadata>, MetadataFsStoreBackend>();
+        services.AddSingleton<IFileStreamProvider<Guid, Stream>, FilesystemStoreBackend>();
+        services.AddSingleton<IStore<Guid, Upload, UploadResultRow>, FileSystemStore>();
 
-            services.AddSingleton(Configuration.BindTo<AppConfiguration>(ConfNode));
-            services.AddSingleton<IContentTypeTestUtility, ContentTypeTestUtility>();
-            services.AddSingleton<ISerializer, Serializer>();
-            services.AddSingleton<IDeserializer, Deserializer>();
-            services.AddSingleton((r) => new HttpClientHandler
+        services.AddHttpContextAccessor();
+
+        services.AddMediatR(config => config.RegisterServicesFromAssemblies(
+            [
+                  typeof(UploadFiles.Handler).Assembly
+                , typeof(CheckUser.Handler).Assembly
+            ]));
+    }
+
+    private static void ConfigureOptions(IServiceCollection services)
+    {
+        services.Configure<RouteOptions>(o => o.LowercaseUrls = true);
+    }
+
+    private void ConfigureMvc(IServiceCollection services)
+    {
+        services.AddMvc()
+            .AddJsonOptions(o =>
             {
-                AllowAutoRedirect = true,
-                AutomaticDecompression = System.Net.DecompressionMethods.Deflate | System.Net.DecompressionMethods.GZip
+                o.JsonSerializerOptions.PropertyNameCaseInsensitive = false;
+                o.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
             });
 
-            services.AddSingleton<IContentDownloaderFactory<DownloadUriResponse>, ContentDownloaderFactory>();
-            services.AddSingleton(Configuration.BindTo<StorageConfiguration>(FileStoreNode));
-
-            services.AddSingleton<IStoreBackend<Guid, Upload>, FilesystemStoreBackend>();
-            services.AddSingleton<IStoreBackend<Guid, Metadata>, MetadataFsStoreBackend>();
-            services.AddSingleton<IFileStreamProvider<Guid, StreamAdapter>, FilesystemStoreBackend>();
-            services.AddSingleton<IStore<Guid, Upload, UploadResultRow>, FileSystemStore>();
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
-            services.AddScoped<ServiceFactory>(p => p.GetService);
-
-            services.Scan(scan => scan
-                .FromAssembliesOf(typeof(IMediator)
-                    , typeof(GenericEvent)
-                    , typeof(DownloadUriQuery)
-                    , typeof(UploadFilesCommandHandler))
-                .AddClasses()
-                .AsImplementedInterfaces());
-
-            services.AddCors((s) =>
+        services.AddCors((s) => s.AddDefaultPolicy((c) =>
             {
-                s.AddDefaultPolicy((c) =>
-                {
-                    c.AllowAnyOrigin();
-                    c.AllowAnyHeader();
-                    c.WithMethods("OPTIONS", "GET", "POST");
-                });
-            });
+                c.AllowAnyOrigin();
+                c.AllowAnyHeader();
+                c.WithMethods("OPTIONS", "GET", "POST", "DELETE");
+            }));
 
-            services.AddJwt();
-            services.AddJwtAuthenticationEndpointWithFakeService(Configuration);
-            services.AddHealthChecks();
-        }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        services.AddJwt();
+        services.AddJwtAuthenticationEndpointWithInMemoryService(Configuration,
+            (o) => Configuration.GetSection(InMemoryCheckUserServiceOptions.SectionKey).Bind(o));
+        services.AddHealthChecks();
+        services.AddEndpointsApiExplorer();
+        services.AddSwaggerGen(c =>
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
+            //FIXME 
+            c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "File Uploader", Version = "v1" });
+            c.EnableAnnotations();
+        });
+    }
 
-            app.UseAccessTokenValidator();
-            //app.UseHttpsRedirection();
-            app.UseAuthentication();
-            app.UseMvc();
+    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+    public void Configure(WebApplication app)
+    {
+        RegisterMiddleware(app);
+    }
 
-            app.UseCors();
-
-            app.UseForwardedHeaders(new ForwardedHeadersOptions
-            {
-                ForwardedHeaders = ForwardedHeaders.XForwardedFor
-                                   | ForwardedHeaders.XForwardedProto
-            });
-
-            app.UseHealthChecks(Environment.GetEnvironmentVariable(EnvHealthCheckEp) ?? DefaultHealthCheckEndpoint);
+    private void RegisterMiddleware(WebApplication app)
+    {
+        if (_env.IsDevelopment())
+        {
+            app.UseDeveloperExceptionPage();
+            app.UseSwagger();
+            app.UseSwaggerUI();
         }
+        else
+        {
+            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+            app.UseHsts();
+        }
+
+        app.UseAccessTokenValidator();
+#if ONLY_HTTPS
+        app.UseHttpsRedirection();
+#endif
+
+        app.UseCors();
+
+        app.UseForwardedHeaders(new ForwardedHeadersOptions
+        {
+            ForwardedHeaders = ForwardedHeaders.XForwardedFor
+                               | ForwardedHeaders.XForwardedProto
+        });
+
+        app.UseHealthChecks(Environment.GetEnvironmentVariable(EnvHealthCheckEp) ?? DefaultHealthCheckEndpoint);
+
+        app.UseRouting();
+        app.UseAuthentication();
+        app.UseAuthorization();
+
+        app.MapControllerRoute("Default", "{controller}/{action=index}/{id:int?}");
     }
 }

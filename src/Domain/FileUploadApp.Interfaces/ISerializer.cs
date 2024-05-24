@@ -1,7 +1,6 @@
-﻿namespace FileUploadApp.Interfaces
+﻿namespace FileUploadApp.Interfaces;
+
+public interface ISerializer
 {
-    public interface ISerializer
-    {
-        string Serialize(object @object);
-    }
+    string Serialize(object @object);
 }

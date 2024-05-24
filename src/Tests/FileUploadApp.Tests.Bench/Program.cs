@@ -2,14 +2,12 @@
 using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Running;
 using BenchmarkDotNet.Toolchains.CsProj;
-using System;
 
-namespace FileUploadApp.Tests.Bench
+namespace FileUploadApp.Tests.Bench;
+
+class Program
 {
-    class Program
-    {
-        static void Main(string[] args) => BenchmarkRunner.Run<Base64ParserBench>(
-            DefaultConfig.Instance
-                .With(Job.Default.With(CsProjCoreToolchain.NetCoreApp22)));
-    }
+    static void Main() => BenchmarkRunner.Run<Base64ParserBench>(
+        DefaultConfig.Instance
+            .AddJob(Job.Default.WithToolchain(CsProjCoreToolchain.NetCoreApp80)));
 }

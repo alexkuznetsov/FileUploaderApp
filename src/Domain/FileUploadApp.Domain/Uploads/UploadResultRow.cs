@@ -1,14 +1,13 @@
 ﻿using System;
 
-namespace FileUploadApp.Domain
-{
-    public class UploadResultRow : FileEntity
-    {
-        public UploadResultRow(Guid id, uint number, string name, string contentType) :
-            base(id, number, name, contentType)
-        {
-        }
+namespace FileUploadApp.Domain;
 
-        public FileEntity Preview { get; set; }
+public class UploadResultRow : FileEntity
+{
+    public UploadResultRow(Guid id, uint number, string name, string contentType) :
+        base(id, number, name, contentType)
+    {
     }
+
+    public FileEntity? Preview { get; set; }
 }

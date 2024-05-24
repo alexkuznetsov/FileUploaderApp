@@ -1,15 +1,12 @@
-﻿using System.Runtime.Serialization;
+﻿namespace FileUploadApp.Core.Authentication;
 
-namespace FileUploadApp.Core.Authentication
+public class JwtOptions
 {
-    [DataContract]
-    public class JwtOptions
-    {
-        [DataMember] public string SecretKey { get; set; }
-        [DataMember] public string Issuer { get; set; }
-        [DataMember] public int ExpiryMinutes { get; set; }
-        [DataMember] public bool ValidateLifetime { get; set; }
-        [DataMember] public bool ValidateAudience { get; set; }
-        [DataMember] public string ValidAudience { get; set; }
-    }
+    public const string SectionName = "jwt";
+    public string SecretKey { get; set; } = null!;
+    public string Issuer { get; set; } = null!;
+    public int ExpiryMinutes { get; set; }
+    public bool ValidateLifetime { get; set; }
+    public bool ValidateAudience { get; set; }
+    public string? ValidAudience { get; set; }
 }

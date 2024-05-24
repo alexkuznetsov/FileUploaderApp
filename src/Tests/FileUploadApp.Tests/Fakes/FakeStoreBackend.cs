@@ -1,39 +1,38 @@
-﻿using FileUploadApp.Domain;
-using FileUploadApp.Storage;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace FileUploadApp.Tests.Fakes
+using FileUploadApp.Domain;
+using FileUploadApp.Storage;
+
+namespace FileUploadApp.Tests.Fakes;
+
+internal class FakeStoreBackend : IStoreBackend<Guid, Metadata, Upload>, IFileStreamProvider<Guid, Stream>
 {
-    internal class FakeStoreBackend : IStoreBackend<Guid, Upload>, IFileStreamProvider<Guid, StreamAdapter>
+    private readonly Dictionary<Guid, Upload> _keyValuePairs = [];
+
+    public Task<Upload?> FindAsync(Guid key, CancellationToken cancellationToken = default)
     {
-        private readonly Dictionary<Guid, Upload> keyValuePairs = new Dictionary<Guid, Upload>();
+        _keyValuePairs.TryGetValue(key, out var value);
+        return Task.FromResult(value);
+    }
 
-        public Task<Upload> FindAsync(Guid key, CancellationToken cancellationToken = default)
-        {
-            if (keyValuePairs.TryGetValue(key, out var value))
-                return Task.FromResult(value);
+    public Task DeleteAsync(Metadata key, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
 
-            throw new NotImplementedException();
-        }
+    public Stream GetStream(Guid id)
+    {
+        return _keyValuePairs[id].Stream;
+    }
 
-        public Task DeleteAsync(Guid key, CancellationToken cancellationToken = default)
-        {
-            throw new NotImplementedException();
-        }
+    public Task SaveAsync(Upload file, CancellationToken cancellationToken = default)
+    {
+        _keyValuePairs.Add(file.Id, file);
 
-        public StreamAdapter GetStreamAdapter(Guid id)
-        {
-            return keyValuePairs[id].Stream;
-        }
-
-        public Task SaveAsync(Upload file, CancellationToken cancellationToken = default)
-        {
-            keyValuePairs.Add(file.Id, file);
-
-            return Task.FromResult(0);
-        }
+        return Task.FromResult(0);
     }
 }

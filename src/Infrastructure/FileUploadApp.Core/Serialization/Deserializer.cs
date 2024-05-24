@@ -1,11 +1,18 @@
-﻿using FileUploadApp.Interfaces;
-using Newtonsoft.Json;
+﻿using System.Text.Json;
 
-namespace FileUploadApp.Core.Serialization
+using FileUploadApp.Interfaces;
+
+namespace FileUploadApp.Core.Serialization;
+
+public class Deserializer : IDeserializer
 {
-    public class Deserializer : IDeserializer
+    private readonly JsonSerializerOptions _jsonSerializerOptions;
+
+    public Deserializer()
     {
-        public TObject Deserialize<TObject>(string payload) =>
-            JsonConvert.DeserializeObject<TObject>(payload);
+        _jsonSerializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web);
     }
+
+    public TObject? Deserialize<TObject>(string payload) =>
+        JsonSerializer.Deserialize<TObject>(payload, _jsonSerializerOptions);
 }

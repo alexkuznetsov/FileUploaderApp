@@ -1,4 +1,4 @@
-# File uploads service ![build status ](https://travis-ci.org/alexkuznetsov/FileUploaderApp.svg?branch=dev)
+# File uploads service
 
 REST upload file service.
 
@@ -46,8 +46,8 @@ Endpoints
     Sample request: 
 ```
 {
-    "username": "rex", 
-    "password": "passw" 
+    "username": "admin", 
+    "password": "1qaz!QAZ" 
 } 
 ```
 
@@ -55,9 +55,34 @@ Endpoints
     Upload endpoint. Can consume:
     
     - Multipart Form Data;
-    - JSON, with base64 encoded file ( ``` { "files": [  { "file": "some-file-name", "data": "base64 encoded data" }   ] }  ``` );
-    - JSON, with links for download files (  ```{ "links": [ "http://localhost/1.bmp", "http://localhost/2.bmp" ] }``` );
-    - Mix of base64 encoded files and links ( ```{ "files": [ ... ], "links": [ ... ] }``` ).
+    - JSON, with base64 encoded file ( 
+        ``` 
+        { 
+            "files": [{ 
+                "file": "1.jpg", 
+                "data": "base64;iVBORw0KGgoAAAANSUhEUgAAAT4AAAE+CAYAAAAUOHwwAAAgAElEQVR4nOy9WaxtW3qQ9412dmutvXZz9t..." 
+            }] 
+        }  
+        ``` 
+        );
+    - JSON, with links for download files (  
+        ```
+        { 
+            "links": [ "http://localhost/1.bmp", "http://localhost/2.bmp" ] 
+        }
+        ``` 
+        );
+    - Mix of base64 encoded files and links ( 
+        ```
+        { 
+            "files": [ { 
+                "file": "1.jpg", 
+                "data": "base64;iVBORw0KGgoAAAANSUhEUgAAAT4AAAE+CAYAAAAUOHwwAAAgAElEQVR4nOy9WaxtW3qQ9412dmutvXZz9t..." 
+            } ], 
+            "links": [ "http://localhost/1.bmp", "http://localhost/2.bmp" ] 
+        }
+        ``` 
+        ).
 
 3. ```/api/file/{fileId}```
 

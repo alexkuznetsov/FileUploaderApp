@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>disable</ImplicitUsings>
+	</PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="12.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Domain\FileUploadApp.Domain\FileUploadApp.Domain.csproj" />
+    <ProjectReference Include="..\FileUploadApp.Core\FileUploadApp.Core.csproj" />
+    <ProjectReference Include="..\FileUploadApp.Imaging\FileUploadApp.Imaging.csproj" />
+    <ProjectReference Include="..\..\Domain\FileUploadApp.Interfaces\FileUploadApp.Interfaces.csproj" />
+    <ProjectReference Include="..\FileUploadApp.Storage\FileUploadApp.Storage.csproj" />
+  </ItemGroup>
+
+</Project>

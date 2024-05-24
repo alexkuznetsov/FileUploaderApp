@@ -1,68 +1,68 @@
-﻿using FileUploadApp.Domain;
-using FileUploadApp.Interfaces;
+﻿using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace FileUploadApp.Storage
+using FileUploadApp.Interfaces;
+
+namespace FileUploadApp.Storage;
+
+public abstract class Store<TKey, TMeta, TIn, TOut> : IStore<TKey, TIn, TOut>
+    where TKey : struct
+    where TMeta : class
+    where TIn : class
 {
-    public abstract class Store<TKey, TMeta, TIn, TOut> : IStore<TKey, TIn, TOut>
-        where TKey : struct
-        where TMeta : class
-        where TIn : class
+    private readonly IStoreBackend<TKey, TMeta, TMeta> _metaRepository;
+    private readonly IStoreBackend<TKey, TMeta, TIn> _storeBackend;
+    private readonly IFileStreamProvider<TKey, Stream> _fileStreamProvider;
+
+    protected Store(IStoreBackend<TKey, TMeta, TMeta> metadataRepository
+        , IStoreBackend<TKey, TMeta, TIn> storeBackend
+        , IFileStreamProvider<TKey, Stream> fileStreamProvider)
     {
-        private readonly IStoreBackend<TKey, TMeta> metaRepository;
-        private readonly IStoreBackend<TKey, TIn> storeBackend;
-        private readonly IFileStreamProvider<TKey, StreamAdapter> fileStreamProvider;
+        _metaRepository = metadataRepository;
+        this._storeBackend = storeBackend;
+        this._fileStreamProvider = fileStreamProvider;
+    }
 
-        protected Store(IStoreBackend<TKey, TMeta> metadataRepository
-            , IStoreBackend<TKey, TIn> storeBackend
-            , IFileStreamProvider<TKey, StreamAdapter> fileStreamProvider)
+    public async Task<TIn?> ReceiveAsync(TKey fileId, CancellationToken cancellationToken = default)
+    {
+        var spec = await _metaRepository.FindAsync(fileId, cancellationToken).ConfigureAwait(false);
+
+        if (spec == null)
         {
-            metaRepository = metadataRepository;
-            this.storeBackend = storeBackend;
-            this.fileStreamProvider = fileStreamProvider;
+            return default;
         }
 
-        public async Task<TIn> ReceiveAsync(TKey fileId, CancellationToken cancellationToken = default)
-        {
-            var spec = await metaRepository.FindAsync(fileId, cancellationToken).ConfigureAwait(false);
+        var stream = _fileStreamProvider.GetStream(fileId);
 
-            if (spec == null)
-            {
-                return default;
-            }
+        return CreateFromSpec(spec, stream);
+    }
 
-            var streamAdapter = fileStreamProvider.GetStreamAdapter(fileId);
+    protected abstract TIn CreateFromSpec(TMeta metadata, Stream streamAdapter);
 
-            return CreateFromSpec(spec, streamAdapter);
-        }
+    protected abstract TMeta CreateMetadata(TIn @in);
 
-        protected abstract TIn CreateFromSpec(TMeta metadata, StreamAdapter streamAdapter);
-
-        protected abstract TMeta CreateMetadata(TIn @in);
-
-        protected abstract TOut CreateSaveResult(TMeta metadata, TIn @in);
+    protected abstract TOut CreateSaveResult(TMeta metadata, TIn @in);
 
 
-        public async Task<TOut> StoreAsync(TIn file, CancellationToken cancellationToken = default)
-        {
-            var metadata = CreateMetadata(file);
+    public async Task<TOut> StoreAsync(TIn file, CancellationToken cancellationToken = default)
+    {
+        var metadata = CreateMetadata(file);
 
-            await metaRepository.SaveAsync(metadata, cancellationToken).ConfigureAwait(false);
-            await storeBackend.SaveAsync(file, cancellationToken).ConfigureAwait(false);
+        await _metaRepository.SaveAsync(metadata, cancellationToken).ConfigureAwait(false);
+        await _storeBackend.SaveAsync(file, cancellationToken).ConfigureAwait(false);
 
-            return CreateSaveResult(metadata, file);
-        }
+        return CreateSaveResult(metadata, file);
+    }
 
-        public async Task<bool> DeleteAsync(TKey fileId, CancellationToken cancellationToken)
-        {
-            var metadata = await metaRepository.FindAsync(fileId, cancellationToken).ConfigureAwait(false);
-            if (metadata == null) return false;
+    public async Task<bool> DeleteAsync(TKey fileId, CancellationToken cancellationToken = default)
+    {
+        var metadata = await _metaRepository.FindAsync(fileId, cancellationToken).ConfigureAwait(false);
+        if (metadata == null) return false;
 
-            await storeBackend.DeleteAsync(fileId, cancellationToken).ConfigureAwait(false);
-            await metaRepository.DeleteAsync(fileId, cancellationToken).ConfigureAwait(false);
+        await _storeBackend.DeleteAsync(metadata, cancellationToken).ConfigureAwait(false);
+        await _metaRepository.DeleteAsync(metadata, cancellationToken).ConfigureAwait(false);
 
-            return true;
-        }
+        return true;
     }
 }

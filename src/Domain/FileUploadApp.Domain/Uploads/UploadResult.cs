@@ -1,12 +1,3 @@
-﻿namespace FileUploadApp.Domain
-{
-    public class UploadResult
-    {
-        public UploadResult(UploadResultRow[] result)
-        {
-            Result = result;
-        }
+﻿namespace FileUploadApp.Domain;
 
-        public UploadResultRow[] Result { get; }
-    }
-}
+public record UploadResult(UploadResultRow?[] Result);

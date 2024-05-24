@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Data.Common;
 
-namespace FileUploadApp.Core.Authentication
-{
-    public static class DbProviderFactoriesFake
-    {
-        public static DbProviderFactory GetFactory(string providerName)
-        {
-            if (providerName.ToLowerInvariant().Equals("system.data.sqlclient"))
-            {
-                return System.Data.SqlClient.SqlClientFactory.Instance;
-            }
+using Microsoft.Data.SqlClient;
 
-            throw new ArgumentOutOfRangeException(nameof(providerName));
-        }
+namespace FileUploadApp.Authentication;
+
+public static class DbProviderFactoriesFake
+{
+    public static DbProviderFactory GetFactory(string providerName)
+    {
+        var p = providerName.ToLowerInvariant();
+
+        return p switch
+        {
+            "microsoft.data.sqlclient" => SqlClientFactory.Instance,
+            _ => throw new ArgumentOutOfRangeException(nameof(providerName))
+        };
     }
 }

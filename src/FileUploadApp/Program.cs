@@ -1,73 +1,103 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Globalization;
-using Microsoft.AspNetCore;
+using System.IO;
+
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using Serilog;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
-namespace FileUploadApp
+using Serilog;
+
+namespace FileUploadApp;
+
+public class Program
 {
-    public class Program
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
-        {
-            CreateWebHostBuilder(args).Build().Run();
-        }
+        var appBuilder = CreateHostBuilder(args)
+             ;
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .ConfigureAppConfiguration((s) => s.AddEnvironmentVariables(prefix: Strings.EnvPrefix))
-                .UseKestrel(o =>
-                {
-                    var limit = Environment.GetEnvironmentVariable(Strings.EnvUploadLim) ?? Strings.LimitNo;
+        var startup = new Startup(appBuilder.Configuration, appBuilder.Environment);
 
-                    if (limit.Equals(Strings.LimitNo))
-                        o.Limits.MaxRequestBodySize = null;
-                    else
-                    {
-                        if (long.TryParse(limit
-                            , NumberStyles.Number | NumberStyles.AllowThousands
-                            , CultureInfo.InvariantCulture
-                            , out var longLimit))
-                        {
-                            o.Limits.MaxRequestBodySize = longLimit;
-                        }
-                        else
-                        {
-                            var logger = o.ApplicationServices.GetService<ILogger<Program>>();
-                            var message =
-                                $"{Strings.EnvUploadLim} is not equals `{Strings.LimitNo}` or correct long value (current value is {limit}), rolling back to a default value";
+        startup.ConfigureServices(appBuilder.Services);
 
-                            if (logger != null)
-                            {
-                                logger.LogWarning(message);
-                            }
-                            else
-                            {
-                                Console.WriteLine(message);
-                                Debug.WriteLine(message, "Warning");
-                            }
-                        }
-                    }
-                })
-                .ConfigureLogging((hostingContext, logging) =>
-                {
-                    logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
-                    logging.AddConsole();
-                    logging.AddDebug();
-                    logging.AddSerilog();
-                })
-                .UseSerilog((builder, logConfig) =>
-                {
-                    logConfig.ReadFrom.Configuration(builder.Configuration)
-                        .Enrich
-                        .FromLogContext()
-                        .MinimumLevel.Information();
-                })
-                .UseShutdownTimeout(TimeSpan.FromSeconds(60)) // set timeout value here
-                .UseStartup<Startup>();
+        var app = appBuilder.Build();
+
+        startup.Configure(app);
+
+        app.Run();
     }
+
+    public static WebApplicationBuilder CreateHostBuilder(string[] args)
+    {
+        var options = new WebApplicationOptions
+        {
+            ContentRootPath = Directory.GetCurrentDirectory(),
+            Args = args,
+        };
+
+        var builder = WebApplication.CreateBuilder(options);
+
+        builder.Configuration
+            .AddEnvironmentVariables(prefix: Strings.EnvPrefix)
+            .AddCommandLine(args);
+
+        builder.Host.UseSerilog((ctx, lc) => lc
+                .WriteTo.Console()
+                .ReadFrom.Configuration(ctx.Configuration))
+            .UseDefaultServiceProvider(options => options.ValidateOnBuild = true);
+
+        builder.WebHost
+            .ConfigureKestrel(ConfigureKestrelSettings)
+            .UseShutdownTimeout(TimeSpan.FromSeconds(60)) // set timeout value here
+            .UseIISIntegration()
+            .UseIIS()
+        ;
+        return builder;
+
+    }
+
+    private static void ConfigureKestrelSettings(KestrelServerOptions options)
+    {
+        options.AddServerHeader = false;
+        var limit = Environment.GetEnvironmentVariable(Strings.EnvUploadLim) ?? Strings.LimitNo;
+
+        if (limit.Equals(Strings.LimitNo))
+        {
+            options.Limits.MaxRequestBodySize = null;
+        }
+        else
+        {
+            if (long.TryParse(limit
+                , NumberStyles.Number | NumberStyles.AllowThousands
+                , CultureInfo.InvariantCulture
+                , out var longLimit))
+            {
+                options.Limits.MaxRequestBodySize = longLimit;
+            }
+            else
+            {
+                var logger = options.ApplicationServices.GetService<ILogger<Program>>();
+                var message =
+                    $"{Strings.EnvUploadLim} is not equals `{Strings.LimitNo}` or correct long value (current value is {limit}), rolling back to a default value";
+
+                if (logger != null)
+                {
+                    logger.LogWarning(message);
+                }
+                else
+                {
+                    Console.WriteLine(message);
+                    Debug.WriteLine(message, "Warning");
+                }
+            }
+        }
+    }
+
+
 }

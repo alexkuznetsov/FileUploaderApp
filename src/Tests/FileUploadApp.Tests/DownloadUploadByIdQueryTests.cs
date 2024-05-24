@@ -1,83 +1,85 @@
-﻿using FileUploadApp.Domain;
-using FileUploadApp.Requests;
+﻿using System;
+using System.IO;
+using System.Threading.Tasks;
+
+using FileUploadApp.Domain;
+using FileUploadApp.Features.Queries;
 using FileUploadApp.Storage;
+
 using MediatR;
+
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Threading.Tasks;
 
-namespace FileUploadApp.Tests
+namespace FileUploadApp.Tests;
+
+[TestClass]
+public class DownloadUploadByIdQueryTests : TestData
 {
-    [TestClass]
-    public class DownloadUploadByIdQueryTests : TestData
+    public TestContext TestContext { get; set; } = null!;
+
+    private IServiceProvider _serviceProvider = null!;
+
+    [TestInitialize]
+    public void Initialize()
     {
-        public TestContext TestContext { get; set; }
-
-        private IServiceProvider serviceProvider;
-
-        [TestInitialize]
-        public void Initialize()
+        _serviceProvider = ContainerBuilder.Create((s) =>
         {
-            serviceProvider = ContainerBuilder.Create((s) =>
-            {
-                #region Replace by mocked
+            #region Replace by mocked
 
-                var fakeMetaStore = CreateFakeMetadataStore();
-                var sd = new ServiceDescriptor(
-                    typeof(IStoreBackend<Guid, Metadata>)
-                    , (_) => fakeMetaStore
-                    , ServiceLifetime.Scoped);
+            var fakeMetaStore = CreateFakeMetadataStore();
+            var sd = new ServiceDescriptor(
+                typeof(IStoreBackend<Guid, Metadata, Metadata>)
+                , (_) => fakeMetaStore
+                , ServiceLifetime.Scoped);
 
-                s.Replace(sd);
+            s.Replace(sd);
 
-                var fakeUploadsStore = CreateFakeUploadStore();
+            var fakeUploadsStore = CreateFakeUploadStore();
 
-                sd = new ServiceDescriptor(
-                    typeof(IStoreBackend<Guid, Upload>)
-                    , (_) => fakeUploadsStore
-                    , ServiceLifetime.Scoped);
+            sd = new ServiceDescriptor(
+                typeof(IStoreBackend<Guid, Metadata, Upload>)
+                , (_) => fakeUploadsStore
+                , ServiceLifetime.Scoped);
 
-                s.Replace(sd);
+            s.Replace(sd);
 
-                var fakeFileStmAdapter = CreateFakeStreamAdapter();
+            var fakeFileStmAdapter = CreateFakeStreamAdapter();
 
-                sd = new ServiceDescriptor(
-                    typeof(IFileStreamProvider<Guid, StreamAdapter>)
-                    , (_) => fakeFileStmAdapter
-                    , ServiceLifetime.Scoped);
+            sd = new ServiceDescriptor(
+                typeof(IFileStreamProvider<Guid, Stream>)
+                , (_) => fakeFileStmAdapter
+                , ServiceLifetime.Scoped);
 
-                s.Replace(sd);
+            s.Replace(sd);
 
-                #endregion
-            });
-        }
+            #endregion
+        });
+    }
 
-        [TestCleanup]
-        public void Cleanup()
+    [TestCleanup]
+    public void Cleanup()
+    {
+        if (_serviceProvider is IDisposable d)
         {
-            if (serviceProvider is IDisposable d)
-            {
-                d.Dispose();
-            }
+            d.Dispose();
         }
+    }
 
-        [TestMethod]
-        public async Task Test_QueryShouldReturnValidEntity()
-        {
-            var req = new DownloadUploadByIdQuery(RequestId);
+    [TestMethod]
+    public async Task Test_QueryShouldReturnValidEntity()
+    {
+        var req = new DownloadUploadById.Query(RequestId);
 
-            using (var scope = serviceProvider.CreateScope())
-            {
-                var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-                var response = await mediator.Send(req);
+        using var scope = _serviceProvider.CreateScope();
 
-                Assert.IsNotNull(response);
-                Assert.AreEqual(response.Id, RequestId);
-                Assert.AreEqual(response.Name, FakeUpload.Name);
-                Assert.AreEqual(response.ContentType, FakeUpload.ContentType);
-            }
-        }
+        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        var response = await mediator.Send(req);
+
+        Assert.IsNotNull(response);
+        Assert.AreEqual(response.Id, RequestId);
+        Assert.AreEqual(response.Name, FakeUpload.Name);
+        Assert.AreEqual(response.ContentType, FakeUpload.ContentType);
     }
 }

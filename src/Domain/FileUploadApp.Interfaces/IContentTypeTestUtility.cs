@@ -1,12 +1,10 @@
 ﻿using System;
 
-namespace FileUploadApp.Interfaces
+namespace FileUploadApp.Interfaces;
+
+public interface IContentTypeTestUtility
 {
-    public interface IContentTypeTestUtility
-    {
-        string DetectContentType(ReadOnlySpan<byte> bytes);
+    string DetectContentType(ReadOnlySpan<byte> bytes);
 
-        bool IsAllowed(string contentType);
-    }
-
+    bool IsAllowed(string contentType);
 }

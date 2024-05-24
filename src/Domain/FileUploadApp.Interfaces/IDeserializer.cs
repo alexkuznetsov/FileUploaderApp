@@ -1,7 +1,6 @@
-﻿namespace FileUploadApp.Interfaces
+﻿namespace FileUploadApp.Interfaces;
+
+public interface IDeserializer
 {
-    public interface IDeserializer
-    {
-        TObject Deserialize<TObject>(string payload);
-    }
+    TObject? Deserialize<TObject>(string payload);
 }

@@ -21,11 +21,11 @@ ALTER TABLE [dbo].[users] ADD  DEFAULT (getdate()) FOR [created_at]
 GO
 
 --- Insert client for authentication
---- rex / 1qaz!QAZ
+--- admin / 1qaz!QAZ
 
 SET IDENTITY_INSERT [dbo].[users] ON 
 GO
-INSERT [dbo].[users] ([id], [created_at], [updated_at], [username], [passwhash]) VALUES (1, CAST(N'2019-04-08T18:31:18.7866667' AS DateTime2), NULL, N'rex', N'ACAtzWwMbSeKmzfKNcL5SNAy09YbZbEJ4oelQWY+x/O9ai8czW0Dx79HplyLTKGr0A==')
+INSERT [dbo].[users] ([id], [created_at], [updated_at], [username], [passwhash]) VALUES (1, CAST(N'2019-04-08T18:31:18.7866667' AS DateTime2), NULL, N'admin', N'ACAtzWwMbSeKmzfKNcL5SNAy09YbZbEJ4oelQWY+x/O9ai8czW0Dx79HplyLTKGr0A==')
 GO
 SET IDENTITY_INSERT [dbo].[users] OFF
 GO
