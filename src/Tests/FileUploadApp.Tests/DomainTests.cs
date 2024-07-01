@@ -40,7 +40,7 @@ public class DomainTests
         var @object = deserializer.Deserialize<UploadRequest>(json);
 
         Assert.IsNotNull(@object);
-        Assert.IsTrue(@object.Files.Length == 1);
+        Assert.IsTrue(@object.Files?.Length == 1);
     }
 
     [TestMethod]
@@ -62,7 +62,7 @@ public class DomainTests
         var @object = deserializer.Deserialize<UploadRequest>(json);
 
         Assert.IsNotNull(@object);
-        Assert.IsTrue(@object.Files.Length == 1);
-        Assert.IsTrue(@object.Links.Length == 2);
+        Assert.IsTrue(@object.Files?.Length == 1);
+        Assert.IsTrue(@object.Links?.Length == 2);
     }
 }

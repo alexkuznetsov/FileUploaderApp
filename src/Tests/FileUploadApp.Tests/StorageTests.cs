@@ -59,7 +59,7 @@ public class StorageTests : TestData
         var storage = _serviceProvider.GetRequiredService<IStore<Guid, Upload, UploadResultRow>>();
 
         var storedOrigin = await storage.ReceiveAsync(FakeUpload.Id);
-        var storedPReview = await storage.ReceiveAsync(FakeUpload.PreviewId);
+        var storedPReview = await storage.ReceiveAsync(FakeUpload.PreviewId!.Value!);
 
         Assert.IsTrue(storedOrigin != null);
         Assert.AreEqual(storedOrigin.ContentType, FakeUpload.ContentType);

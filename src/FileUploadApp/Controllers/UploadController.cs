@@ -91,12 +91,9 @@ public class UploadController : BaseApiController
         if (uploadedFiles.Length == 0)
             return NotFound();
 
-        var uploadCommand = new UploadFiles.Event(uploadedFiles);
-        var receiveQuery = new GetUploadedResults.Query(uploadedFiles);
+        await PublishAsync(new UploadFiles.Event(uploadedFiles), cancellationToken);
 
-        await PublishAsync(uploadCommand, cancellationToken);
-
-        var uploadResult = await SendAsync(receiveQuery, cancellationToken);
+        var uploadResult = await SendAsync(new GetUploadedResults.Query(uploadedFiles), cancellationToken);
 
         return Ok(uploadResult.Result.Where(x => x != null).Select(x => new
         {

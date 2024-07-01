@@ -60,8 +60,10 @@ public abstract class TestData
     protected static IStoreBackend<Guid, Metadata, Upload> CreateFakeUploadStore()
     {
         var mock = new Mock<IStoreBackend<Guid, Metadata, Upload>>();
+#pragma warning disable CA2012 // Use ValueTasks correctly
         mock.Setup(x => x.FindAsync(It.Is<Guid>(y => y == RequestId), It.IsAny<CancellationToken>()))
-            .Returns(Task.FromResult<Upload?>(FakeUpload));
+            .Returns(ValueTask.FromResult<Upload?>(FakeUpload));
+#pragma warning restore CA2012 // Use ValueTasks correctly
 
         return mock.Object;
     }
@@ -70,8 +72,10 @@ public abstract class TestData
     {
         var mock = new Mock<IStoreBackend<Guid, Metadata, Metadata>>();
 
+#pragma warning disable CA2012 // Use ValueTasks correctly
         mock.Setup(x => x.FindAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
-            .Returns(Task.FromResult<Metadata?>(DefaultMetadata));
+            .Returns(ValueTask.FromResult<Metadata?>(DefaultMetadata));
+#pragma warning restore CA2012 // Use ValueTasks correctly
 
         return mock.Object;
     }

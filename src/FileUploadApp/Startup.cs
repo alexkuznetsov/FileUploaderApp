@@ -64,7 +64,7 @@ public class Startup
             var c = s.GetRequiredService<AppConfiguration>();
             client.DefaultRequestHeaders.Add(ContentDownloader.UserAgentField
                 , c.DefaultUserAgent);
-        });
+        }).AddStandardResilienceHandler();
 
         services.AddSingleton(Configuration.BindTo<StorageConfiguration>(FileStoreNode));
 

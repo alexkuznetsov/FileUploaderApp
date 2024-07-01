@@ -19,7 +19,7 @@ public class FilesystemStoreBackend : FileStoreBackendBase
     {
     }
 
-    public Task<Upload?> FindAsync(Guid key, CancellationToken cancellationToken = default)
+    public ValueTask<Upload?> FindAsync(Guid key, CancellationToken cancellationToken = default)
         => throw new NotImplementedException();
 
     public Stream GetStream(Guid id)

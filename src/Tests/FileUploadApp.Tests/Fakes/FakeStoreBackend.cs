@@ -13,10 +13,10 @@ internal class FakeStoreBackend : IStoreBackend<Guid, Metadata, Upload>, IFileSt
 {
     private readonly Dictionary<Guid, Upload> _keyValuePairs = [];
 
-    public Task<Upload?> FindAsync(Guid key, CancellationToken cancellationToken = default)
+    public ValueTask<Upload?> FindAsync(Guid key, CancellationToken cancellationToken = default)
     {
         _keyValuePairs.TryGetValue(key, out var value);
-        return Task.FromResult(value);
+        return ValueTask.FromResult(value);
     }
 
     public Task DeleteAsync(Metadata key, CancellationToken cancellationToken = default)

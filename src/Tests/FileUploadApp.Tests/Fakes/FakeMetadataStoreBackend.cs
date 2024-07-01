@@ -11,11 +11,11 @@ internal class FakeMetadataStoreBackend : IStoreBackend<Guid, Metadata, Metadata
 {
     private readonly Dictionary<Guid, Metadata> _keyValuePairs = [];
 
-    public Task<Metadata?> FindAsync(Guid key, CancellationToken cancellationToken = default)
+    public ValueTask<Metadata?> FindAsync(Guid key, CancellationToken cancellationToken = default)
     {
         _keyValuePairs.TryGetValue(key, out var value);
 
-        return Task.FromResult(value);
+        return ValueTask.FromResult(value);
     }
 
     public Task DeleteAsync(Metadata key, CancellationToken cancellationToken = default)

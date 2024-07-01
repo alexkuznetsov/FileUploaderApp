@@ -18,7 +18,7 @@ public class GetUploadedResults
         public Query(IEnumerable<Upload> uploads)
         {
             Ids = uploads
-                .Select(x => new Tuple<Guid, Guid>(x.Id, x.PreviewId))
+                .Select(x => new Tuple<Guid, Guid>(x.Id, x.PreviewId.GetValueOrDefault()))
                 .ToArray();
         }
 

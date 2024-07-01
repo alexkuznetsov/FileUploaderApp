@@ -1,4 +1,7 @@
-﻿using System.Text.Json;
+﻿using System.IO;
+using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
 
 using FileUploadApp.Interfaces;
 
@@ -15,4 +18,10 @@ public class Deserializer : IDeserializer
 
     public TObject? Deserialize<TObject>(string payload) =>
         JsonSerializer.Deserialize<TObject>(payload, _jsonSerializerOptions);
+
+    public async ValueTask<TObject?> DeserializeAsync<TObject>(string file, CancellationToken cancellationToken = default)
+    {
+        using var f = File.OpenRead(file);
+        return await JsonSerializer.DeserializeAsync<TObject>(f, _jsonSerializerOptions, cancellationToken);
+    }
 }

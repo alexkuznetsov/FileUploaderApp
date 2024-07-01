@@ -7,11 +7,11 @@ public class Upload : FileDescriptor
 {
     public const string PreviewPrefix = "preview_";
 
-    public Guid PreviewId { get; }
+    public Guid? PreviewId { get; }
 
     public Upload(
        Guid id,
-       Guid previewId,
+       Guid? previewId,
        uint num,
        string name,
        string contentType,

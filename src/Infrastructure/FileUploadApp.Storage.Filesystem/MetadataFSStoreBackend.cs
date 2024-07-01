@@ -26,29 +26,22 @@ public class MetadataFsStoreBackend : FileStoreBackendBase, IStoreBackend<Guid, 
         this._deserializer = deserializer;
     }
 
-    public async Task SaveAsync(Metadata file, CancellationToken cancellationToken = default)
+    public Task SaveAsync(Metadata file, CancellationToken cancellationToken = default)
     {
         var path = BuildPathAndCheckDir(file.Id, true);
         var specFilePath = FormatSpecFilePath(path);
 
-        using var writer = File.CreateText(specFilePath);
-        var contents = _serializer.Serialize(file);
-
-        await writer.WriteAsync(contents.AsMemory(), cancellationToken)
-            .ConfigureAwait(false);
+        return _serializer.SerializeAsync(file, specFilePath, cancellationToken);
     }
 
-    public async Task<Metadata?> FindAsync(Guid key, CancellationToken cancellationToken = default)
+    public ValueTask<Metadata?> FindAsync(Guid key, CancellationToken cancellationToken = default)
     {
         var path = BuildPathAndCheckDir(key, false);
         var specFilePath = FormatSpecFilePath(path);
 
         if (!File.Exists(specFilePath)) return default;
 
-        var contents = await File.ReadAllTextAsync(specFilePath, cancellationToken)
-            .ConfigureAwait(false);
-
-        return _deserializer.Deserialize<Metadata>(contents);
+        return _deserializer.DeserializeAsync<Metadata>(specFilePath, cancellationToken);
     }
 
     public Task DeleteAsync(Metadata metadata, CancellationToken cancellationToken = default)

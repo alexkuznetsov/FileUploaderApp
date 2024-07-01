@@ -70,7 +70,7 @@ public class UploadFiles
                     , _appConfiguration.PreviewContentType);
 
             var preview = new Upload(
-                  id: uploadModel.PreviewId
+                  id: uploadModel.PreviewId.GetValueOrDefault()
                 , previewId: Guid.Empty
                 , num: uploadModel.Number
                 , name: $"{Upload.PreviewPrefix}{uploadModel.Name}"

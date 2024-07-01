@@ -1,3 +1,4 @@
 ﻿namespace FileUploadApp.Domain.Raw;
 
-public record UploadRequest(Base64FilePayload[] Files, string[] Links);
+public record UploadRequest(Base64FilePayload[]? Files = default,
+    string[]? Links = default);

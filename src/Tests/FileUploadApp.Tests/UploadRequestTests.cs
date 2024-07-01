@@ -43,9 +43,9 @@ public class UploadRequestTests
         var @object = deserializer.Deserialize<UploadRequest>(json);
 
         Assert.IsNotNull(@object);
-        Assert.IsTrue(@object.Files.Length == 1);
+        Assert.IsTrue(@object.Files?.Length == 1);
 
-        var data = @object.Files.AsFileDescriptors(contentTypeTestUtility);
+        var data = @object.Files?.AsFileDescriptors(contentTypeTestUtility);
 
         Assert.IsNotNull(data);
         Assert.IsTrue(data.Count() == 1);
@@ -61,9 +61,9 @@ public class UploadRequestTests
         var @object = deserializer.Deserialize<UploadRequest>(json);
 
         Assert.IsNotNull(@object);
-        Assert.IsTrue(@object.Files.Length == 1);
+        Assert.IsTrue(@object.Files?.Length == 1);
 
-        var data = @object.Files.AsFileDescriptors(contentTypeTestUtility);
+        var data = @object.Files?.AsFileDescriptors(contentTypeTestUtility);
 
         Assert.IsNotNull(data);
         Assert.IsTrue(data.Count() == 1);
@@ -79,9 +79,9 @@ public class UploadRequestTests
         var @object = deserializer.Deserialize<UploadRequest>(json);
 
         Assert.IsNotNull(@object);
-        Assert.IsTrue(@object.Files.Length == 1);
+        Assert.IsTrue(@object.Files?.Length == 1);
 
-        var data = @object.Files.AsFileDescriptors(contentTypeTestUtility);
+        var data = @object.Files?.AsFileDescriptors(contentTypeTestUtility);
 
         Assert.IsNotNull(data);
         Assert.IsTrue(data.Count() == 1);
@@ -97,9 +97,9 @@ public class UploadRequestTests
         var @object = deserializer.Deserialize<UploadRequest>(json);
 
         Assert.IsNotNull(@object);
-        Assert.IsTrue(@object.Files.Length == 1);
+        Assert.IsTrue(@object.Files?.Length == 1);
 
-        var data = @object.Files.AsFileDescriptors(contentTypeTestUtility);
+        var data = @object.Files?.AsFileDescriptors(contentTypeTestUtility);
 
         Assert.IsNotNull(data);
         Assert.IsTrue(data.Count() == 1);
@@ -114,8 +114,8 @@ public class UploadRequestTests
         var @object = deserializer.Deserialize<UploadRequest>(json);
 
         Assert.IsNotNull(@object);
-        Assert.IsTrue(@object.Files.Length == 1);
-        Assert.IsTrue(@object.Links.Length == 2);
+        Assert.IsTrue(@object.Files?.Length == 1);
+        Assert.IsTrue(@object.Links?.Length == 2);
 
         Assert.IsTrue(Array.IndexOf(@object.Links, "http://localhost/1.jpg") == 0);
         Assert.IsTrue(Array.IndexOf(@object.Links, "http://localhost/2.bmp") == 1);
@@ -132,9 +132,9 @@ public class UploadRequestTests
         var @object = deserializer.Deserialize<UploadRequest>(json);
 
         Assert.IsNotNull(@object);
-        Assert.IsTrue(@object.Files.Length == 1);
-        Assert.IsTrue(@object.Links.Length == 2);
-        _ = @object.Files.AsFileDescriptors(contentTypeTestUtility).ToArray();
+        Assert.IsTrue(@object.Files?.Length == 1);
+        Assert.IsTrue(@object.Links?.Length == 2);
+        _ = @object.Files?.AsFileDescriptors(contentTypeTestUtility).ToArray();
     }
 
     [TestMethod]
@@ -148,9 +148,9 @@ public class UploadRequestTests
         var @object = deserializer.Deserialize<UploadRequest>(json);
 
         Assert.IsNotNull(@object);
-        Assert.IsTrue(@object.Files.Length == 1);
-        Assert.IsTrue(@object.Links.Length == 2);
-        _ = @object.Files.AsFileDescriptors(contentTypeTestUtility).ToArray();
+        Assert.IsTrue(@object.Files?.Length == 1);
+        Assert.IsTrue(@object.Links?.Length == 2);
+        _ = @object.Files?.AsFileDescriptors(contentTypeTestUtility).ToArray();
     }
 
     [TestMethod]
@@ -164,9 +164,9 @@ public class UploadRequestTests
         var @object = deserializer.Deserialize<UploadRequest>(json);
 
         Assert.IsNotNull(@object);
-        Assert.IsTrue(@object.Files.Length == 1);
-        Assert.IsTrue(@object.Links.Length == 2);
-        _ = @object.Files.AsFileDescriptors(contentTypeTestUtility).ToArray();
+        Assert.IsTrue(@object.Files?.Length == 1);
+        Assert.IsTrue(@object.Links?.Length == 2);
+        _ = @object.Files?.AsFileDescriptors(contentTypeTestUtility).ToArray();
     }
 
     [TestMethod]
@@ -180,9 +180,9 @@ public class UploadRequestTests
         var @object = deserializer.Deserialize<UploadRequest>(json);
 
         Assert.IsNotNull(@object);
-        Assert.IsTrue(@object.Files.Length == 1);
-        Assert.IsTrue(@object.Links.Length == 2);
-        _ = @object.Files.AsFileDescriptors(contentTypeTestUtility).ToArray();
+        Assert.IsTrue(@object.Files?.Length == 1);
+        Assert.IsTrue(@object.Links?.Length == 2);
+        _ = @object.Files?.AsFileDescriptors(contentTypeTestUtility).ToArray();
     }
 
     [TestMethod]
@@ -196,9 +196,9 @@ public class UploadRequestTests
         var @object = deserializer.Deserialize<UploadRequest>(json);
 
         Assert.IsNotNull(@object);
-        Assert.IsTrue(@object.Files.Length == 1);
-        Assert.IsTrue(@object.Links.Length == 2);
-        _ = @object.Files.AsFileDescriptors(contentTypeTestUtility).ToArray();
+        Assert.IsTrue(@object.Files?.Length == 1);
+        Assert.IsTrue(@object.Links?.Length == 2);
+        _ = @object.Files?.AsFileDescriptors(contentTypeTestUtility).ToArray();
     }
 
     [TestMethod]
@@ -212,8 +212,8 @@ public class UploadRequestTests
         var @object = deserializer.Deserialize<UploadRequest>(json);
 
         Assert.IsNotNull(@object);
-        Assert.IsTrue(@object.Files.Length == 1);
-        Assert.IsTrue(@object.Links.Length == 2);
-        _ = @object.Files.AsFileDescriptors(contentTypeTestUtility).ToArray();
+        Assert.IsTrue(@object.Files?.Length == 1);
+        Assert.IsTrue(@object.Links?.Length == 2);
+        _ = @object.Files?.AsFileDescriptors(contentTypeTestUtility).ToArray();
     }
 }
