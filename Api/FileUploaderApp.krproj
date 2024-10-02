@@ -1,0 +1,27 @@
+{
+  "id": "4d5e6804-f809-4983-bb2a-550eb409ab0e",
+  "importStreams": [
+    {
+      "id": "48dbaa2c-613d-46dd-a025-c6048d3ff9d7",
+      "name": "open-api-url-importer",
+      "importerName": "OpenApiUrlImporter",
+      "createMissingOperations": true,
+      "options": {
+        "url": "https://localhost:8081/swagger/v1/swagger.json",
+        "disableAutoRedirect": false,
+        "disableServerCertificateValidation": false
+      }
+    }
+  ],
+  "authConfigs": [
+    {
+      "name": "Bearer",
+      "providerName": "static",
+      "id": "d6d347ce-054d-49ff-8a4e-fe654961e906",
+      "options": {
+        "value": "Bearer {{env.CurrentJWT}}"
+      }
+    }
+  ],
+  "certificates": []
+}

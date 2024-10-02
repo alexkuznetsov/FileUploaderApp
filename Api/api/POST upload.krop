@@ -1,0 +1,25 @@
+{
+  "details": {
+    "path": "/api/upload",
+    "method": "POST",
+    "importedOperationId": "POST /api/upload",
+    "headers": [
+      {
+        "key": "Content-Type",
+        "value": "application/json"
+      }
+    ],
+    "pathParams": []
+  },
+  "requests": [
+    {
+      "location": "POST upload-request.json",
+      "contentType": "json"
+    }
+  ],
+  "authId": "d6d347ce-054d-49ff-8a4e-fe654961e906",
+  "operationType": "unary",
+  "invokerName": "rest",
+  "typeHint": "POST",
+  "importStreamId": "48dbaa2c-613d-46dd-a025-c6048d3ff9d7"
+}

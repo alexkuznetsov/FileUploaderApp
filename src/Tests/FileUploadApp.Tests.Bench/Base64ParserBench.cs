@@ -2,7 +2,7 @@
 
 using BenchmarkDotNet.Attributes;
 
-using FileUploadApp.Core.Encoding;
+using FileUploadApp.Application.Common.Encoding;
 
 namespace FileUploadApp.Tests.Bench;
 

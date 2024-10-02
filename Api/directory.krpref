@@ -1,0 +1,13 @@
+{
+  "settings": [
+    {
+      "authId": "d6d347ce-054d-49ff-8a4e-fe654961e906",
+      "options": {
+        "rest": {
+          "endpoint": "https://localhost:8081/",
+          "pathParams": []
+        }
+      }
+    }
+  ]
+}

@@ -2,13 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 
-using FileUploadApp.Authentication;
-using FileUploadApp.Authentication.Queries;
-using FileUploadApp.Core.Serialization;
+using FileUploadApp.Application;
+using FileUploadApp.Application.Services;
 using FileUploadApp.Domain;
-using FileUploadApp.Domain.Raw;
-using FileUploadApp.Features;
-using FileUploadApp.Features.Services;
 using FileUploadApp.Interfaces;
 using FileUploadApp.Storage;
 using FileUploadApp.Storage.Filesystem;
@@ -25,7 +21,9 @@ internal class ContainerBuilder
 {
     private static readonly Dictionary<string, string?> ArrayDict = new()
     {
-        {"fileStore:BasePath",         "d:\\temp\\uploads"            },
+        
+
+        {"fileStore:BasePath",         "e:\\temp\\uploads"            },
         {"conf:AllowedContentTypes:0", "image/jpeg"                   },
         {"conf:AllowedContentTypes:1", "image/png"                    },
         {"conf:AllowedContentTypes:2", "image/bmp"                    },
@@ -39,7 +37,13 @@ internal class ContainerBuilder
         {"Mappings:Qk0="  ,     "image/bmp"                   },
         {"Mappings:SUkq"  ,     "image/tiff"                  },
         {"Mappings:R0lG"  ,     "image/gif"                   },
-        {"Mappings:N3q8rw=="  , "application/x-7z-compressed" }
+        {"Mappings:N3q8rw=="  , "application/x-7z-compressed" },
+
+        { "jwt:SecretKey"       ,   "as[pd[a0_)_22e89893edjaskld;ss" },
+        { "jwt:Issuer"          ,   "FileUploadApp" },
+        { "jwt:ExpiryMinutes"   ,   "60" },
+        { "jwt:ValidateLifetime",   "true" },
+        { "jwt:ValidateAudience",   "false" },
     };
 
     private static class ConfigConstants
@@ -65,20 +69,10 @@ internal class ContainerBuilder
 
         var configuration = CreateConfiguration(services);
 
-        services.AddSingleton(configuration.BindTo<AppConfiguration>(ConfigConstants.ConfNode));
-        services.AddSingleton<IContentTypeTestUtility, ContentTypeTestUtility>();
-        services.AddSingleton<ISerializer, Serializer>();
-        services.AddSingleton<IDeserializer, Deserializer>();
 
-        services.AddHttpClient<ContentDownloader>((s, client) =>
-        {
-            var c = s.GetRequiredService<AppConfiguration>();
-            client.DefaultRequestHeaders.Add(ContentDownloader.UserAgentField
-                , c.DefaultUserAgent);
-        });
-
-        services.AddSingleton<IContentDownloader<DownloadUriResponse>, ContentDownloader>();
-        services.AddSingleton(configuration.BindTo<StorageConfiguration>(ConfigConstants.FileStoreNode));
+        services.AddSingleton(configuration);
+        services.AddApplication(configuration);
+        services.AddFileStorage(configuration);
 
         var fakeStoreBackend = new FakeStoreBackend();
 
@@ -87,11 +81,7 @@ internal class ContainerBuilder
         services.AddSingleton<IFileStreamProvider<Guid, Stream>, FakeStoreBackend>((_) => fakeStoreBackend);
         services.AddSingleton<IStore<Guid, Upload, UploadResultRow>, FileSystemStore>();
 
-        services.AddMediatR(c => c.RegisterServicesFromAssemblies(
-            [
-                  typeof(GenericEvent).Assembly
-                , typeof(CheckUser.Handler).Assembly
-            ]));
+
 
         Log.Logger = new LoggerConfiguration()
            .ReadFrom.Configuration(configuration)
@@ -100,8 +90,8 @@ internal class ContainerBuilder
 
         services.AddLogging((c) => c.AddSerilog(Log.Logger));
 
-        services.AddJwtAuthenticationEndpointWithInMemoryService(configuration, (o) => o.WithUser("admin", "1qaz!QAZ")
-);
+        services.Configure<InMemoryCheckUserServiceOptions>((o)
+            => o.WithUser("admin", "1qaz!QAZ"));
 
         configureServices?.Invoke(services);
 

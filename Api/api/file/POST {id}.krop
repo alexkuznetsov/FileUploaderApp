@@ -1,0 +1,22 @@
+{
+  "details": {
+    "path": "/api/file/{id}",
+    "method": "POST",
+    "importedOperationId": "POST /api/file/{id}",
+    "pathParams": [
+      {
+        "key": "id",
+        "value": "Jewelery Norway Persistent"
+      }
+    ]
+  },
+  "requests": [
+    {
+      "contentType": "none"
+    }
+  ],
+  "operationType": "unary",
+  "invokerName": "rest",
+  "typeHint": "POST",
+  "importStreamId": "48dbaa2c-613d-46dd-a025-c6048d3ff9d7"
+}

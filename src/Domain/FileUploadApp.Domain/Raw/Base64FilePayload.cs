@@ -2,9 +2,15 @@
 
 namespace FileUploadApp.Domain.Raw;
 
-public record Base64FilePayload(
-    [property: Required][property: MinLength(3)] string Name,
-    [property: Required][property: MinLength(3)] string RawData)
+public class Base64FilePayload
 {
     public const string DataToken = "data";
+
+    [Required]
+    [MinLength(3)]
+    public required string Name{ get; init; }
+
+    [Required]
+    [MinLength(3)]
+    public required string RawData { get; init; }
 }

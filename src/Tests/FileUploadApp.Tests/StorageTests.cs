@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 
+using FileUploadApp.Application.Uploading.Commands;
 using FileUploadApp.Domain;
-using FileUploadApp.Features.Commands;
 using FileUploadApp.Interfaces;
 
 using MediatR;

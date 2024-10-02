@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-using FileUploadApp.Authentication;
-using FileUploadApp.Authentication.Queries;
+using FileUploadApp.Application.Authentication.Queries;
 using FileUploadApp.Domain;
+using FileUploadApp.Interfaces;
 
 using MediatR;
 
@@ -74,7 +74,7 @@ public class CheckUserServiceTests
         var result = await mediator.Send(new CheckUser.Query("admin", "1qaz!QAZ"));
 
         Assert.IsNotNull(result);
-        Assert.AreEqual(result.User.Username, "admin");
+        Assert.AreEqual(result.Result.Username, "admin");
     }
 
     [TestMethod]

@@ -18,11 +18,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" Version="0.13.12" />
+    <PackageReference Include="BenchmarkDotNet" Version="0.14.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Infrastructure\FileUploadApp.Core\FileUploadApp.Core.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\FileUploadApp.Application\FileUploadApp.Application.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 
+using FileUploadApp.Application.Uploading.Commands;
 using FileUploadApp.Domain;
 using FileUploadApp.Domain.Raw;
-using FileUploadApp.Features.Commands;
 using FileUploadApp.Interfaces;
 
 using MediatR;
@@ -34,7 +34,7 @@ public class DownloadUriQueryTests : TestData
 
             var fakeHandler = CreateFakeRequestHandlerForDownloadUriQuery();
             sd = new ServiceDescriptor(
-                  typeof(IRequestHandler<DownloadUri.Command, Upload>)
+                  typeof(IRequestHandler<DownloadUri.Command, DownloadUri.Result>)
                 , (_) => fakeHandler
                 , ServiceLifetime.Scoped);
 
@@ -59,7 +59,8 @@ public class DownloadUriQueryTests : TestData
         using var scope = _serviceProvider.CreateScope();
 
         var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-        var response = await mediator.Send(req);
+        var result = await mediator.Send(req);
+        var response = result.Result;
 
         Assert.IsNotNull(response);
         Assert.AreEqual(response.ContentType, FakeUpload.ContentType);

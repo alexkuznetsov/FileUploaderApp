@@ -2,8 +2,8 @@
 using System.IO;
 using System.Threading.Tasks;
 
+using FileUploadApp.Application.Uploading.Queries;
 using FileUploadApp.Domain;
-using FileUploadApp.Features.Queries;
 using FileUploadApp.Storage;
 
 using MediatR;

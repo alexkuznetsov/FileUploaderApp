@@ -1,18 +1,12 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
+# 17
 VisualStudioVersion = 17.3.32804.467
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileUploadApp", "FileUploadApp\FileUploadApp.csproj", "{6346C4D7-F278-4D5B-BC34-AA11D0488660}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileUploadApp.Domain", "Domain\FileUploadApp.Domain\FileUploadApp.Domain.csproj", "{EBC19B3C-6027-4EA7-9A03-C866562159AE}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{E28B5E71-A290-4CD2-850D-A856175D31BA}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{2CCF48F5-DAB2-41E1-982F-F023C1ED9215}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileUploadApp.Core", "Infrastructure\FileUploadApp.Core\FileUploadApp.Core.csproj", "{5F8BAA2D-493F-4B09-90D5-54237487F720}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileUploadApp.Features", "Infrastructure\FileUploadApp.Handlers\FileUploadApp.Features.csproj", "{21B6853F-073B-4B5A-AEBD-58EE4A9E2C11}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileUploadApp.Interfaces", "Domain\FileUploadApp.Interfaces\FileUploadApp.Interfaces.csproj", "{EE234C8E-DEA8-4B01-8F4E-F8CF772E6BB1}"
 EndProject
@@ -24,24 +18,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{3D3BAEED
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileUploadApp.Tests", "Tests\FileUploadApp.Tests\FileUploadApp.Tests.csproj", "{04A604CF-3760-489B-8DFD-72CD849076D7}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Storage", "Storage", "{E1B96CCF-9C67-4A87-92E5-334D2731E04E}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileUploadApp.Storage", "Infrastructure\FileUploadApp.Storage\FileUploadApp.Storage.csproj", "{86F7BE34-2015-4545-902C-8A0E434B12CC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileUploadApp.Tests.Bench", "Tests\FileUploadApp.Tests.Bench\FileUploadApp.Tests.Bench.csproj", "{C12DA9DF-4D46-4A53-B854-6FB0E539D320}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AuthServer", "AuthServer", "{10FED739-5DC1-4902-954C-340281836935}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileUploadApp.Authentication", "AuthServer\FileUploadApp.Core.Authentication\FileUploadApp.Authentication.csproj", "{CCDD2FF5-DFF1-4D29-923C-BF369087464D}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{3D5A3714-0AA5-4AD0-988F-A94D7345B94B}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		..\docker-compose-local.yml = ..\docker-compose-local.yml
 		..\docker-compose.yml = ..\docker-compose.yml
 		..\Dockerfile = ..\Dockerfile
 		..\README.md = ..\README.md
 		..\users.sql = ..\users.sql
-		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{935E19D5-3BB9-4A0F-91FD-DC1C120E46E9}"
@@ -62,6 +50,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "requests", "requests", "{E5
 		0_auth.http = 0_auth.http
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileUploadApp.Application", "Infrastructure\FileUploadApp.Application\FileUploadApp.Application.csproj", "{F04DAEB4-1025-4253-844D-C98EEF8D278A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "App", "App", "{372898BD-443C-4ED2-A6B1-C3AF4429F4A2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -76,14 +68,6 @@ Global
 		{EBC19B3C-6027-4EA7-9A03-C866562159AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBC19B3C-6027-4EA7-9A03-C866562159AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EBC19B3C-6027-4EA7-9A03-C866562159AE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5F8BAA2D-493F-4B09-90D5-54237487F720}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5F8BAA2D-493F-4B09-90D5-54237487F720}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5F8BAA2D-493F-4B09-90D5-54237487F720}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5F8BAA2D-493F-4B09-90D5-54237487F720}.Release|Any CPU.Build.0 = Release|Any CPU
-		{21B6853F-073B-4B5A-AEBD-58EE4A9E2C11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{21B6853F-073B-4B5A-AEBD-58EE4A9E2C11}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{21B6853F-073B-4B5A-AEBD-58EE4A9E2C11}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{21B6853F-073B-4B5A-AEBD-58EE4A9E2C11}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EE234C8E-DEA8-4B01-8F4E-F8CF772E6BB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EE234C8E-DEA8-4B01-8F4E-F8CF772E6BB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE234C8E-DEA8-4B01-8F4E-F8CF772E6BB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -108,29 +92,26 @@ Global
 		{C12DA9DF-4D46-4A53-B854-6FB0E539D320}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C12DA9DF-4D46-4A53-B854-6FB0E539D320}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C12DA9DF-4D46-4A53-B854-6FB0E539D320}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CCDD2FF5-DFF1-4D29-923C-BF369087464D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CCDD2FF5-DFF1-4D29-923C-BF369087464D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CCDD2FF5-DFF1-4D29-923C-BF369087464D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CCDD2FF5-DFF1-4D29-923C-BF369087464D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F04DAEB4-1025-4253-844D-C98EEF8D278A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F04DAEB4-1025-4253-844D-C98EEF8D278A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F04DAEB4-1025-4253-844D-C98EEF8D278A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F04DAEB4-1025-4253-844D-C98EEF8D278A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{EBC19B3C-6027-4EA7-9A03-C866562159AE} = {E28B5E71-A290-4CD2-850D-A856175D31BA}
-		{5F8BAA2D-493F-4B09-90D5-54237487F720} = {2CCF48F5-DAB2-41E1-982F-F023C1ED9215}
-		{21B6853F-073B-4B5A-AEBD-58EE4A9E2C11} = {2CCF48F5-DAB2-41E1-982F-F023C1ED9215}
-		{EE234C8E-DEA8-4B01-8F4E-F8CF772E6BB1} = {E28B5E71-A290-4CD2-850D-A856175D31BA}
-		{32276AD5-9027-4394-B6BE-A26413810C43} = {E1B96CCF-9C67-4A87-92E5-334D2731E04E}
+		{EBC19B3C-6027-4EA7-9A03-C866562159AE} = {372898BD-443C-4ED2-A6B1-C3AF4429F4A2}
+		{EE234C8E-DEA8-4B01-8F4E-F8CF772E6BB1} = {372898BD-443C-4ED2-A6B1-C3AF4429F4A2}
+		{32276AD5-9027-4394-B6BE-A26413810C43} = {2CCF48F5-DAB2-41E1-982F-F023C1ED9215}
 		{C0F9E0A9-F41A-425B-9854-54C6047A238B} = {2CCF48F5-DAB2-41E1-982F-F023C1ED9215}
 		{04A604CF-3760-489B-8DFD-72CD849076D7} = {3D3BAEED-1584-4B94-A3E3-361C4A5C3860}
-		{E1B96CCF-9C67-4A87-92E5-334D2731E04E} = {2CCF48F5-DAB2-41E1-982F-F023C1ED9215}
-		{86F7BE34-2015-4545-902C-8A0E434B12CC} = {E1B96CCF-9C67-4A87-92E5-334D2731E04E}
+		{86F7BE34-2015-4545-902C-8A0E434B12CC} = {2CCF48F5-DAB2-41E1-982F-F023C1ED9215}
 		{C12DA9DF-4D46-4A53-B854-6FB0E539D320} = {3D3BAEED-1584-4B94-A3E3-361C4A5C3860}
-		{CCDD2FF5-DFF1-4D29-923C-BF369087464D} = {10FED739-5DC1-4902-954C-340281836935}
 		{935E19D5-3BB9-4A0F-91FD-DC1C120E46E9} = {3D5A3714-0AA5-4AD0-988F-A94D7345B94B}
 		{4A2ABCF4-D26E-4F1C-97E5-BF787D536361} = {3D5A3714-0AA5-4AD0-988F-A94D7345B94B}
 		{E5698266-7DEE-4083-9109-F5F9EFD8F735} = {3D5A3714-0AA5-4AD0-988F-A94D7345B94B}
+		{F04DAEB4-1025-4253-844D-C98EEF8D278A} = {372898BD-443C-4ED2-A6B1-C3AF4429F4A2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AD87DD4E-6017-46E8-BAE2-390993FA2761}

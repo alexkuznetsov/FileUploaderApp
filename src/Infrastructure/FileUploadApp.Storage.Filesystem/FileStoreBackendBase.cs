@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-using FileUploadApp.Core;
+using FileUploadApp.Application;
 
 using Microsoft.Extensions.Logging;
 

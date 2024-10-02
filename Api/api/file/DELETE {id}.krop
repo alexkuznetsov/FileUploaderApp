@@ -1,0 +1,22 @@
+{
+  "details": {
+    "path": "/api/file/{id}",
+    "method": "DELETE",
+    "importedOperationId": "DELETE /api/file/{id}",
+    "pathParams": [
+      {
+        "key": "id",
+        "value": "connecting Hawaii Assurance"
+      }
+    ]
+  },
+  "requests": [
+    {
+      "contentType": "none"
+    }
+  ],
+  "operationType": "unary",
+  "invokerName": "rest",
+  "typeHint": "DELETE",
+  "importStreamId": "48dbaa2c-613d-46dd-a025-c6048d3ff9d7"
+}

@@ -2,9 +2,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-using FileUploadApp.Core.Mvc;
-using FileUploadApp.Features.Commands;
-using FileUploadApp.Features.Queries;
+using FileUploadApp.Application.Uploading.Commands;
+using FileUploadApp.Application.Uploading.Queries;
 
 using MediatR;
 
@@ -17,13 +16,8 @@ namespace FileUploadApp.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class FileController : BaseApiController
+public class FileController(IMediator mediator) : ControllerBase
 {
-    public FileController(IMediator mediator) : base(mediator)
-    {
-
-    }
-
     [HttpGet("{id}")]
     [ResponseCache(Duration = 5, Location = ResponseCacheLocation.Any)]
     [SwaggerOperation(
@@ -34,7 +28,7 @@ public class FileController : BaseApiController
        ]
     public async Task<IActionResult> Get(Guid id, CancellationToken cancellationToken = default)
     {
-        var response = await SendAsync(new DownloadUploadById.Query(id), cancellationToken);
+        var response = await mediator.Send(new DownloadUploadById.Query(id), cancellationToken);
 
         return response == null
             ? NotFound()
@@ -52,7 +46,7 @@ public class FileController : BaseApiController
     ]
     public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
     {
-        var response = await SendAsync(new DeleteUploadById.Command(id), cancellationToken);
+        var response = await mediator.Send(new DeleteUploadById.Command(id), cancellationToken);
 
         return response.IsNotFound() ? NotFound() : Ok();
     }

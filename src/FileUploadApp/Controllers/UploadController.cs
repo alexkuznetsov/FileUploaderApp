@@ -2,12 +2,12 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-using FileUploadApp.Core.Mvc;
+using FileUploadApp.Application;
+using FileUploadApp.Application.Common.Mvc;
+using FileUploadApp.Application.Uploading.Commands;
+using FileUploadApp.Application.Uploading.Queries;
 using FileUploadApp.Domain;
 using FileUploadApp.Domain.Raw;
-using FileUploadApp.Features;
-using FileUploadApp.Features.Commands;
-using FileUploadApp.Features.Queries;
 using FileUploadApp.Interfaces;
 
 using MediatR;
@@ -24,18 +24,10 @@ namespace FileUploadApp.Controllers;
 [Route("api/[controller]")]
 [Authorize]
 [ApiController]
-public class UploadController : BaseApiController
-{
-    private readonly IContentTypeTestUtility _contentTypeTestUtility;
-    private readonly ILogger<UploadController> _logger;
-
-    public UploadController(IMediator mediator
+public class UploadController(Mediator mediator
         , IContentTypeTestUtility contentTypeTestUtility
-        , ILogger<UploadController> logger) : base(mediator)
-    {
-        this._contentTypeTestUtility = contentTypeTestUtility;
-        this._logger = logger;
-    }
+        , ILogger<UploadController> logger) : ControllerBase
+{
 
     [HttpPost(Name = "PostFormData")]
     [FormContentType]
@@ -47,7 +39,7 @@ public class UploadController : BaseApiController
     ]
     public async Task<IActionResult> PostForm(CancellationToken ct = default)
     {
-        var files = await HttpContext.AsUploadFilesEventAsync(_contentTypeTestUtility, ct);
+        var files = await HttpContext.AsUploadFilesEventAsync(contentTypeTestUtility, ct);
 
         return await UploadCoreAsync(files.ToArray(), ct);
     }
@@ -62,18 +54,18 @@ public class UploadController : BaseApiController
     public async Task<IActionResult> PostJson(UploadRequest uploadRequest, CancellationToken ct = default)
     {
         var commands = uploadRequest.AsDownloadUriQueries(
-            e => _logger.LogError("Fail to parse URI: {Error}", e)).ToArray();
-        var files = uploadRequest.AsUploads(_contentTypeTestUtility);
+            e => logger.LogError("Fail to parse URI: {Error}", e)).ToArray();
+        var files = uploadRequest.AsUploads(contentTypeTestUtility);
 
         if (commands.Length == 0)
         {
             return await UploadCoreAsync(files.ToArray(), ct);
         }
 
-        var newFileTasks = commands.Select(x => SendAsync(x, ct)).ToArray();
+        var newFileTasks = commands.Select(x => mediator.Send(x, ct)).ToArray();
         var newFiles = await Task.WhenAll(newFileTasks);
 
-        files = files.Concat(newFiles);
+        files = files.Concat(newFiles.Select(x => x.Result));
 
         return await UploadCoreAsync(files.ToArray(), ct);
     }
@@ -91,9 +83,9 @@ public class UploadController : BaseApiController
         if (uploadedFiles.Length == 0)
             return NotFound();
 
-        await PublishAsync(new UploadFiles.Event(uploadedFiles), cancellationToken);
+        await mediator.Publish(new UploadFiles.Event(uploadedFiles), cancellationToken);
 
-        var uploadResult = await SendAsync(new GetUploadedResults.Query(uploadedFiles), cancellationToken);
+        var uploadResult = await mediator.Send(new GetUploadedResults.Query(uploadedFiles), cancellationToken);
 
         return Ok(uploadResult.Result.Where(x => x != null).Select(x => new
         {

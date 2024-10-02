@@ -2,14 +2,21 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
+
+using FileUploadApp.Application;
+using FileUploadApp.Storage.Filesystem;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 
 using Serilog;
 
@@ -17,18 +24,80 @@ namespace FileUploadApp;
 
 public class Program
 {
+    private const string EnvHealthCheckEp = Strings.EnvPrefix + "P_HEALTHCHECK";
+
+    private const string DefaultHealthCheckEndpoint = "/health";
+
+
     public static void Main(string[] args)
     {
-        var appBuilder = CreateHostBuilder(args)
-             ;
+        var builder = CreateHostBuilder(args);
 
-        var startup = new Startup(appBuilder.Configuration, appBuilder.Environment);
+        builder.Services.AddControllers()
+            .AddJsonOptions(o =>
+            {
+                o.JsonSerializerOptions.PropertyNameCaseInsensitive = false;
+                o.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+            });
 
-        startup.ConfigureServices(appBuilder.Services);
+        builder.Services
+            .AddCors((s) => s.AddDefaultPolicy((c) =>
+            {
+                c.AllowAnyOrigin();
+                c.AllowAnyHeader();
+                c.WithMethods("OPTIONS", "GET", "POST", "DELETE");
+            }))
+            .AddHealthChecks();
 
-        var app = appBuilder.Build();
+        builder.Services.AddEndpointsApiExplorer()
+            .AddSwaggerGen(c =>
+            {
+                //FIXME 
+                c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "File Uploader", Version = "v1" });
+                c.EnableAnnotations();
+            });
 
-        startup.Configure(app);
+        builder.Services.AddApplication(builder.Configuration);
+        builder.Services.AddFileStorage(builder.Configuration);
+
+        builder.Services.Configure<RouteOptions>(o => o.LowercaseUrls = true);
+
+        var app = builder.Build();
+
+        if (builder.Environment.IsDevelopment())
+        {
+            app.UseDeveloperExceptionPage();
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
+        else
+        {
+            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+            app.UseHsts();
+        }
+
+       
+#if ONLY_HTTPS
+        app.UseHttpsRedirection();
+#endif
+
+        app.UseCors();
+
+        app.UseForwardedHeaders(new ForwardedHeadersOptions
+        {
+            ForwardedHeaders = ForwardedHeaders.XForwardedFor
+                               | ForwardedHeaders.XForwardedProto
+        });
+
+        app.UseHealthChecks(Environment.GetEnvironmentVariable(EnvHealthCheckEp) ?? DefaultHealthCheckEndpoint);
+
+        app.UseRouting();
+        app.UseAuthentication();
+        app.UseAuthorization();
+        app.UseApplication();
+
+        app.MapControllerRoute("Default", "{controller}/{action=index}/{id:int?}");
 
         app.Run();
     }

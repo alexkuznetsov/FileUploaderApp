@@ -3,9 +3,9 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FileUploadApp.Application.Uploading.Commands;
 using FileUploadApp.Domain;
 using FileUploadApp.Domain.Raw;
-using FileUploadApp.Features.Commands;
 using FileUploadApp.Interfaces;
 using FileUploadApp.Storage;
 
@@ -84,11 +84,11 @@ public abstract class TestData
 
     #region Mock download
 
-    protected static IRequestHandler<DownloadUri.Command, Upload> CreateFakeRequestHandlerForDownloadUriQuery()
+    protected static IRequestHandler<DownloadUri.Command, DownloadUri.Result> CreateFakeRequestHandlerForDownloadUriQuery()
     {
-        var mock = new Mock<IRequestHandler<DownloadUri.Command, Upload>>();
+        var mock = new Mock<IRequestHandler<DownloadUri.Command, DownloadUri.Result>>();
         mock.Setup(x => x.Handle(It.IsAny<DownloadUri.Command>(), It.IsAny<CancellationToken>()))
-            .Returns(Task.FromResult(FakeUpload));
+            .Returns(Task.FromResult(DownloadUri.Result.Ok(FakeUpload)));
 
         return mock.Object;
     }
