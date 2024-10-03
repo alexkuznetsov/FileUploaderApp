@@ -8,9 +8,8 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using FileUploadApp.Application.Common.Authentication;
+using FileUploadApp.Application.Common.Messaging;
 using FileUploadApp.Domain;
-
-using MediatR;
 
 using Microsoft.IdentityModel.Tokens;
 
@@ -19,9 +18,9 @@ namespace FileUploadApp.Application.Authentication.Commands;
 public static class CreateToken
 {
     public record Command(string UserId, string? Role = null, IReadOnlyDictionary<string, string>? Claims = null)
-        : IRequest<Token>;
+        : ICommand<Token>;
 
-    public sealed class Handler(JwtOptions options) : IRequestHandler<Command, Token>
+    public sealed class Handler(JwtOptions options) : ICommandHandler<Command, Token>
     {
         private readonly SigningCredentials _signingCredentials = new(
                 new SymmetricSecurityKey(Encoding.UTF8.GetBytes(options.SecretKey))
@@ -67,7 +66,7 @@ public static class CreateToken
                 Expires = expires.ToTimestamp(),
                 Id = request.UserId,
                 Role = string.IsNullOrEmpty(request.Role) ? string.Empty : request.Role,
-                Claims = customClaims.ToDictionary(c => c.Type, c => c.Value)
+                Claims = customClaims.Select(c => new TokenClaim(c.Type, c.Value)).ToArray(),
             });
         }
     }

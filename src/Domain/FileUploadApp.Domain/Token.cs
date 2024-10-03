@@ -9,5 +9,7 @@ public class Token : IHaveId<string>
     public long Expires { get; set; }
     public required string Id { get; set; }
     public string? Role { get; set; }
-    public required IDictionary<string, string> Claims { get; set; }
+    public required IEnumerable<TokenClaim> Claims { get; set; }
 }
+
+public record TokenClaim(string Key, string Value);

@@ -4,19 +4,18 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FileUploadApp.Application.Common.Messaging;
 using FileUploadApp.Domain;
 using FileUploadApp.Interfaces;
-
-using MediatR;
 
 namespace FileUploadApp.Application.Uploading.Queries;
 
 public class GetUploadedResults
 {
-    public record Query(IEnumerable<Upload> Uploads) : IRequest<UploadResult>;
+    public record Query(IEnumerable<Upload> Uploads) : IMessage<UploadResult>;
 
     public sealed class Handler(IStore<Guid, Upload, UploadResultRow> store)
-        : IRequestHandler<Query, UploadResult>
+        : IMessageHandler<Query, UploadResult>
     {
         public async Task<UploadResult> Handle(Query request, CancellationToken cancellationToken)
         {

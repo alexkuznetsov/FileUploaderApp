@@ -4,24 +4,22 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-using FileUploadApp.Application.Common;
+using FileUploadApp.Application.Common.Messaging;
 using FileUploadApp.Domain;
 using FileUploadApp.Imaging;
 using FileUploadApp.Interfaces;
-
-using MediatR;
 
 using Microsoft.Extensions.Logging;
 
 namespace FileUploadApp.Application.Uploading.Commands;
 
-public class UploadFiles
+public static class UploadFiles
 {
     public record Event(IEnumerable<Upload> UploadedFiles) : GenericEvent;
 
     public class Handler(IStore<Guid, Upload, UploadResultRow> store
             , AppConfiguration appConfiguration
-            , ILogger<Handler> logger) : INotificationHandler<Event>
+            , ILogger<Handler> logger) : IEventHandler<Event>
     {
         public async Task Handle(Event notification, CancellationToken cancellationToken)
         {

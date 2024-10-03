@@ -2,16 +2,15 @@
 using System.Threading.Tasks;
 
 using FileUploadApp.Application.Common;
+using FileUploadApp.Application.Common.Messaging;
 using FileUploadApp.Domain;
 using FileUploadApp.Interfaces;
-
-using MediatR;
 
 namespace FileUploadApp.Application.Authentication.Queries;
 
 public static class CheckUser
 {
-    public record Query(string Username, string Password) : IRequest<Result>;
+    public record Query(string Username, string Password) : IMessage<Result>;
 
     public record Result : ResultBase<Result, User>
     {
@@ -20,7 +19,7 @@ public static class CheckUser
         public bool UserPasswordMismatch() => State == WrongPasswState;
     }
 
-    public class Handler : IRequestHandler<Query, Result>
+    public class Handler : IMessageHandler<Query, Result>
     {
         private readonly ICheckUserService<User> _checkUserService;
 

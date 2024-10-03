@@ -4,21 +4,20 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using FileUploadApp.Application.Common;
+using FileUploadApp.Application.Common.Messaging;
 using FileUploadApp.Domain;
 using FileUploadApp.Domain.Raw;
 using FileUploadApp.Interfaces;
-
-using MediatR;
 
 namespace FileUploadApp.Application.Uploading.Commands;
 
 public static class DownloadUri
 {
-    public record Command(uint Number, Uri Uri) : IRequest<Result>;
+    public record Command(uint Number, Uri Uri) : ICommand<Result>;
 
     public record Result : ResultBase<Result, Upload>;
 
-    public sealed class Handler(IContentDownloader<DownloadUriResponse> contentDownloader) : IRequestHandler<Command, Result>
+    public sealed class Handler(IContentDownloader<DownloadUriResponse> contentDownloader) : ICommandHandler<Command, Result>
     {
         public async Task<Result> Handle(Command request, CancellationToken cancellationToken)
         {

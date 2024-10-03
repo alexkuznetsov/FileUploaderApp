@@ -8,9 +8,8 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using FileUploadApp.Application.Common.Authentication;
+using FileUploadApp.Application.Common.Messaging;
 using FileUploadApp.Domain;
-
-using MediatR;
 
 using Microsoft.IdentityModel.Tokens;
 
@@ -18,9 +17,9 @@ namespace FileUploadApp.Application.Authentication.Queries;
 
 public class GetTokenPayload
 {
-    public record Query(string Token) : IRequest<TokenPayload>;
+    public record Query(string Token) : IMessage<TokenPayload>;
 
-    public class Handler : IRequestHandler<Query, TokenPayload>
+    public class Handler : IMessageHandler<Query, TokenPayload>
     {
         private static readonly HashSet<string> DefaultClaims =
         [
@@ -60,10 +59,10 @@ public class GetTokenPayload
                 => new()
                 {
                     Subject = jwt.Subject,
-                    Role = jwt.Claims.SingleOrDefault(x => x.Type == ClaimTypes.Role)?.Value,
+                    Role = string.Join(",", jwt.Claims.Where(x => x.Type == ClaimTypes.Role).Select(x => x.Value)),
                     Expires = jwt.ValidTo.ToTimestamp(),
                     Claims = jwt.Claims.Where(x => !DefaultClaims.Contains(x.Type))
-                        .ToDictionary(k => k.Type, v => v.Value)
+                        .Select(k => new TokenClaim(k.Type, k.Value)).ToArray()
                 };
         }
     }
