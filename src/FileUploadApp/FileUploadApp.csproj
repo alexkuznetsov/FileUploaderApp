@@ -26,15 +26,18 @@
 	  <None Remove="logs\**" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <_WebToolingArtifacts Remove="Properties\PublishProfiles\FolderProfileSingleFile.pubxml" />
+	</ItemGroup>
+
   <ItemGroup>
-    <PackageReference Include="AspNetCore.HealthChecks" Version="1.0.0" />
     <PackageReference Include="MediatR" Version="12.4.1" />
-    <PackageReference Include="Serilog.AspNetCore" Version="8.0.2" />
-    <PackageReference Include="Serilog.Settings.Configuration" Version="8.0.2" />
-    <PackageReference Include="Serilog.Sinks.Async" Version="2.0.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="8.0.4" />
+    <PackageReference Include="Serilog.Sinks.Async" Version="2.1.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
-	<PackageReference Include="Swashbuckle.AspNetCore" Version="6.8.1" />
-	<PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.8.1" />
+	<PackageReference Include="Swashbuckle.AspNetCore" Version="6.9.0" />
+	<PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.9.0" />
   </ItemGroup>
 
   <ItemGroup>

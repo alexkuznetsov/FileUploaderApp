@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 
 using FileUploadApp.Application.Uploading.Queries;
 using FileUploadApp.Domain;
+using FileUploadApp.Interfaces;
 using FileUploadApp.Storage;
+using FileUploadApp.Tests.Fakes;
 
 using MediatR;
 
@@ -24,7 +26,7 @@ public class DownloadUploadByIdQueryTests : TestData
     [TestInitialize]
     public void Initialize()
     {
-        _serviceProvider = ContainerBuilder.Create((s) =>
+        _serviceProvider = ContainerBuilder.Create(/*(s) =>
         {
             #region Replace by mocked
 
@@ -55,7 +57,7 @@ public class DownloadUploadByIdQueryTests : TestData
             s.Replace(sd);
 
             #endregion
-        });
+        }*/);
     }
 
     [TestCleanup]

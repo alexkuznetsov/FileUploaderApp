@@ -11,11 +11,9 @@ internal sealed class ContentTypeTestUtility : IContentTypeTestUtility
 {
     private readonly (byte[], string)[] _fingerprints;
     private readonly HashSet<string> _contentTypes;
-    //private readonly AppConfiguration _appConfiguration;
 
     public ContentTypeTestUtility(AppConfiguration appConfiguration)
     {
-        //_appConfiguration = appConfiguration;
         _fingerprints = appConfiguration.GetMimeFingerprints().ToArray();
         _contentTypes = new HashSet<string>(appConfiguration.AllowedContentTypes);
     }

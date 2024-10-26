@@ -1,38 +1,54 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
 using FileUploadApp.Domain;
+using FileUploadApp.Interfaces;
 using FileUploadApp.Storage;
 
 namespace FileUploadApp.Tests.Fakes;
 
-internal class FakeStoreBackend : IStoreBackend<Guid, Metadata, Upload>, IFileStreamProvider<Guid, Stream>
+internal sealed class FakeFileSystemStore : TestData, IStore<Guid, Upload, UploadResultRow>
 {
-    private readonly Dictionary<Guid, Upload> _keyValuePairs = [];
+    public Task<bool> DeleteAsync(Guid fileId, CancellationToken cancellationToken = default)
+    {
+        return Task.FromResult(false);
+    }
 
+    public Task<Upload?> ReceiveAsync(Guid fileId, CancellationToken cancellationToken = default)
+    {
+        return Task.FromResult<Upload?>(FakeUpload);
+    }
+
+    private static readonly UploadResultRow FakeUploadResultRow =
+        new UploadResultRow(FakeUpload.Id, FakeUpload.Number, FakeUpload.Name, FakeUpload.ContentType);
+
+    public Task<UploadResultRow> StoreAsync(Upload file, CancellationToken cancellationToken = default)
+    {
+        return Task.FromResult(FakeUploadResultRow);
+    }
+}
+
+internal class FakeStoreBackend : TestData, IStoreBackend<Guid, Metadata, Upload>, IFileStreamProvider<Guid, Stream>
+{
     public ValueTask<Upload?> FindAsync(Guid key, CancellationToken cancellationToken = default)
     {
-        _keyValuePairs.TryGetValue(key, out var value);
-        return ValueTask.FromResult(value);
+        return ValueTask.FromResult<Upload?>(FakeUpload);
     }
 
     public Task DeleteAsync(Metadata key, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        return Task.CompletedTask;
     }
 
     public Stream GetStream(Guid id)
     {
-        return _keyValuePairs[id].Stream;
+        return FakeDownloadUriResponse.Stream;
     }
 
     public Task SaveAsync(Upload file, CancellationToken cancellationToken = default)
     {
-        _keyValuePairs.Add(file.Id, file);
-
-        return Task.FromResult(0);
+        return Task.CompletedTask;
     }
 }

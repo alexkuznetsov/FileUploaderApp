@@ -21,8 +21,6 @@ internal class ContainerBuilder
 {
     private static readonly Dictionary<string, string?> ArrayDict = new()
     {
-        
-
         {"fileStore:BasePath",         "e:\\temp\\uploads"            },
         {"conf:AllowedContentTypes:0", "image/jpeg"                   },
         {"conf:AllowedContentTypes:1", "image/png"                    },
@@ -31,6 +29,7 @@ internal class ContainerBuilder
         {"conf:AllowedContentTypes:4", "image/gif"                    },
         {"conf:AllowedContentTypes:5", "image/tiff"                   },
         {"conf:AllowedContentTypes:6", "application/x-7z-compressed"  },
+        {"conf:PreviewContentType", "image/png" },
 
         {"Mappings:iVBORw",     "image/png"                   },
         {"Mappings:/9j/4A",     "image/jpeg"                  },
@@ -75,13 +74,12 @@ internal class ContainerBuilder
         services.AddFileStorage(configuration);
 
         var fakeStoreBackend = new FakeStoreBackend();
+        var store = new FakeFileSystemStore(/*fakeStoreBackend*/);
 
         services.AddSingleton<IStoreBackend<Guid, Metadata, Metadata>, FakeMetadataStoreBackend>();
         services.AddSingleton<IStoreBackend<Guid, Metadata, Upload>, FakeStoreBackend>((_) => fakeStoreBackend);
         services.AddSingleton<IFileStreamProvider<Guid, Stream>, FakeStoreBackend>((_) => fakeStoreBackend);
-        services.AddSingleton<IStore<Guid, Upload, UploadResultRow>, FileSystemStore>();
-
-
+        services.AddSingleton<IStore<Guid, Upload, UploadResultRow>, FakeFileSystemStore>((_) => store);
 
         Log.Logger = new LoggerConfiguration()
            .ReadFrom.Configuration(configuration)

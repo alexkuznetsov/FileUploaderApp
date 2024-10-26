@@ -14,7 +14,8 @@ public class Metadata
 
     }
 
-    public Metadata(Guid id, string name, string contentType, DateTime? dateTime = null) : this(id, name, contentType, dateTime ?? DateTime.UtcNow)
+    public Metadata(Guid id, string name, string contentType, DateTime? dateTime = null) 
+        : this(id, name, contentType, dateTime ?? DateTime.UtcNow)
     {
     }
 

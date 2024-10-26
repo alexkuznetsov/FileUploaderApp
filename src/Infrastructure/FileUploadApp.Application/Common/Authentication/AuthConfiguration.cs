@@ -1,5 +1,4 @@
-﻿using FileUploadApp.Application.Services;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 
 namespace FileUploadApp.Application.Common.Authentication;
@@ -8,7 +7,6 @@ namespace FileUploadApp.Application.Common.Authentication;
 public class AuthConfigurationOptionsSetup(IConfiguration configuration)
     : IConfigureOptions<AuthConfiguration>
 {
-
     const string SectionKey = "AuthServer";
 
     public void Configure(AuthConfiguration options)

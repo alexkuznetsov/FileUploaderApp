@@ -33,6 +33,7 @@ cd FileUploaderApp
 git checkout dev
 mkdir logs
 mkdir uploads
+docker buildx build -t alexkuznetsov/fileuploaderapp:dev .
 docker-compose -f docker-compose-local.yml up
 ```
 

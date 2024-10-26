@@ -67,7 +67,7 @@ internal static class Extensions
     {
         var section = configuration.GetSection(JwtOptions.SectionName);
         var jwtOptions = new JwtOptions();
-        
+
         configuration.GetSection(JwtOptions.SectionName).Bind(jwtOptions);
 
         if (string.IsNullOrEmpty(jwtOptions.SecretKey))

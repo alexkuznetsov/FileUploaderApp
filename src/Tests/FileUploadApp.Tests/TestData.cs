@@ -28,7 +28,7 @@ public abstract class TestData
 
     private static DateTime FakeMetadataDate { get; } = DateTime.Parse("2018-05-31 10:00");
 
-    private static DownloadUriResponse FakeDownloadUriResponse { get; } =
+    protected static DownloadUriResponse FakeDownloadUriResponse { get; } =
         new DownloadUriResponse(RequestUri, MimeConstants.BitmapMime
             , ImageArray);
 
@@ -40,7 +40,7 @@ public abstract class TestData
         , FakeDownloadUriResponse.ContentType
         , ImageArray);
 
-    private static Metadata DefaultMetadata { get; } = new Metadata(RequestId
+    protected static Metadata DefaultMetadata { get; } = new Metadata(RequestId
         , Path.GetFileName(FakeDownloadUriResponse.Uri.LocalPath)
         , MimeConstants.BitmapMime
         , FakeMetadataDate);

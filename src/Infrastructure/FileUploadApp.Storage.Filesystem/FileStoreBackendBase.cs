@@ -7,19 +7,9 @@ using Microsoft.Extensions.Logging;
 
 namespace FileUploadApp.Storage.Filesystem;
 
-public abstract class FileStoreBackendBase
-{
-    private readonly ILogger<FileStoreBackendBase> _logger;
-
-    protected FileStoreBackendBase(StorageConfiguration storageConfiguration
+internal abstract class FileStoreBackendBase(StorageConfiguration storageConfiguration
         , ILogger<FileStoreBackendBase> logger)
-    {
-        this._logger = logger;
-        StorageConfiguration = storageConfiguration;
-    }
-
-    private StorageConfiguration StorageConfiguration { get; }
-
+{
     protected string BuildPathAndCheckDir(Guid? fileId, bool createIfNotExists)
     {
         if (fileId == null || fileId.Equals(Guid.Empty))
@@ -30,7 +20,7 @@ public abstract class FileStoreBackendBase
         var fileIdStr = fileId!.ToString();
         var span = fileIdStr!.ToCharArray();
 
-        var foldersPath = Path.Combine(StorageConfiguration.BasePath,
+        var foldersPath = Path.Combine(storageConfiguration.BasePath,
             new string(span.Slice(0, 2)),
             new string(span.Slice(2, 2)),
             new string(span.Slice(4, 2)));
@@ -40,7 +30,7 @@ public abstract class FileStoreBackendBase
             Directory.CreateDirectory(foldersPath);
         }
 
-        _logger.LogInformation("Expanded path for {FileId} is {Path}",
+        logger.LogInformation("Expanded path for {FileId} is {Path}",
             fileId.ToString()
             , Path.GetFullPath(Path.Combine(foldersPath, fileIdStr)));
 

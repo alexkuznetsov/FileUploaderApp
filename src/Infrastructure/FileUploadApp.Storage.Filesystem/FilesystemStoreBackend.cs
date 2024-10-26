@@ -9,15 +9,11 @@ using Microsoft.Extensions.Logging;
 
 namespace FileUploadApp.Storage.Filesystem;
 
-public class FilesystemStoreBackend : FileStoreBackendBase
+internal sealed class FilesystemStoreBackend(StorageConfiguration storageConfiguration
+        , ILogger<FilesystemStoreBackend> logger) : FileStoreBackendBase(storageConfiguration, logger)
     , IStoreBackend<Guid, Metadata, Upload>
     , IFileStreamProvider<Guid, Stream>
 {
-    public FilesystemStoreBackend(StorageConfiguration storageConfiguration
-        , ILogger<FilesystemStoreBackend> logger)
-        : base(storageConfiguration, logger)
-    {
-    }
 
     public ValueTask<Upload?> FindAsync(Guid key, CancellationToken cancellationToken = default)
         => throw new NotImplementedException();

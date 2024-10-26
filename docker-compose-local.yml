@@ -1,5 +1,3 @@
-version: '3.4'
-
 services:
   fileuploaderapp:
     image: alexkuznetsov/fileuploaderapp:dev
