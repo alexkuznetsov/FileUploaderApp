@@ -24,7 +24,7 @@ namespace FileUploadApp.Controllers;
 [Route("api/[controller]")]
 [Authorize]
 [ApiController]
-public class UploadController(Mediator mediator
+public class UploadController(IMediator mediator
         , IContentTypeTestUtility contentTypeTestUtility
         , ILogger<UploadController> logger) : ControllerBase
 {
