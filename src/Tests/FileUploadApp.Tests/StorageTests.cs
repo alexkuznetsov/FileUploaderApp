@@ -51,7 +51,7 @@ public class StorageTests : TestData
     public async Task Test_HandlerAndStore_ShouldUploadImageAndMakePreview()
     {
         //TODO Refactor 
-        var uploadEvent = new UploadFiles.Event([FakeUpload]);
+        var uploadEvent = new UploadFiles.Command([FakeUpload]);
         var mediator = _serviceProvider.GetRequiredService<IMediator>();
         var appConfig = _serviceProvider.GetRequiredService<AppConfiguration>();
 

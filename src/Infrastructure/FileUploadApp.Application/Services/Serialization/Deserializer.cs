@@ -21,7 +21,10 @@ internal sealed class Deserializer : IDeserializer
 
     public async ValueTask<TObject?> DeserializeAsync<TObject>(string file, CancellationToken cancellationToken = default)
     {
-        using var f = File.OpenRead(file);
-        return await JsonSerializer.DeserializeAsync<TObject>(f, _jsonSerializerOptions, cancellationToken);
+        var fileData = await File.ReadAllTextAsync(file,cancellationToken);
+        //return await JsonSerializer.DeserializeAsync<TObject>(fileData, _jsonSerializerOptions, cancellationToken);
+        var obj = JsonSerializer.Deserialize<TObject>(fileData, _jsonSerializerOptions);
+
+        return obj;
     }
 }

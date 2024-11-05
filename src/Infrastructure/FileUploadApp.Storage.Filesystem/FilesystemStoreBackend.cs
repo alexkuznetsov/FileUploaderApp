@@ -30,8 +30,12 @@ internal sealed class FilesystemStoreBackend(StorageConfiguration storageConfigu
         var filePath = BuildPathAndCheckDir(upload.Id, true);
 
         using var wri = File.OpenWrite(filePath);
-        await upload.Stream.CopyToAsync(wri, cancellationToken).ConfigureAwait(false);
-        await wri.FlushAsync(cancellationToken).ConfigureAwait(false);
+        
+        await upload.Stream.CopyToAsync(wri, cancellationToken);
+        
+        wri.Flush(true);
+        wri.Close();
+        wri.Dispose();
     }
 
     public Task DeleteAsync(Metadata metadata, CancellationToken cancellationToken = default)
@@ -41,10 +45,27 @@ internal sealed class FilesystemStoreBackend(StorageConfiguration storageConfigu
             cancellationToken.ThrowIfCancellationRequested();
 
             var filePath = BuildPathAndCheckDir(metadata.Id, false);
+            int tries = 0;
+            bool removed = false;
 
-            if (File.Exists(filePath))
+            while (tries < 3)
             {
-                File.Delete(filePath);
+                if (!UnlinkFile(filePath, out var err))
+                {
+                    logger.LogError(err, "Can't delete the file");
+                    tries++;
+                    GC.Collect();
+                }
+                else
+                {
+                    removed = true;
+                    break;
+                }
+            }
+
+            if (!removed)
+            {
+                throw new InvalidOperationException($"File not removed: {metadata}");
             }
 
             RemoveDirIfEmpty(Path.GetDirectoryName(filePath));

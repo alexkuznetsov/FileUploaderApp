@@ -16,22 +16,22 @@ internal sealed class MetadataFsStoreBackend(StorageConfiguration storageConfigu
 {
     private static readonly string SpecFileExtension = ".spec";
 
-    public Task SaveAsync(Metadata file, CancellationToken cancellationToken = default)
+    public async Task SaveAsync(Metadata file, CancellationToken cancellationToken = default)
     {
         var path = BuildPathAndCheckDir(file.Id, true);
         var specFilePath = FormatSpecFilePath(path);
 
-        return serializer.SerializeAsync(file, specFilePath, cancellationToken);
+        await serializer.SerializeAsync(file, specFilePath, cancellationToken);
     }
 
-    public ValueTask<Metadata?> FindAsync(Guid key, CancellationToken cancellationToken = default)
+    public async ValueTask<Metadata?> FindAsync(Guid key, CancellationToken cancellationToken = default)
     {
         var path = BuildPathAndCheckDir(key, false);
         var specFilePath = FormatSpecFilePath(path);
 
-        return !File.Exists(specFilePath) 
-            ? default 
-            : deserializer.DeserializeAsync<Metadata>(specFilePath, cancellationToken);
+        return !File.Exists(specFilePath)
+            ? default
+            : await deserializer.DeserializeAsync<Metadata>(specFilePath, cancellationToken);
     }
 
     public Task DeleteAsync(Metadata metadata, CancellationToken cancellationToken = default)
@@ -42,10 +42,27 @@ internal sealed class MetadataFsStoreBackend(StorageConfiguration storageConfigu
 
             var filePath = BuildPathAndCheckDir(metadata.Id, false);
             var specFilePath = FormatSpecFilePath(filePath);
+            int tries = 0;
+            bool removed = false;
 
-            if (File.Exists(specFilePath))
+            while (tries < 3)
             {
-                File.Delete(specFilePath);
+                if (!UnlinkFile(specFilePath, out var err))
+                {
+                    logger.LogError(err, "Can't delete the file");
+                    tries++;
+                    GC.Collect();
+                }
+                else
+                {
+                    removed = true;
+                    break;
+                }
+            }
+
+            if (!removed)
+            {
+                throw new InvalidOperationException($"Meta file not removed: {metadata}");
             }
 
             RemoveDirIfEmpty(Path.GetDirectoryName(specFilePath));

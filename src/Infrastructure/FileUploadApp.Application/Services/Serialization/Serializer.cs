@@ -20,7 +20,17 @@ internal sealed class Serializer : ISerializer
 
     public async Task SerializeAsync<T>(T @object, string file, CancellationToken cancellationToken = default)
     {
-        using var stream = File.OpenWrite(file);
-        await JsonSerializer.SerializeAsync(stream, @object, _jsonSerializerOptions, cancellationToken);
+        //using var stream = File.OpenWrite(file);
+        var utf8Bytes = JsonSerializer.SerializeToUtf8Bytes<T>(@object, _jsonSerializerOptions);
+
+        await WriteBytesAsync(file, utf8Bytes, cancellationToken);
+    }
+
+    private static async Task WriteBytesAsync(string file, byte[] utf8Bytes, CancellationToken cancellationToken)
+    {
+        using FileStream stream = File.OpenWrite(file);
+        await stream.WriteAsync(utf8Bytes, cancellationToken);
+        await stream.FlushAsync(cancellationToken);
+        stream.Close();
     }
 }

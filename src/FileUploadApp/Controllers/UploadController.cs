@@ -83,7 +83,7 @@ public class UploadController(IMediator mediator
         if (uploadedFiles.Length == 0)
             return NotFound();
 
-        await mediator.Publish(new UploadFiles.Event(uploadedFiles), cancellationToken);
+        await mediator.Send(new UploadFiles.Command(uploadedFiles), cancellationToken);
 
         var uploadResult = await mediator.Send(new GetUploadedResults.Query(uploadedFiles), cancellationToken);
 

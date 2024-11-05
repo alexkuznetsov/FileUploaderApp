@@ -52,4 +52,26 @@ internal abstract class FileStoreBackendBase(StorageConfiguration storageConfigu
             depth++;
         }
     }
+
+    protected static bool UnlinkFile(string filePath, out Exception? error)
+    {
+        if (File.Exists(filePath))
+        {
+            try
+            {
+                File.Delete(filePath);
+                error = null;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                error = ex;
+                return false;
+
+            }
+        }
+
+        error = null;
+        return true;
+    }
 }
