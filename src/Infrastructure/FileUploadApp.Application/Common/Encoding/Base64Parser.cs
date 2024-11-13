@@ -74,19 +74,19 @@ public static partial class Base64Parser
 
         if (arrHeader.Length > 1)
         {
-            if (arrHeader[1].StartsWith(CharsetToken))
+            if (arrHeader[1].StartsWith(CharsetToken, StringComparison.Ordinal))
             {
                 var charsetPart = arrHeader[1].Split('=');
                 _ = charsetPart[1]; //TODO Charset now not using
             }
-            else if (arrHeader[1].Equals(Base64Token))
+            else if (arrHeader[1].Equals(Base64Token, StringComparison.Ordinal))
             {
                 isBase64 = true;
             }
 
             if (!isBase64 && arrHeader.Length > 2)
             {
-                isBase64 = arrHeader[2].Equals(Base64Token);
+                isBase64 = arrHeader[2].Equals(Base64Token, StringComparison.Ordinal);
             }
         }
 

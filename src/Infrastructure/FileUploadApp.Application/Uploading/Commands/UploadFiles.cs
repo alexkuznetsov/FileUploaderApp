@@ -14,7 +14,7 @@ using Microsoft.Extensions.Logging;
 
 namespace FileUploadApp.Application.Uploading.Commands;
 
-public static class UploadFiles
+public static partial class UploadFiles
 {
     public record Command(IEnumerable<Upload> UploadedFiles) : ICommand<Result>;
 
@@ -37,8 +37,7 @@ public static class UploadFiles
 
         private async Task<UploadResultRow> SaveFileAsync(Upload uploadModel, CancellationToken cancellationToken)
         {
-            logger.LogInformation("Saving the file {fileName}. Content type: {fileContentType}"
-                , uploadModel.Name, uploadModel.ContentType);
+            logger.SavingTheFile(uploadModel.Name, uploadModel.ContentType);
 
             var result = await store.StoreAsync(uploadModel, cancellationToken);
 
@@ -49,8 +48,7 @@ public static class UploadFiles
                 return result;
             }
 
-            logger.LogInformation("Saving preview for the file {fileName}. Content type: {fileContentType}",
-                uploadModel.Name, uploadModel.ContentType);
+            logger.SavingPreviewForTheFile(uploadModel.Name, uploadModel.ContentType);
 
             using var previewData = ImageHelper.Resize(appConfiguration.PreviewSize
                     , uploadModel.Stream
@@ -69,5 +67,21 @@ public static class UploadFiles
             return result;
         }
     }
+}
 
+internal static partial class Log
+{
+    [LoggerMessage(
+        EventId = 0x10,
+        Level = LogLevel.Information,
+        Message = "Saving preview for the file {fileName}. Content type: {fileContentType}")]
+    public static partial void SavingPreviewForTheFile(
+        this ILogger logger, string fileName, string fileContentType);
+
+    [LoggerMessage(
+        EventId = 0x11,
+        Level = LogLevel.Information,
+        Message = "Saving the file {fileName}. Content type: {fileContentType}")]
+    public static partial void SavingTheFile(
+        this ILogger logger, string fileName, string fileContentType);
 }

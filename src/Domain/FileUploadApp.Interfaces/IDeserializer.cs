@@ -1,11 +1,12 @@
-﻿using System.Threading;
+﻿using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FileUploadApp.Interfaces;
 
 public interface IDeserializer
 {
-    TObject? Deserialize<TObject>(string payload);
+    TObject? DeserializeString<TObject>(string payload);
 
-    ValueTask<TObject?> DeserializeAsync<TObject>(string file, CancellationToken cancellationToken = default);
+    ValueTask<TObject?> DeserializeAsync<TObject>(Stream utf8json, CancellationToken cancellationToken = default);
 }

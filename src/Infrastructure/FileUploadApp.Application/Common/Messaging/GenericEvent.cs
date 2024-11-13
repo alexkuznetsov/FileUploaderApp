@@ -13,5 +13,7 @@ public interface IMessageHandler<in TRequest, TResponse> : IRequestHandler<TRequ
 public interface ICommandHandler<in TRequest, TResponse> : IRequestHandler<TRequest, TResponse>
     where TRequest : ICommand<TResponse>;
 
+#pragma warning disable CA1711 // Identifiers should not have incorrect suffix
 public interface IEventHandler<in TRequest> : INotificationHandler<TRequest>
+#pragma warning restore CA1711 // Identifiers should not have incorrect suffix
     where TRequest : GenericEvent;

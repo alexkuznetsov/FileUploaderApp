@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -54,7 +55,7 @@ internal sealed class InMemoryCheckUserService : ICheckUserService<User>
         }
         catch (Exception ex)
         {
-            Debug.WriteLine(string.Format("There is error to read option for InMemoryCheckUserService. Error: {0}", ex)
+            Debug.WriteLine(string.Format(CultureInfo.InvariantCulture, "There is error to read option for InMemoryCheckUserService. Error: {0}", ex)
                 , "ERROR");
             _options = new InMemoryCheckUserServiceOptions();
             _usersHash = CreateUsers([]);

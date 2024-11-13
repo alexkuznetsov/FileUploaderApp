@@ -37,7 +37,7 @@ public class DomainTests
     {
         var json = (TestContext.Properties["json"] ?? "").ToString()!;
         var deserializer = _serviceProvider.GetRequiredService<IDeserializer>();
-        var @object = deserializer.Deserialize<UploadRequest>(json);
+        var @object = deserializer.DeserializeString<UploadRequest>(json);
 
         Assert.IsNotNull(@object);
         Assert.IsTrue(@object.Files?.Length == 1);
@@ -59,7 +59,7 @@ public class DomainTests
     {
         var json = (TestContext.Properties["json"] ?? "").ToString()!;
         var deserializer = _serviceProvider.GetRequiredService<IDeserializer>();
-        var @object = deserializer.Deserialize<UploadRequest>(json);
+        var @object = deserializer.DeserializeString<UploadRequest>(json);
 
         Assert.IsNotNull(@object);
         Assert.IsTrue(@object.Files?.Length == 1);

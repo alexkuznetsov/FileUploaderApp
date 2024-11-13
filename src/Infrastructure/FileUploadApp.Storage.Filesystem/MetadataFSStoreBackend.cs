@@ -29,9 +29,22 @@ internal sealed class MetadataFsStoreBackend(StorageConfiguration storageConfigu
         var path = BuildPathAndCheckDir(key, false);
         var specFilePath = FormatSpecFilePath(path);
 
-        return !File.Exists(specFilePath)
-            ? default
-            : await deserializer.DeserializeAsync<Metadata>(specFilePath, cancellationToken);
+        if (!File.Exists(specFilePath))
+            return default;
+
+        FileStream? utf8Stream = null;
+
+        try
+        {
+            utf8Stream = File.OpenRead(specFilePath);
+
+            return await deserializer.DeserializeAsync<Metadata>(utf8Stream, cancellationToken);
+        }
+        finally
+        {
+            utf8Stream?.Close();
+            utf8Stream?.Dispose();
+        }
     }
 
     public Task DeleteAsync(Metadata metadata, CancellationToken cancellationToken = default)

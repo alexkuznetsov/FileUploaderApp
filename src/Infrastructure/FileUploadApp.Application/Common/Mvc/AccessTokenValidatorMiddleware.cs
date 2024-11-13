@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace FileUploadApp.Application.Common.Mvc;
 
-internal class AccessTokenValidatorMiddleware : IMiddleware
+internal sealed class AccessTokenValidatorMiddleware : IMiddleware
 {
     private readonly IAccessTokenService _accessTokenService;
 

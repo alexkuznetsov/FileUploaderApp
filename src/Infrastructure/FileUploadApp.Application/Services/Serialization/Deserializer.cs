@@ -16,15 +16,15 @@ internal sealed class Deserializer : IDeserializer
         _jsonSerializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web);
     }
 
-    public TObject? Deserialize<TObject>(string payload) =>
+    public TObject? DeserializeString<TObject>(string payload) =>
         JsonSerializer.Deserialize<TObject>(payload, _jsonSerializerOptions);
 
-    public async ValueTask<TObject?> DeserializeAsync<TObject>(string file, CancellationToken cancellationToken = default)
+    public async ValueTask<TObject?> DeserializeAsync<TObject>(Stream utf8Json, CancellationToken cancellationToken = default)
     {
-        var fileData = await File.ReadAllTextAsync(file,cancellationToken);
-        //return await JsonSerializer.DeserializeAsync<TObject>(fileData, _jsonSerializerOptions, cancellationToken);
-        var obj = JsonSerializer.Deserialize<TObject>(fileData, _jsonSerializerOptions);
+        //var fileData = await File.ReadAllTextAsync(file,cancellationToken);
+        return await JsonSerializer.DeserializeAsync<TObject>(utf8Json, _jsonSerializerOptions, cancellationToken);
+        //var obj = JsonSerializer.Deserialize<TObject>(fileData, _jsonSerializerOptions);
 
-        return obj;
+        //return obj;
     }
 }

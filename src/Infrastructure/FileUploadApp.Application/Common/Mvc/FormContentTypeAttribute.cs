@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc.ActionConstraints;
+﻿using System;
 
-using System;
+using Microsoft.AspNetCore.Mvc.ActionConstraints;
 
 namespace FileUploadApp.Application.Common.Mvc;
 
@@ -9,6 +9,6 @@ public class FormContentTypeAttribute : Attribute, IActionConstraint
 {
     public int Order => 0;
 
-    public bool Accept(ActionConstraintContext ctx) =>
-        ctx.RouteContext.HttpContext.Request.HasFormContentType;
+    public bool Accept(ActionConstraintContext context) =>
+        context.RouteContext.HttpContext.Request.HasFormContentType;
 }

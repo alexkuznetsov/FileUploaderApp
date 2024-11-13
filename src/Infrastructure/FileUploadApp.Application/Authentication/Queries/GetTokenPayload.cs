@@ -15,7 +15,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace FileUploadApp.Application.Authentication.Queries;
 
-public class GetTokenPayload
+public static class GetTokenPayload
 {
     public record Query(string Token) : IMessage<TokenPayload>;
 

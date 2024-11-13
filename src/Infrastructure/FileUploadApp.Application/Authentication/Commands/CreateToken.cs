@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -37,7 +38,7 @@ public static class CreateToken
                 new(JwtRegisteredClaimNames.Sub, request.UserId),
                 new(JwtRegisteredClaimNames.UniqueName, request.UserId),
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new(JwtRegisteredClaimNames.Iat, now.ToTimestamp().ToString()),
+                new(JwtRegisteredClaimNames.Iat, now.ToTimestamp().ToString(CultureInfo.InvariantCulture)),
             };
 
             if (!string.IsNullOrWhiteSpace(request.Role))

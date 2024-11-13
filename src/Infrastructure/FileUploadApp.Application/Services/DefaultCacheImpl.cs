@@ -8,7 +8,7 @@ using Microsoft.Extensions.Caching.Distributed;
 
 namespace FileUploadApp.Application.Services;
 
-internal class DefaultCacheImpl(IDistributedCache memoryCache) : ICache
+internal sealed class DefaultCacheImpl(IDistributedCache memoryCache) : ICache
 {
     public Task<string?> GetStringAsync(string key, CancellationToken cancellationToken = default)
         => memoryCache.GetStringAsync(key, cancellationToken);
@@ -25,7 +25,7 @@ internal class DefaultCacheImpl(IDistributedCache memoryCache) : ICache
     }
 
 
-    class DefaultCacheItemOptions : ICacheOptions
+    sealed class DefaultCacheItemOptions : ICacheOptions
     {
         public TimeSpan AbsoluteExpirationRelativeToNow { get; set; }
     }

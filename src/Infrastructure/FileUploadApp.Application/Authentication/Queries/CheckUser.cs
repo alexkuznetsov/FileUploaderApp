@@ -14,7 +14,7 @@ public static class CheckUser
 
     public record Result : ResultBase<Result, User>
     {
-        private static readonly int WrongPasswState = 0xaaa;
+        private const int WrongPasswState = 0xaaa;
         public static Result WrongPassword() => new Result { State = WrongPasswState, Result = null! };
         public bool UserPasswordMismatch() => State == WrongPasswState;
     }

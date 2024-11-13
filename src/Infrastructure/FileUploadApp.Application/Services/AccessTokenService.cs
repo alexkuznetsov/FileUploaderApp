@@ -11,7 +11,7 @@ using Microsoft.Extensions.Primitives;
 
 namespace FileUploadApp.Application.Services;
 
-internal class AccessTokenService(ICache cache,
+internal sealed class AccessTokenService(ICache cache,
         IHttpContextAccessor httpContextAccessor,
         IOptions<JwtOptions> jwtOptions) : IAccessTokenService
 {
@@ -30,7 +30,8 @@ internal class AccessTokenService(ICache cache,
     public async Task DeactivateAsync(string userId, string token)
     {
         await cache.SetStringAsync(GetKey(token),
-            DeactivatedField, (o) => {
+            DeactivatedField, (o) =>
+            {
                 o.AbsoluteExpirationRelativeToNow =
                         TimeSpan.FromMinutes(jwtOptions.Value.ExpiryMinutes);
             }).ConfigureAwait(false);
